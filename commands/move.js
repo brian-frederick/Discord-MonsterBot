@@ -17,22 +17,23 @@ module.exports = {
 
     const moveContext = moves[alias];
 
-    const modifierName = moveContext.modifier;
-
     const keeper = await ddb.getKeeper(message.author.id);
+
+    let modifiers = [{
+      key: moveContext.modifier, 
+      value: keeper[moveContext.modifier]
+    }];
+
+    if (!isNaN(args[0])) {
+      const value = parseInt(args[0]);
+      modifiers.push({ key: 'input', value: value });
+    }
       
-    const diceRolls = dice.roll2d6();
-
-    const modifiers = [{name: modifierName, value: keeper[modifierName]}];
-
-    console.log('modifiers', modifiers);
-  
-    const modifiedRoll = dice.makeOutcomeWithModifierArgs(diceRolls, args);
-
-    const outcomeMessages = movesHelper.createMessages(keeper.FirstName, modifiedRoll.total, moveContext);
+    const outcome = dice.roll(modifiers);
+    const outcomeMessages = movesHelper.createMessages(keeper.FirstName, outcome.total, moveContext);
   
     message.channel.send(outcomeMessages.actionReport);
-    message.channel.send(modifiedRoll.equation);
+    message.channel.send(outcome.equation);
     message.channel.send(outcomeMessages.outcomeReport);
 	}
 };

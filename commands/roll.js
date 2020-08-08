@@ -3,10 +3,14 @@ module.exports = {
 	description: 'roll',
 	execute(message, args) {
     const dice = require('../utils/dice');
+    const modifiers = [];
 
-    const diceRolls = dice.roll2d6();
+    if (!isNaN(args[0])) {
+      const value = parseInt(args[0]);
+      modifiers.push({ key: 'input', value: value });
+    }
 
-    const outcome = dice.makeOutcomeWithModifierArgs(diceRolls, args);
+    const outcome = dice.roll(modifiers);
 
     message.channel.send(`${message.author.username} just rolled a ${outcome.total}`);
     message.channel.send(outcome.equation);
