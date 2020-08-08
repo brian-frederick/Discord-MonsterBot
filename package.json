@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/brian-frederick/Discord-MonsterBot#readme",
   "dependencies": {
+    "aws-sdk": "^2.729.0",
     "discord.js": "^12.2.0"
   }
 }
