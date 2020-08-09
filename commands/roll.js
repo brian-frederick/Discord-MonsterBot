@@ -12,7 +12,7 @@ module.exports = {
 
     const outcome = dice.roll(modifiers);
 
-    message.channel.send(`${message.author.username} just rolled a ${outcome.total}`);
+    message.channel.send(`${message.author.username} just rolled ${outcome.total}`);
     message.channel.send(outcome.equation);
 	}
 };

@@ -1,6 +1,6 @@
 module.exports = {
   name: 'move',
-  aliases: ['ksa', 'uap', 'ho', 'iam', 'ms', 'ps', 'rabs', 'um'],
+  aliases: ['ksa', 'aup', 'ho', 'iam', 'ms', 'ps', 'rabs', 'um'],
 	description: 'move',
 	async execute(message, args, alias) {
     const dice = require('../utils/dice');
@@ -9,7 +9,7 @@ module.exports = {
     const movesHelper = require('../utils/movesHelper');
 
     if (!alias) {
-      message.channel.send('Specify a move such as ksa, uap, ho, iam, ms, ps, rabs, um.');
+      message.channel.send('Specify a move such as ksa (Ki), uap, ho, iam, ms, ps, rabs, um.');
       return;
     }
 
