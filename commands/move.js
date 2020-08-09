@@ -1,5 +1,3 @@
-const { MessageFlags } = require('discord.js');
-
 module.exports = {
   name: 'move',
   aliases: ['ksa', 'uap', 'ho', 'iam', 'ms', 'ps', 'rabs', 'um'],
