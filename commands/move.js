@@ -32,6 +32,6 @@ module.exports = {
   
     message.channel.send(outcomeMessages.actionReport);
     message.channel.send(outcome.equation);
-    message.channel.send(outcomeMessages.outcomeReport);
+    message.channel.send({ embed: outcomeMessages.outcomeReport });
 	}
 };

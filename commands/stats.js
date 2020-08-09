@@ -6,7 +6,7 @@ module.exports = {
 
     const hunter = await ddb.getHunter(message.author.id);
 
-    const exampleEmbed = {
+    const statsEmbed = {
       color: 0x0099ff,
       title: `${hunter.firstName} ${hunter.lastName}`,
       description: `${hunter.type}`,
@@ -39,6 +39,6 @@ module.exports = {
       ],
     };
     
-    message.channel.send({ embed: exampleEmbed });
+    message.channel.send({ embed: statsEmbed });
 	}
 };
