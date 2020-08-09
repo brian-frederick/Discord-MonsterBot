@@ -7,24 +7,24 @@ AWS.config.update({region: 'us-east-1'});
 // Create the DynamoDB service object
 var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
-async function getKeeper(userId) {
+async function getHunter(userId) {
 
   try {
     var params = {
-      TableName: 'monsterbot_keepers',
+      TableName: 'monsterbot_hunters',
       Key: {
-        'UserId': {S: userId }
+        'userId': {S: userId }
       }
     };
 
     var data = await ddb.getItem(params).promise();
-    const keeper = AWS.DynamoDB.Converter.unmarshall(data["Item"]);
-    return keeper;
+    const hunter = AWS.DynamoDB.Converter.unmarshall(data["Item"]);
+    return hunter;
   } 
   catch (error) {
     console.log(error);
   }
 }
 
-module.exports = { getKeeper };
+module.exports = { getHunter };
 

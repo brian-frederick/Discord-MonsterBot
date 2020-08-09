@@ -3,7 +3,7 @@
   const ksa =  {
     name: 'kick some ass',
     action: 'kicked some ass',
-    modifier: 'Tough',
+    modifier: 'tough',
     outcome: {
       success: 'On a 7+, you and whatever you’re fighting inflict harm on each other. The amount of harm is based on the established dangers in the game. That usually means you inflict the harm rating of your weapon and your enemy inflicts their attack’s harm rating on you.',
       high: `On a 10+, choose one extra effect:\n - You gain the advantage: take +1 forward, or give +1 forward to another hunter.\n`

@@ -17,11 +17,11 @@ module.exports = {
 
     const moveContext = moves[alias];
 
-    const keeper = await ddb.getKeeper(message.author.id);
+    const hunter = await ddb.getHunter(message.author.id);
 
     let modifiers = [{
       key: moveContext.modifier, 
-      value: keeper[moveContext.modifier]
+      value: hunter[moveContext.modifier]
     }];
 
     if (!isNaN(args[0])) {
@@ -30,7 +30,7 @@ module.exports = {
     }
       
     const outcome = dice.roll(modifiers);
-    const outcomeMessages = movesHelper.createMessages(keeper.FirstName, outcome.total, moveContext);
+    const outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext);
   
     message.channel.send(outcomeMessages.actionReport);
     message.channel.send(outcome.equation);
