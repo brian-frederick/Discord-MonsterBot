@@ -14,7 +14,7 @@ for (const file of commandFiles) {
 }
 
 client.once('ready', () => {
-	console.log('I\'m a monster raaaarrr!');
+	console.log('starting up! beep boop raaaarrr!');
 });
 
 client.on('message', message => {
