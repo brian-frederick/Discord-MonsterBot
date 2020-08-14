@@ -9,7 +9,7 @@ module.exports = {
     const movesHelper = require('../utils/movesHelper');
 
     if (!alias) {
-      message.channel.send('Specify a move such as ksa (Ki), uap, ho, iam, ms, ps, rabs, um.');
+      message.channel.send('Specify a move such as ksa (Kick Some Ass), aup (Act Under Pressure), ho (help out), iam (Investigate A Mystery), ms (Manipulate Someone), ps (Protect Someone), rabs (Read A Bad Situation), um (Use Magic).');
       return;
     }
 

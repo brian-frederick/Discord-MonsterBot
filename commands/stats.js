@@ -9,34 +9,12 @@ module.exports = {
     const statsEmbed = {
       color: 0x0099ff,
       title: `${hunter.firstName} ${hunter.lastName}`,
-      description: `${hunter.type}`,
-      fields: [
-        {
-          name: 'charm',
-          value: `${hunter.charm}`,
-          inline: true,
-        },
-        {
-          name: 'cool',
-          value: `${hunter.cool}`,
-          inline: true,
-        },
-        {
-          name: 'sharp',
-          value: `${hunter.sharp}`,
-          inline: true,
-        },
-        {
-          name: 'tough',
-          value: `${hunter.tough}`,
-          inline: true,
-        },
-        {
-          name: 'weird',
-          value: `${hunter.weird}`,
-          inline: true,
-        },
-      ],
+      description: `${hunter.type}\n` 
+        + `Charm: ${hunter.charm}\n`
+        + `Cool: ${hunter.cool}\n`
+        + `Sharp: ${hunter.sharp}\n`
+        + `Tough: ${hunter.tough}\n`
+        + `Weird: ${hunter.weird}\n`
     };
     
     message.channel.send({ embed: statsEmbed });
