@@ -8,8 +8,11 @@ module.exports = {
     const moves =  require('../utils/moves');
     const movesHelper = require('../utils/movesHelper');
     const moveContext = require('../content/callRickBayless');
+    const params = require('../utils/params');
 
-    const hunter = await ddb.getHunter(message.author.id);
+    const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
+    const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
+    const hunter = await ddb.getHunter(userIdInQuestion);
 
     const crb = moveContext['crb'];
 

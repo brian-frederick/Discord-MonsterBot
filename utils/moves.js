@@ -170,6 +170,9 @@ const ms = {
       description: `For charming another hunter, it's up to that hunter to decide how badly you offend or annoy them. They mark experience if they decide not to do what you ask. Monsters and minions cannot normally be manipulated.`,
       image: {
         url: 'https://media.giphy.com/media/kDmsG1ei4P1Yc/giphy-downsized.gif'
+      },
+      footer: {
+        text: `XP!`
       }
     },
     success: {
@@ -267,6 +270,9 @@ const um = {
     fail: {
       image: {
         url: 'https://media.giphy.com/media/myuLckXB7OjfGw1gSb/giphy-downsized.gif'
+      },
+      footer: {
+        text: `That experience though...`
       }
     },
     success: {

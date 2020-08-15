@@ -1,3 +1,5 @@
+const { getUserFromMention } = require('../utils/params');
+
 module.exports = {
   name: 'move',
   aliases: ['ksa', 'aup', 'ho', 'iam', 'ms', 'ps', 'rabs', 'um'],
@@ -7,6 +9,7 @@ module.exports = {
     const ddb = require('../utils/dynamodb');
     const moves =  require('../utils/moves');
     const movesHelper = require('../utils/movesHelper');
+    const params = require('../utils/params');
 
     if (!alias) {
       message.channel.send('Specify a move such as ksa (Kick Some Ass), aup (Act Under Pressure), ho (help out), iam (Investigate A Mystery), ms (Manipulate Someone), ps (Protect Someone), rabs (Read A Bad Situation), um (Use Magic).');
@@ -15,7 +18,11 @@ module.exports = {
 
     const moveContext = moves[alias];
 
-    const hunter = await ddb.getHunter(message.author.id);
+    const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
+
+    const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
+
+    const hunter = await ddb.getHunter(userIdInQuestion);
 
     let modifiers = [{
       key: moveContext.modifier, 
