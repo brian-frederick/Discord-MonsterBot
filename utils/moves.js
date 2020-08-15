@@ -167,55 +167,34 @@ const ms = {
   outcome: {
     fail: {
       title: 'On a Failed Manipulate Somone...',
-      fields: [
-        {
-          name: 'For charming a normal person:',
-          value: 'Consequences, if any, are up to the keeper.'
-        },
-        {
-          name: 'For charming another hunter',
-          value: 'It’s up to that hunter to decide how badly you offend or annoy them. They mark experience if they decide not to do what you asked. Monsters and minions cannot normally be manipulated.'
-        }
-      ]
+      description: `For charming another hunter, it's up to that hunter to decide how badly you offend or annoy them. They mark experience if they decide not to do what you ask. Monsters and minions cannot normally be manipulated.`,
+      image: {
+        url: 'https://media.giphy.com/media/kDmsG1ei4P1Yc/giphy-downsized.gif'
+      }
     },
     success: {
       title: 'On a 7-9 Manipulate Somone...',
-      fields: [
-        {
-          name: 'For charming a normal person:',
-          value: 'They’ll do it, but only if you do something for them right now to show that you mean it. If you asked too much, they’ll tell you what, if anything, it would take for them to do it.'
-        },
-        {
-          name: 'For charming another hunter',
-          value: 'They mark experience if they do what you ask.'
-        }
-      ]
+      description: `For charming a normal person:\n`
+        + `They’ll do it, but only if you do something for them right now to show that you mean it. If you asked too much, they’ll tell you what, if anything, it would take for them to do it.\n`
+        + '\n'
+        + `For charming another hunter:\n`
+        + `They mark experience if they do what you ask.`
     },
     high: {
       title: 'On a 10+ Manipulate Someone',
-      fields: [
-        {
-          name: 'For charming a normal person:',
-          value: 'They’ll do it for the reason you gave them. If you asked too much, they’ll tell you the minimum it would take for them to do it (or if there’s no way they’d do it).'
-        },
-        {
-          name: 'For charming another hunter',
-          value: 'If they do what you ask they mark experience and get +1 forward.'
-        }
-      ]
+      description: `For charming a normal person:\n`
+        + `They’ll do it for the reason you gave them. If you asked too much, they’ll tell you the minimum it would take for them to do it (or if there’s no way they’d do it).\n`
+        + '\n'
+        + `For charming another hunter:\n`
+        + `If they do what you ask they mark experience and get +1 forward.`
     },
     advanced: {
       title: 'On a 12+ Manipulate Someone...',
-      fields: [
-        {
-          name: 'For charming a normal person:',
-          value: 'Not only do they do what you want right now, they also become your ally for the rest of the mystery (or, if you do enough for them, permanently).'
-        },
-        {
-          name: 'For charming another hunter',
-          value: 'They must act under pressure to resist your request. If they do what you ask, they mark one experience and take +1 ongoing while doing what you asked.'
-        }
-      ]
+      description: 'For charming a normal person:\n'
+        + `Not only do they do what you want right now, they also become your ally for the rest of the mystery (or, if you do enough for them, permanently).\n`
+        + '\n'
+        + `For charming another hunter:\n`
+        + `They must act under pressure to resist your request. If they do what you ask, they mark one experience and take +1 ongoing while doing what you asked.`
     }
   }
 };
@@ -260,12 +239,12 @@ const rabs = {
       }
     },
     success: {
-      title: 'On a 7-9 Read A Bad Situation, hold 1.',
-      description: `One hold can be spent to ask the following questions:\n` + rabsQuestions 
+      title: 'On a 7-9 Read A Bad Situation...',
+      description: `Hold 1. One hold can be spent to ask the following questions:\n` + rabsQuestions 
     },
     high: {
-      title: 'On a 10+ Read A Bad Situation, hold 3',
-      description: `One hold can be spent to ask the following questions:\n` + rabsQuestions
+      title: 'On a 10+ Read A Bad Situation...',
+      description: `Hold 3. One hold can be spent to ask the following questions:\n` + rabsQuestions
     },
     advanced: {
       title: 'On a 12+ Read A Bad Situation...',
