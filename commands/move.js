@@ -19,9 +19,7 @@ module.exports = {
     const moveContext = moves[alias];
 
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
-
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
-
     const hunter = await ddb.getHunter(userIdInQuestion);
 
     let modifiers = [{

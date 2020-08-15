@@ -26,5 +26,28 @@ async function getHunter(userId) {
   }
 }
 
-module.exports = { getHunter };
+async function updateHunter(userId, UpdateExpression, ExpressionAttributeValues) {
+
+  try {
+    var params = {
+      TableName: 'monsterbot_hunters',
+      Key: {
+        'userId': {S: userId }
+      },
+      UpdateExpression,
+      ExpressionAttributeValues,
+      ReturnValues: "ALL_NEW"
+    };
+  
+    let data = await ddb.updateItem(params).promise();
+    const updatedHunter = AWS.DynamoDB.Converter.unmarshall(data["Attributes"]);
+    return updatedHunter;
+  }
+  catch (error) {
+    console.log(error);
+  }
+  
+}
+
+module.exports = { getHunter, updateHunter };
 
