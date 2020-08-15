@@ -1,21 +1,22 @@
 module.exports = {
-  name: 'mark',
-	description: 'add to experience, harm, or luck',
+  name: 'update',
+	description: 'Update stats like cool, charm, tough, sharp, weird',
 	async execute(message, args) {
     const ddb = require('../utils/dynamodb');
     const params = require('../utils/params');
 
-    const update = params.parseUpdateVital(args);
+    const update = params.parseUpdateProperty(args);
 
     if (!update) {
-      message.channel.send('You must include a vital sign (experience, harm, or luck) to mark.');
+      message.channel.send('You must include a stat like cool, charm, tough, sharp, or weird to mark.');
+      return;
     }
 
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
     
     // dynamodb properties
-    const UpdateExpression = `set ${update.key} = ${update.key} + :val`
+    const UpdateExpression = `set ${update.key} = :val`
     const ExpressionAttributeValues = {
       ":val": { "N": update.value.toString() }
     };
@@ -24,9 +25,10 @@ module.exports = {
 
     if (!updatedHunter) {
       message.channel.send('Something has gone wrong! Help!');
+      return;
     }
 
-    message.channel.send(`marked ${update.key} plus ${update.value}.`);
+    message.channel.send(`updated ${update.key} to ${update.value}.`);
 
     const statsEmbed = {
       color: 0x0099ff,

@@ -2,7 +2,7 @@ function checkAllArgs(args, check) {
   
   for (let i = 0; i < args.length; i++) {
     let result = check(args[i]);
-    if (result) {
+    if (result || result === 0) {
       return result;
     }
   }
@@ -10,8 +10,8 @@ function checkAllArgs(args, check) {
   return;
 }
 
-function parseUpdateProperty(args) {
-  const key = checkAllArgs(args, parseHunterProperty);
+function parseUpdateVital(args) {
+  const key = checkAllArgs(args, parseHunterVital);
 
   if (!key) {
     return;
@@ -26,10 +26,48 @@ function parseUpdateProperty(args) {
 
 }
 
+function parseUpdateProperty(args) {
+  const key = checkAllArgs(args, parseHunterProperty);
+
+  if (!key) {
+    return;
+  }
+
+  const value = checkAllArgs(args, parseNumber);
+
+  if (!value && value !== 0 ) {
+    return;
+  }
+
+  return { key, value: value };
+
+}
+
 function parseNumber(arg) {
   if (!isNaN(arg)) {
-    return parseInt(arg);
+    const val = parseInt(arg);
+    return val;
   }
+
+  return;
+}
+
+function parseHunterVital(arg) {
+  const hunterProperties = [
+    'experience',
+    'harm',
+    'luck',
+  ];
+
+  if (hunterProperties.includes(arg)) {
+    return arg;
+  }
+
+  if (arg === 'xp') {
+    return 'experience';
+  }
+
+  return;
 }
 
 function parseHunterProperty(arg) {
@@ -37,6 +75,11 @@ function parseHunterProperty(arg) {
     'experience',
     'harm',
     'luck',
+    'charm',
+    'cool',
+    'sharp',
+    'tough',
+    'weird'
   ];
 
   if (hunterProperties.includes(arg)) {
@@ -66,4 +109,4 @@ function parseUserIdFromMentionParam(arg) {
   return;
 }
 
-module.exports = { checkAllArgs, parseUserIdFromMentionParam, parseUpdateProperty };
+module.exports = { checkAllArgs, parseUserIdFromMentionParam, parseUpdateVital, parseUpdateProperty };
