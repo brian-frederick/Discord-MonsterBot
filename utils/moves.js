@@ -60,8 +60,13 @@ const ksa =  {
   modifier: 'tough',
   outcome: {
     fail: {
+      title: 'On a miss...',
+      description: 'When a hunter misses on kick some ass, they’re usually going to be in a lot of trouble. Keeper doesn’t always have to be inflict harm as established. Sometimes other moves can apply too: maybe the hunter gets captured, or the monster gets a chance to flee the fight.',
       image: {
         url: 'https://media.giphy.com/media/nKN7E76a27Uek/giphy.gif'
+      },
+      footer: {
+        text: `Shut your eyes and think of the Experience you've gained.`
       }
     },
     success: {
@@ -91,8 +96,13 @@ const aup = {
   modifier: 'cool',
   outcome: {
     fail: {
+      title: 'On a miss...',
+      description: 'The pressure has overwhelmed the hunter.',
       image: {
-        url: 'https://media.giphy.com/media/Dc1w8y69enroY/giphy.gif'
+        url: 'https://media.giphy.com/media/KHJw9NRFDMom487qyo/giphy-downsized.gif'
+      },
+      footer: {
+        text: `What a rich Experience.`
       }
     },
     success: {
@@ -116,8 +126,13 @@ const ho = {
   modifier: 'cool',
   outcome: {
     fail: {
+      title: 'On a miss...',
+      description: 'The help does no good and the helper exposes themselves to trouble or danger. This could be the same as the danger of the move being helped, or something else entirely.',
       image: {
         url: 'https://media.giphy.com/media/11StaZ9Lj74oCY/giphy.gif'
+      },
+      footer: {
+        text: `You're the proud owner of one new Experience point`
       }
     },
     success: {
@@ -141,8 +156,13 @@ const iam = {
   modifier: 'sharp',
   outcome: {
     fail: {
+      title: 'On a miss...',
+      description: 'Misses for this move lend themselves to trouble with normal people (e.g. annoying the witness; being caught stealing evidence, etc) or giving away information to their enemies (e.g. the monster or minions hear about questions being asked; the hunters are observed in their evidence collection; etc).',
       image: {
         url: 'https://media.giphy.com/media/10hO9c6zalcju/giphy.gif'
+      },
+      footer: {
+        text: `Mark Experience.`
       }
     },
     success: {
@@ -167,7 +187,7 @@ const ms = {
   outcome: {
     fail: {
       title: 'On a Failed Manipulate Somone...',
-      description: `For charming another hunter, it's up to that hunter to decide how badly you offend or annoy them. They mark experience if they decide not to do what you ask. Monsters and minions cannot normally be manipulated.`,
+      description: `Misses on this move naturally lead to offending the target, or the hunter coming across as obtuse or annoying. When the move isused on the other hunters, one of these results will probably happen naturally. For misses with bystanders, the target could see through a disguise, or refuse to believe a critical lie (or truth!). Look at the threat type for the character (or pick one for them right now) andFor charming another hunter, it's up to that hunter to decide how badly you offend or annoy them. They mark experience if they decide not to do what you ask.`,
       image: {
         url: 'https://media.giphy.com/media/kDmsG1ei4P1Yc/giphy-downsized.gif'
       },
@@ -208,8 +228,13 @@ const ps = {
   modifier: 'tough',
   outcome: {
     fail: {
+      title: 'On a miss...',
+      description: 'Missing a protect someone roll is very bad. In general, harm to both the original victim and the hunter is a good choice. Things could be even worse, e.g. the target might be captured as well. As with kick some ass, when things go bad here, they go really bad. Feel free to inflict harm as established and follow up with a hard move.',
       image: {
         url: 'https://media.giphy.com/media/b5XRfyjS2xva0/giphy.gif'
+      },
+      footer: {
+        text: `Experience!`
       }
     },
     success: {
@@ -237,8 +262,13 @@ const rabs = {
   modifier: 'sharp',
   outcome: {
     fail: {
+      title: 'On a miss...',
+      description: 'Misses on reading a bad situation lend themselves to you turning the move back on the hunter —ask them some of the questions on behalf of whatever enemies are present, and then have the enemies act on those answers. Misses can also give you a chance to put the hunters into danger -for example, they just failed to notice the ambush they’re walking into.',
       image: {
         url: 'https://media.giphy.com/media/UXSB8HYbpLQNq/giphy.gif'
+      },
+      footer: {
+        text: `That Experience though...`
       }
     },
     success: {
@@ -268,11 +298,13 @@ const um = {
   modifier: 'weird',
   outcome: {
     fail: {
+      title: 'On a miss...',
+      description: 'On a miss using magic, keeper makes as hard a move as they like: anything can happen when magic goes wrong. Reversing the intended effect of the spell is an option, so that the exact opposite of what the hunter wanted happens. Keeper can also go for off-the-wall weirdness: portals to other dimensions; angry spirits converging on the hunter; or changes to the laws of physics around the hunter—that sort of thing.',
       image: {
         url: 'https://media.giphy.com/media/myuLckXB7OjfGw1gSb/giphy-downsized.gif'
       },
       footer: {
-        text: `That experience though...`
+        text: `The real magic is the friends we made along the way. Mark Experience.`
       }
     },
     success: {

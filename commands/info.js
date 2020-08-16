@@ -56,7 +56,7 @@ module.exports = {
     if (moveContext.outcome.fail && moveContext.outcome.fail.description) {
       moveEmbed.fields.push(
         {
-          name: 'On a failure...',
+          name: 'On a miss...',
           value: moveContext.outcome.fail.description
         }
       );

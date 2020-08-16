@@ -3,7 +3,7 @@ function createMessages(name, total, moveContext) {
 
   if (total < 7) {
     return {
-      actionReport: `Yikes. ${name} just failed to ${moveContext.name} with a roll of ${total}.`,
+      actionReport: `Yikes. ${name} just missed on a ${moveContext.name} with a roll of ${total}.`,
       outcomeReport: moveContext.outcome.fail,
     }
   }
