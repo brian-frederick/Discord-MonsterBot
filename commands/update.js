@@ -4,6 +4,7 @@ module.exports = {
 	async execute(message, args) {
     const ddb = require('../utils/dynamodb');
     const params = require('../utils/params');
+    const hunterHelper = require('../utils/hunter');
 
     const update = params.parseUpdateProperty(args);
 
@@ -30,22 +31,8 @@ module.exports = {
 
     message.channel.send(`updated ${update.key} to ${update.value}.`);
 
-    const statsEmbed = {
-      color: 0x0099ff,
-      title: `${updatedHunter.firstName} ${updatedHunter.lastName}`,
-      description: `${updatedHunter.type}\n`,
-      fields: [
-        {
-          name: `harm: ${updatedHunter.harm} luck: ${updatedHunter.luck} xp: ${updatedHunter.experience}`,
-          value: `Charm: ${updatedHunter.charm}\n`
-          + `Cool: ${updatedHunter.cool}\n`
-          + `Sharp: ${updatedHunter.sharp}\n`
-          + `Tough: ${updatedHunter.tough}\n`
-          + `Weird: ${updatedHunter.weird}\n`, 
-        }
-      ]
-    };
+    const statSheet = hunterHelper.statsEmbed(updatedHunter);
     
-    message.channel.send({ embed: statsEmbed });
+    message.channel.send({ embed: statSheet });
 	}
 };
