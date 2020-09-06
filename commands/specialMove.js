@@ -6,6 +6,7 @@ const movesHelper = require('../utils/movesHelper');
 const params = require('../utils/params');
 const move = require('./move');
 const specialMovesHelper = require('../utils/specialMovesHelper');
+const _ = require('lodash');
 
 module.exports = {
   name: 'specialmove',
@@ -20,14 +21,9 @@ module.exports = {
     }
 
     const moveContext = await ddb.getMove(moveKey);
-    if (!moveContext) {
+    if (!moveContext || _.isEmpty(moveContext)) {
       message.channel.send('BLORP whimper whimper. Could not find a move by that name.');
       return;
-    }
-
-    if (moveContext.type === 'simple') {
-      const simpleEmbed = specialMovesHelper.createSimpleEmbed(moveContext);
-      message.channel.send(simpleEmbed);
     }
 
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
@@ -35,6 +31,12 @@ module.exports = {
     const hunter = await ddb.getHunter(userIdInQuestion);
     if (!hunter) {
       message.channel.send('KRRRR-- hoooowwwllll! Could not find a hunter to use.');
+      return;
+    }
+
+    if (moveContext.type === 'simple') {
+      const simpleEmbed = specialMovesHelper.createSimpleEmbed(hunter.firstName, moveContext);
+      message.channel.send(simpleEmbed);
       return;
     }
 

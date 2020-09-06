@@ -1,8 +1,8 @@
-function createSimpleEmbed(move) {
+function createSimpleEmbed(name, move) {
   
   return {
     embed: {
-      title: move.name,
+      title: `${name} just used ${move.name}.`,
       description: move.description,
     }    
   };
