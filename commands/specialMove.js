@@ -75,9 +75,9 @@ module.exports = {
     } else {
       outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext);
     }
-
-    message.channel.send(outcomeMessages.actionReport);
+    
     message.channel.send(outcome.equation);
+    message.channel.send(outcomeMessages.actionReport);
     message.channel.send({ embed: outcomeMessages.outcomeReport });
 	}
 };

@@ -2,13 +2,19 @@ function createMessages(name, total, moveContext) {
   
   if (total < 7) {
     return {
-      actionReport: `Yikes. ${name} just missed on ${moveContext.name} with a roll of ${total}.`,
+      actionReport: { 
+        embed: {
+          title: 'Yikes.', 
+          description: `${name} just missed on ${moveContext.name} with a roll of ${total}.`,
+          image: moveContext.failGif ? moveContext.failGif : null,
+        }
+      },
       outcomeReport: moveContext.outcome.fail,
     }
   }
   else if (total < 10) {
     return {
-      actionReport: `${name} just rolled a ${total} on ${moveContext.name}.`,
+      actionReport: `${name} just rolled ${total} on ${moveContext.name}.`,
       outcomeReport: moveContext.outcome.success,
     };
   }

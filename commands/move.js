@@ -35,9 +35,9 @@ module.exports = {
       
     const outcome = dice.roll(modifiers);
     const outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext);
-  
+
+    message.channel.send(`${hunter.firstName} rolls ${outcome.equation}`);
     message.channel.send(outcomeMessages.actionReport);
-    message.channel.send(outcome.equation);
     message.channel.send({ embed: outcomeMessages.outcomeReport });
 	}
 };
