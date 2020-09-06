@@ -14,10 +14,10 @@ module.exports = {
     };
   
     // add description
-    if (moveContext.description && moveContext.modifier) {
-      moveEmbed.description = `modifier: ${moveContext.modifier} \n${moveContext.description}`
-    } else if (moveContext.modifier) {
-      moveEmbed.description = `modifier: ${moveContext.modifier}`;
+    if (moveContext.description && moveContext.modifiers) {
+      moveEmbed.description = `modifier: ${moveContext.modifiers.property} \n${moveContext.description}`
+    } else if (moveContext.modifiers) {
+      moveEmbed.description = `modifier: ${moveContext.modifiers[0].property}`;
     } else if (moveContext.description) {
       moveEmbed.description = moveContext.description;
     }

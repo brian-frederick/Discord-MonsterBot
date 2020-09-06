@@ -52,6 +52,10 @@ function parseNumber(arg) {
   return;
 }
 
+function parseAllForNumber(args) {
+  return checkAllArgs(args, parseNumber);
+}
+
 function parseHunterVital(arg) {
   const hunterProperties = [
     'experience',
@@ -109,4 +113,25 @@ function parseUserIdFromMentionParam(arg) {
   return;
 }
 
-module.exports = { checkAllArgs, parseUserIdFromMentionParam, parseUpdateVital, parseUpdateProperty };
+function parseSpecialMoveKey(args) {
+  
+  const possibleMove = (arg) => {
+    const mightBe = 
+      !/[^a-zA-Z]/.test(arg) && 
+      arg.length < 6 &&
+      arg.length > 1;
+
+      return mightBe ? arg : null;
+  };
+
+  return checkAllArgs(args, possibleMove);
+}
+
+module.exports = { 
+  checkAllArgs,
+  parseUserIdFromMentionParam,
+  parseUpdateVital,
+  parseUpdateProperty,
+  parseSpecialMoveKey,
+  parseAllForNumber,
+};

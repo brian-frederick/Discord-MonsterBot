@@ -1,5 +1,4 @@
 function statsEmbed(hunter) {
-  console.log('creating template for ', hunter);
   return {
     color: 0x0099ff,
     title: `${hunter.firstName} ${hunter.lastName}`,

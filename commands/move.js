@@ -22,10 +22,11 @@ module.exports = {
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
     const hunter = await ddb.getHunter(userIdInQuestion);
 
-    let modifiers = [{
-      key: moveContext.modifier, 
-      value: hunter[moveContext.modifier]
-    }];
+    const modifiers = []
+
+    moveContext.modifiers.forEach(mod => {
+      modifiers.push({ key: mod.property, value: hunter[mod.property] })
+    });
 
     if (!isNaN(args[0])) {
       const value = parseInt(args[0]);

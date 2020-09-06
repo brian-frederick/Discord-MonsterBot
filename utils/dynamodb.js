@@ -7,11 +7,14 @@ AWS.config.update({region: 'us-east-1'});
 // Create the DynamoDB service object
 var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
+const HUNTER_TABLE = 'monsterbot_hunters';
+const MOVES_TABLE = 'monsterbot_special_moves';
+
 async function getHunter(userId) {
 
   try {
     var params = {
-      TableName: 'monsterbot_hunters',
+      TableName: HUNTER_TABLE,
       Key: {
         'userId': {S: userId }
       }
@@ -30,7 +33,7 @@ async function updateHunter(userId, UpdateExpression, ExpressionAttributeValues)
 
   try {
     var params = {
-      TableName: 'monsterbot_hunters',
+      TableName: HUNTER_TABLE,
       Key: {
         'userId': {S: userId }
       },
@@ -46,8 +49,26 @@ async function updateHunter(userId, UpdateExpression, ExpressionAttributeValues)
   catch (error) {
     console.log(error);
   }
-  
 }
 
-module.exports = { getHunter, updateHunter };
+async function getMove(moveKey) {
+  try {
+    const params = {
+      TableName: MOVES_TABLE,
+      Key: {
+        'key': {S: moveKey }
+      }
+    };
+
+    var data = await ddb.getItem(params).promise();
+    const move = AWS.DynamoDB.Converter.unmarshall(data["Item"]);
+    return move;
+  } 
+  catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+module.exports = { getHunter, updateHunter, getMove };
 

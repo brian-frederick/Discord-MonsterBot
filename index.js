@@ -42,6 +42,12 @@ client.on('message', message => {
 	}
 });
 
-
 // login to Discord with your app's token
-client.login(token);
+
+try {
+  console.log('attempting to login with ', token);
+  client.login(token);
+} catch (error) {
+  console.log(error);
+  console.error(error);
+}

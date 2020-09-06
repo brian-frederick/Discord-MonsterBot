@@ -56,8 +56,7 @@ const umFields = [
 
 const ksa =  {
   name: 'kick some ass',
-  action: 'kicked some ass',
-  modifier: 'tough',
+  modifiers: [{ type: 'property', plus: true, property: 'tough' }],
   outcome: {
     fail: {
       title: 'On a miss...',
@@ -92,8 +91,7 @@ const ksa =  {
 
 const aup = {
   name: 'act under pressure',
-  action: 'acted under pressure',
-  modifier: 'cool',
+  modifiers: [{ type: 'property', plus: true, property: 'cool' }],
   outcome: {
     fail: {
       title: 'On a miss...',
@@ -122,8 +120,7 @@ const aup = {
 
 const ho = {
   name: 'help out',
-  action: 'helped out',
-  modifier: 'cool',
+  modifiers: [{ type: 'property', plus: true, property: 'cool' }],
   outcome: {
     fail: {
       title: 'On a miss...',
@@ -152,8 +149,7 @@ const ho = {
 
 const iam = {
   name: 'investigate a mystery',
-  action: 'investigated a mystery',
-  modifier: 'sharp',
+  modifiers: [{ type: 'property', plus: true, property: 'sharp' }],
   outcome: {
     fail: {
       title: 'On a miss...',
@@ -182,8 +178,7 @@ const iam = {
 
 const ms = {
   name: 'manipulate someone',
-  action: 'manipulated someone',
-  modifier: 'charm',
+  modifiers: [{ type: 'property', plus: true, property: 'charm' }],
   outcome: {
     fail: {
       title: 'On a Failed Manipulate Somone...',
@@ -224,8 +219,7 @@ const ms = {
 
 const ps = {
   name: 'protect someone',
-  action: 'protected someone',
-  modifier: 'tough',
+  modifiers: [{ type: 'property', plus: true, property: 'tough' }],
   outcome: {
     fail: {
       title: 'On a miss...',
@@ -258,8 +252,7 @@ const ps = {
 
 const rabs = {
   name: 'read a bad situation',
-  action: 'read a bad situation',
-  modifier: 'sharp',
+  modifiers: [{ type: 'property', plus: true, property: 'sharp' }],
   outcome: {
     fail: {
       title: 'On a miss...',
@@ -294,8 +287,7 @@ const rabs = {
 
 const um = {
   name: 'use magic',
-  action: 'used magic',
-  modifier: 'weird',
+  modifiers: [{ type: 'property', plus: true, property: 'weird' }],
   outcome: {
     fail: {
       title: 'On a miss...',
