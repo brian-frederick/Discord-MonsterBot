@@ -27,7 +27,7 @@ function createMessages(name, total, moveContext) {
   else {
     return {
       actionReport: `Wow! ${name} just crushed ${moveContext.name} with a roll of ${total}!`,
-      outcomeReport: moveContext.outcome.advanced,  
+      outcomeReport: moveContext.outcome.advanced,
     };
   }
 

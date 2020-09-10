@@ -17,7 +17,7 @@ module.exports = {
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
     
     // dynamodb properties
-    const UpdateExpression = `set ${update.key} = :val`
+    const UpdateExpression = `set ${update.key} = :val`;
     const ExpressionAttributeValues = {
       ":val": { "N": update.value.toString() }
     };

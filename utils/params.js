@@ -74,6 +74,51 @@ function parseHunterVital(arg) {
   return;
 }
 
+const addInvTypes = [
+  'add',
+  'plus',
+  'put',
+  '+'
+];
+
+const removeInvTypes = [
+  'remove',
+  'minus',
+  'subtract',
+  'sub',
+  'minus',
+  'take',
+  '-'
+];
+
+function parseInventoryUpdate(args) {
+
+  const type = checkAllArgs(args, parseInventoryUpdateType);
+
+  // our item could be more than one word so we have to reconstruct.
+  const nonTypeArgs = args.filter(arg => 
+    !removeInvTypes.includes(arg) &&
+    !addInvTypes.includes(arg));
+    
+  const item = nonTypeArgs.join(' ');
+
+  if (type && item) {
+    return { type, item };
+  }
+
+  return null;
+
+}
+
+function parseInventoryUpdateType(arg) {
+
+  if (addInvTypes.includes(arg)) return 'add';
+
+  if (removeInvTypes.includes(arg)) return 'remove';
+
+  return;
+}
+
 function parseHunterProperty(arg) {
   const hunterProperties = [
     'experience',
@@ -134,4 +179,5 @@ module.exports = {
   parseUpdateProperty,
   parseSpecialMoveKey,
   parseAllForNumber,
+  parseInventoryUpdate,
 };
