@@ -1,4 +1,4 @@
-const { getUserFromMention } = require('../utils/params');
+const _ = require('lodash');
 const dice = require('../utils/dice');
 const ddb = require('../utils/dynamodb');
 const moves =  require('../utils/moves');
@@ -6,7 +6,7 @@ const movesHelper = require('../utils/movesHelper');
 const params = require('../utils/params');
 const move = require('./move');
 const specialMovesHelper = require('../utils/specialMovesHelper');
-const _ = require('lodash');
+const { someHunter } = require('../utils/hunter');
 
 module.exports = {
   name: 'specialmove',
@@ -28,10 +28,10 @@ module.exports = {
 
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
-    const hunter = await ddb.getHunter(userIdInQuestion);
-    if (!hunter) {
-      message.channel.send('KRRRR-- hoooowwwllll! Could not find a hunter to use.');
-      return;
+    let hunter = await ddb.getHunter(userIdInQuestion);
+    if (_.isEmpty(hunter)) {
+      message.channel.send('Could not find your hunter. Rolling with some hunter.')
+      hunter = someHunter;
     }
 
     if (moveContext.type === 'simple') {

@@ -14,7 +14,10 @@ module.exports = {
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
     const hunter = await ddb.getHunter(userIdInQuestion);
-    // check for no hunter
+    if (_.isEmpty(hunter)) {
+      message.channel.send("Could not find your hunter!");
+      return;
+    }
     
     const update = params.parseInventoryUpdate(args);
     const inventory = hunter.inventory ? hunter.inventory : [];

@@ -1,3 +1,19 @@
+const someHunter = {
+  "charm": 0,
+  "cool": 0,
+  "experience": 0,
+  "firstName": "Some Hunter",
+  "harm": 0,
+  "inventory": [],
+  "lastName": "",
+  "luck": 0,
+  "sharp": 0,
+  "tough": 0,
+  "type": "Other",
+  "userId": "1",
+  "weird": 0
+}
+
 function statsEmbed(hunter) {
   return {
     color: 0x0099ff,
@@ -16,4 +32,4 @@ function statsEmbed(hunter) {
   }
 };
 
-module.exports = { statsEmbed };
+module.exports = { statsEmbed, someHunter };

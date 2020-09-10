@@ -1,18 +1,25 @@
+const _ = require('lodash');
+const dice = require('../utils/dice');
+const ddb = require('../utils/dynamodb');
+const moves =  require('../utils/moves');
+const movesHelper = require('../utils/movesHelper');
+const moveContext = require('../content/callRickBayless');
+const params = require('../utils/params');
+const { someHunter } = require('../utils/hunter');
+
 module.exports = {
   name: 'callrickbayless',
   aliases: ['crb', 'rickroll'],
 	description: `A janky custom move for chris mathew'\ns janky move mechanic.`,
 	async execute(message, args, alias) {
-    const dice = require('../utils/dice');
-    const ddb = require('../utils/dynamodb');
-    const moves =  require('../utils/moves');
-    const movesHelper = require('../utils/movesHelper');
-    const moveContext = require('../content/callRickBayless');
-    const params = require('../utils/params');
 
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
-    const hunter = await ddb.getHunter(userIdInQuestion);
+    let hunter = await ddb.getHunter(userIdInQuestion);
+    if (_.isEmpty(hunter)) {
+      message.channel.send('Could not find your hunter. Rolling with some hunter.');
+      hunter = someHunter;
+    }
 
     const crb = moveContext['crb'];
 
