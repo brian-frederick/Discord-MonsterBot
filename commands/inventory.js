@@ -1,9 +1,21 @@
 const { DynamoDB } = require('aws-sdk');
+const { tag } = require('../content/commonParams');
 
 module.exports = {
   name: 'inventory',
   aliases: ['inv'],
-	description: 'Update hunter inventory',
+  description: 'Provides information on or updates hunter inventory.',
+  params: [
+    { 
+      name: '- Item (text)', 
+      value: `Item to add or remove. Cannot include any transaction words such as 'add'. If no item is included, the hunter's existing inventory will be shown.`
+    },
+    tag,
+    { 
+      name: '- Transaction (add/remove)', 
+      value: `Add or remove an item from inventory. Can also use the words 'plus', 'put', '+', '-', 'minus', 'subtract', 'sub', or 'take'.`
+    }
+  ],
 	async execute(message, args) {
     const _ = require('lodash');
     const ddb = require('../utils/dynamodb');

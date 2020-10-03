@@ -1,6 +1,17 @@
+const { tag } = require('../content/commonParams');
+
 module.exports = {
   name: 'update',
-	description: 'Update stats like cool, charm, tough, sharp, weird',
+  description: 'Updates hunter stats like cool, charm, tough, sharp, weird.',
+  params: [
+    { name: `- Property ('cool', 'charm', 'experience', 'harm', 'luck', 'tough', 'sharp', or 'weird') (required)`,
+    value: 'The hunter property to be updated.'}, 
+    tag,
+    {
+      name: '- Modifier (number) (required)',
+      value: 'A positive or negative number which will replace the existing value of the given property.'
+    }
+  ],
 	async execute(message, args) {
     const ddb = require('../utils/dynamodb');
     const params = require('../utils/params');
@@ -9,7 +20,7 @@ module.exports = {
     const update = params.parseUpdateProperty(args);
 
     if (!update) {
-      message.channel.send('You must include a stat like cool, charm, tough, sharp, or weird to mark.');
+      message.channel.send('You must include a stat like cool, charm, tough, sharp, or weird to update.');
       return;
     }
 

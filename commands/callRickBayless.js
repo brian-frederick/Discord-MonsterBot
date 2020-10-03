@@ -1,16 +1,18 @@
 const _ = require('lodash');
 const dice = require('../utils/dice');
 const ddb = require('../utils/dynamodb');
-const moves =  require('../utils/moves');
+const moves = require('../utils/moves');
 const movesHelper = require('../utils/movesHelper');
 const moveContext = require('../content/callRickBayless');
 const params = require('../utils/params');
 const { someHunter } = require('../utils/hunter');
+const { modifier, tag } = require('../content/commonParams');
 
 module.exports = {
   name: 'callrickbayless',
   aliases: ['crb', 'rickroll'],
-	description: `A janky custom move for chris mathew'\ns janky move mechanic.`,
+  description: `A janky custom move for chris mathew's janky move mechanic.`,
+  params: [modifier, tag],
 	async execute(message, args, alias) {
 
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);

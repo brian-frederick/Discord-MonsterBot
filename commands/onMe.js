@@ -1,6 +1,6 @@
 module.exports = {
 	name: 'onme',
-	description: 'on me',
+	description: 'An admin command to log info about the invoker.',
 	execute(message) {
     const { BOT_SPEAK } = require('../motw.json');
 

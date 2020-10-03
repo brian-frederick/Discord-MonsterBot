@@ -83,7 +83,6 @@ const addInvTypes = [
 
 const removeInvTypes = [
   'remove',
-  'minus',
   'subtract',
   'sub',
   'minus',

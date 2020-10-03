@@ -1,6 +1,14 @@
+const { tag, modifier } = require('../content/commonParams');
+
+
 module.exports = {
   name: 'mark',
-	description: 'add to experience, harm, or luck',
+  description: 'Adds to experience, harm, or luck. If no number is given, defaults to adding 1.',
+  params: [
+    modifier,
+    tag,  
+    { name: `- Vital ('experience', 'harm', or 'luck') (required)`, value: 'A hunter vital to increment by the corresponding modifier.'}
+  ],
 	async execute(message, args) {
     const ddb = require('../utils/dynamodb');
     const params = require('../utils/params');

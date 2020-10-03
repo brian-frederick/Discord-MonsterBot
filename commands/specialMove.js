@@ -7,11 +7,13 @@ const params = require('../utils/params');
 const move = require('./move');
 const specialMovesHelper = require('../utils/specialMovesHelper');
 const { someHunter } = require('../utils/hunter');
+const { tag, modifier } = require('../content/commonParams');
 
 module.exports = {
   name: 'specialmove',
   aliases: ['secretmenu', 'sm', '!'],
-	description: 'special moves',
+  description: 'Invokes special moves.',
+  params: [modifier, tag],
 	async execute(message, args) {
 
     const moveKey = params.parseSpecialMoveKey(args);

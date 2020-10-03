@@ -1,8 +1,10 @@
 const _ = require('lodash');
+const { tag } = require('../content/commonParams');
 
 module.exports = {
   name: 'stats',
-	description: 'stats',
+  description: 'Provides hunter stats.',
+  params: [tag],
 	async execute(message, args) {
     const ddb = require('../utils/dynamodb');
     const params = require('../utils/params');

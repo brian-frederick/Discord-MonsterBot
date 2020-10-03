@@ -1,8 +1,11 @@
+const dice = require('../utils/dice');
+const { modifier } = require('../content/commonParams');
+
 module.exports = {
 	name: 'roll',
-	description: 'roll',
+  description: 'Just rolls two d6.',
+  params: [modifier],
 	execute(message, args) {
-    const dice = require('../utils/dice');
     const modifiers = [];
 
     if (!isNaN(args[0])) {

@@ -6,11 +6,17 @@ const movesHelper = require('../utils/movesHelper');
 const params = require('../utils/params');
 const { getUserFromMention } = require('../utils/params');
 const { someHunter } = require('../utils/hunter');
+const { tag, modifier } = require('../content/commonParams');
 
 module.exports = {
   name: 'move',
   aliases: ['ksa', 'aup', 'ho', 'iam', 'ms', 'ps', 'rabs', 'um'],
-	description: 'move',
+  description: `Execute all basic moves. In this unique case, the command 'move' should not be used at all. Just the move key or alias.
+    These include 'ksa', 'aup', 'ho', 'iam', 'ms', 'ps', 'rabs', or 'um'.`,
+  params: [
+    modifier,
+    tag,
+  ],
 	async execute(message, args, alias) {
 
     if (!alias) {

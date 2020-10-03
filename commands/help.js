@@ -1,10 +1,51 @@
+const Discord = require('discord.js');
+const fs = require('fs');
+
+
 module.exports = {
 	name: 'help',
-	description: 'help',
-	execute(message) {
-    const { AVAILABLE_COMMANDS, AVAILABLE_MOVES } = require('../motw.json');
+  description: 'Provides details on all commands.',
+  params: [{name: '- Command (text)', value: 'Name of command you would like details for.'}],
+	execute(message, args) {
+    let commands = [];
+    let embed = new Discord.MessageEmbed();
+
+    const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
     
-    message.channel.send(AVAILABLE_COMMANDS);
-    message.channel.send(AVAILABLE_MOVES);
+    for (const file of commandFiles) {
+      const command = require(`./${file}`);
+      commands.push(command);
+    }
+
+    if (args.length > 0) {
+      const command = commands.find( com => 
+        com.name === args[0].toLowerCase() ||
+        (com.aliases && com.aliases.includes(args[0].toLowerCase()))
+      );
+      
+      if (!command) {
+        message.channel.send(`Please enter a valid command name for details. Could not find command with name ${args[0]}.`);
+        return;
+      }
+
+      embed.setTitle(command.name.toUpperCase());
+      embed.setDescription(command.description);
+
+      if (command.params) {
+        embed.addFields(command.params);
+      }
+
+      if (command.aliases) {
+        embed.setFooter(`AKA ${command.aliases}.`);
+      }
+
+    } else {
+      embed.setTitle('Commands');
+      commands.forEach(com => {
+        embed.fields.push({ name: com.name, value: com.description })
+      });
+    }
+
+    message.channel.send(embed);
 	},
 };

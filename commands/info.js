@@ -1,6 +1,7 @@
 module.exports = {
   name: 'info',
-	description: 'info on moves',
+  description: 'Provides info on all basic moves.',
+  params: [{name: "Move (text) (required)", value: "Move name for which you would like info."}],
 	async execute(message, args) {
     const moves =  require('../utils/moves');
 
