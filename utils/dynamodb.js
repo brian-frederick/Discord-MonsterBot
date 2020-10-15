@@ -9,6 +9,7 @@ var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
 const HUNTER_TABLE = 'monsterbot_hunters';
 const MOVES_TABLE = 'monsterbot_special_moves';
+const RECAPS_TABLE = 'monsterbot_session_recaps';
 
 async function getHunter(userId) {
 
@@ -70,5 +71,22 @@ async function getMove(moveKey) {
   }
 }
 
-module.exports = { getHunter, updateHunter, getMove };
+async function createRecap(recap) {
+  const item = AWS.DynamoDB.Converter.marshall(recap);
+  var params = {
+    TableName: RECAPS_TABLE,
+    Item: item
+  };
+  
+  await ddb.putItem(params, function(err, data) {
+    if (err) {
+      console.log(err, err.stack);
+      return;
+    } 
+  });
+
+  return recap;
+}
+
+module.exports = { getHunter, updateHunter, getMove, createRecap };
 
