@@ -88,5 +88,30 @@ async function createRecap(recap) {
   return recap;
 }
 
-module.exports = { getHunter, updateHunter, getMove, createRecap };
+async function getRecap(guildId) {
+  try {
+    const params = {
+      TableName: RECAPS_TABLE,
+      Limit: 1,
+      KeyConditionExpression: "guildId = :v1",
+      ExpressionAttributeValues: {
+        ":v1": {"S": guildId}
+      },
+      ScanIndexForward: false
+    };
+
+    var data = await ddb.query(params).promise();
+    console.log('data', data);
+    const recaps = data.Items.map(item => AWS.DynamoDB.Converter.unmarshall(item));
+    console.log('recaps', recaps);
+
+    return recaps;
+  }
+  catch (error) {
+    console.log(error);
+    return null;
+  }
+}
+
+module.exports = { getHunter, updateHunter, getMove, createRecap, getRecap };
 

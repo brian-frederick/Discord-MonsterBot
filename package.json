@@ -19,6 +19,7 @@
   "dependencies": {
     "aws-sdk": "^2.729.0",
     "discord.js": "^12.2.0",
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1"
   }
 }
