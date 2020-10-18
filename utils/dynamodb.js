@@ -88,17 +88,20 @@ async function createRecap(recap) {
   return recap;
 }
 
-async function getRecap(guildId) {
+async function getRecap(guildId, getAll) {
   try {
     const params = {
       TableName: RECAPS_TABLE,
-      Limit: 1,
       KeyConditionExpression: "guildId = :v1",
       ExpressionAttributeValues: {
         ":v1": {"S": guildId}
       },
       ScanIndexForward: false
     };
+
+    if (!getAll) {
+      params.Limit = 1;
+    }
 
     var data = await ddb.query(params).promise();
     console.log('data', data);
