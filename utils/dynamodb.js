@@ -88,25 +88,20 @@ async function createRecap(recap) {
   return recap;
 }
 
-async function getRecap(guildId, getAll) {
+async function getRecap(guildId, recordLimit=1) {
   try {
     const params = {
       TableName: RECAPS_TABLE,
       KeyConditionExpression: "guildId = :v1",
+      Limit: recordLimit,
       ExpressionAttributeValues: {
         ":v1": {"S": guildId}
       },
       ScanIndexForward: false
     };
 
-    if (!getAll) {
-      params.Limit = 1;
-    }
-
     var data = await ddb.query(params).promise();
-    console.log('data', data);
     const recaps = data.Items.map(item => AWS.DynamoDB.Converter.unmarshall(item));
-    console.log('recaps', recaps);
 
     return recaps;
   }
