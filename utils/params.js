@@ -95,11 +95,13 @@ function parseInventoryUpdate(args) {
   const type = checkAllArgs(args, parseInventoryUpdateType);
 
   // our item could be more than one word so we have to reconstruct.
-  const nonTypeArgs = args.filter(arg => 
+  const inventoryItemDeconstructed = args.filter(arg => 
     !removeInvTypes.includes(arg) &&
-    !addInvTypes.includes(arg));
+    !addInvTypes.includes(arg) &&
+    !isUserMention(arg)
+  );
     
-  const item = nonTypeArgs.join(' ');
+  const item = inventoryItemDeconstructed.join(' ');
 
   if (type && item) {
     return { type, item };
@@ -156,6 +158,16 @@ function parseUserIdFromMentionParam(arg) {
 
   return;
 }
+
+// be able to check for and remove any mentions
+function isUserMention(arg) {
+  if (arg.startsWith('<@') && arg.endsWith('>')) {
+    return true;
+  }
+  return false;
+}
+
+
 
 function parseSpecialMoveKey(args) {
   
