@@ -40,7 +40,7 @@ module.exports = {
 
     // just get latest
     const recap = recaps[0];
-    const recapDate = moment(recap.timestamp).format("MMMM Do");
+    const recapDate = moment(recap.timestamp).utcOffset(-5).format("MMMM Do");
     let recapEmbed = new Discord.MessageEmbed();
     recapEmbed.setTitle(`On ${recapDate}...`);
     recapEmbed.setDescription(recap.recap);

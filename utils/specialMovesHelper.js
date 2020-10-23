@@ -31,7 +31,7 @@ function createModificationMessages(name, total, moveContext, secondaryContext) 
   else {
     return {
       actionReport: `Wow! ${name} just crushed ${moveContext.name} with a roll of ${total}! ${moveContext.name} modifies ${secondaryContext.name}.`,
-      outcomeReport: { ...secondaryContext.outcome.success, title: `On a 12+... ${moveContext.name}....` },  
+      outcomeReport: { ...secondaryContext.outcome.advanced, title: `On a 12+ ${moveContext.name}....` },  
     };
   }
 

@@ -11,6 +11,23 @@ const HUNTER_TABLE = 'monsterbot_hunters';
 const MOVES_TABLE = 'monsterbot_special_moves';
 const RECAPS_TABLE = 'monsterbot_session_recaps';
 
+async function createHunter(hunter) {
+  const item = AWS.DynamoDB.Converter.marshall(hunter);
+  var params = {
+    TableName: HUNTER_TABLE,
+    Item: item
+  };
+  
+  await ddb.putItem(params, function(err, data) {
+    if (err) {
+      console.log(err, err.stack);
+      return;
+    } 
+  });
+
+  return hunter;
+}
+
 async function getHunter(userId) {
 
   try {
@@ -111,5 +128,5 @@ async function getRecap(guildId, recordLimit=1) {
   }
 }
 
-module.exports = { getHunter, updateHunter, getMove, createRecap, getRecap };
+module.exports = { getHunter, updateHunter, getMove, createRecap, getRecap, createHunter };
 

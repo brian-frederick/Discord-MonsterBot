@@ -46,16 +46,6 @@ module.exports = {
       sessionSummary[q.response] = answer;
     }
 
-    // Assess XP gained
-    if (yesCount > 2) {
-      message.channel.send('Mark 1 Experience!');
-    }
-    else if (yesCount > 0) {
-      message.channel.send('Mark 1 Experience')
-    } else {
-      message.channel.send('No experience this time. :disappointed_relieved:')
-    }
-
     // Create a recap of the session
     let recap = '';
 
@@ -67,6 +57,9 @@ module.exports = {
     let recapCollectionFinalSeconds = await message.channel.awaitMessages(msg => !msg.author.bot, { time: 20000 });  
     recapCollectionFinalSeconds.forEach(msg => recap += `${msg.content} - ${msg.author}\n`);
 
+    await message.channel.send(`I AM OUT OF PATIENCE SEND IT NOW!`);
+    let recapCollectionLastChance = await message.channel.awaitMessages(msg => !msg.author.bot, { time: 5000 });  
+    recapCollectionLastChance.forEach(msg => recap += `${msg.content} - ${msg.author}\n`);
     sessionSummary.recap = recap;
 
     // Add admin fields to summary
@@ -83,5 +76,16 @@ module.exports = {
     }
 
     message.channel.send(`Grrr Bleep Blorp. Your session has ended and your answers are saved.`);
+
+
+    // Assess XP gained
+    if (yesCount > 2) {
+      message.channel.send('Mark 2 Experience!');
+    }
+    else if (yesCount > 0) {
+      message.channel.send('Mark 1 Experience.')
+    } else {
+      message.channel.send('No experience this time. :disappointed_relieved:')
+    }
   }
 };
