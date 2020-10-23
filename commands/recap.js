@@ -1,7 +1,7 @@
 const moment = require('moment');
 const Discord = require('discord.js');
 const ddb = require('../utils/dynamodb');
-const {yesNoQuestions} = require('../utils/recap');
+const {createRecapEmbed, createRecapsEmbed } = require('../utils/recap');
 const params = require('../utils/params');
 
 module.exports = {
@@ -26,31 +26,13 @@ module.exports = {
 
     // see all recaps provided
     if (maybeRecordLimit && maybeRecordLimit > 1) {
-      let recapsEmbed = new Discord.MessageEmbed();
-      recapsEmbed.setTitle('Recaps');
-      
-      const fields = recaps.reverse().map(r => {
-        return {name: moment(r.timestamp).format("MMMM Do"), value: r.recap}
-      });
-      recapsEmbed.addFields(fields);
-
+      const recapsEmbed = createRecapsEmbed(recaps);
       message.channel.send({embed: recapsEmbed});
       return;
     } 
 
     // just get latest
-    const recap = recaps[0];
-    const recapDate = moment(recap.timestamp).utcOffset(-5).format("MMMM Do");
-    let recapEmbed = new Discord.MessageEmbed();
-    recapEmbed.setTitle(`On ${recapDate}...`);
-    recapEmbed.setDescription(recap.recap);
-
-    const fields = yesNoQuestions.map(q => {
-        return { name: q.prompt, value: recap[q.response]}
-    });
-
-    recapEmbed.addFields(fields);
-
+    const recapEmbed = createRecapEmbed(recaps[0]);
     message.channel.send({embed: recapEmbed});
   }
 };

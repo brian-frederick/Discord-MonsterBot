@@ -36,7 +36,7 @@ module.exports = {
       }
 
       if (command.aliases) {
-        embed.setFooter(`AKA ${command.aliases}.`);
+        embed.setFooter(`AKA: ${command.aliases.join(', ')}`);
       }
 
     } else {

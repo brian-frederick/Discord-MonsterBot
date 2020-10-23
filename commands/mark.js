@@ -1,6 +1,5 @@
 const { tag, modifier } = require('../content/commonParams');
 
-
 module.exports = {
   name: 'mark',
   description: 'Adds to experience, harm, or luck. If no number is given, defaults to adding 1.',
@@ -24,7 +23,7 @@ module.exports = {
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;
     
     // dynamodb properties
-    const UpdateExpression = `set ${update.key} = ${update.key} + :val`
+    const UpdateExpression = `set ${update.key} = ${update.key} + :val`;
     const ExpressionAttributeValues = {
       ":val": { "N": update.value.toString() }
     };
