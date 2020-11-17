@@ -1,6 +1,21 @@
-function createMessages(name, total, moveContext) {
+function createMessages(name, total, moveContext, advanced) {
   
-  if (total < 7) {
+  if (total >= 12 && advanced) {
+    return {
+      actionReport: `Wow! ${name} just crushed ${moveContext.name} with a roll of ${total}!`,
+      outcomeReport: moveContext.outcome.advanced,
+    };
+  } else if (total >= 10) {
+    return {
+      actionReport: `Hey! ${name} just rolled a solid ${total} on ${moveContext.name}!`,
+      outcomeReport: moveContext.outcome.high,
+    };
+  } else if (total >= 7) {
+    return {
+      actionReport: `${name} just rolled ${total} on ${moveContext.name}.`,
+      outcomeReport: moveContext.outcome.success,
+    };
+  } else {
     return {
       actionReport: { 
         embed: {
@@ -10,24 +25,6 @@ function createMessages(name, total, moveContext) {
         }
       },
       outcomeReport: moveContext.outcome.fail,
-    }
-  }
-  else if (total < 10) {
-    return {
-      actionReport: `${name} just rolled ${total} on ${moveContext.name}.`,
-      outcomeReport: moveContext.outcome.success,
-    };
-  }
-  else if (total < 12) {
-    return {
-      actionReport: `Hey! ${name} just rolled a solid ${total} on ${moveContext.name}!`,
-      outcomeReport: moveContext.outcome.high,
-    };
-  }
-  else {
-    return {
-      actionReport: `Wow! ${name} just crushed ${moveContext.name} with a roll of ${total}!`,
-      outcomeReport: moveContext.outcome.advanced,
     };
   }
 

@@ -1,3 +1,5 @@
+const moves =  require('../utils/moves');
+
 function checkAllArgs(args, check) {
   
   for (let i = 0; i < args.length; i++) {
@@ -40,7 +42,6 @@ function parseUpdateProperty(args) {
   }
 
   return { key, value: value };
-
 }
 
 function parseNumber(arg) {
@@ -167,8 +168,6 @@ function isUserMention(arg) {
   return false;
 }
 
-
-
 function parseSpecialMoveKey(args) {
   
   const possibleMove = (arg) => {
@@ -183,6 +182,16 @@ function parseSpecialMoveKey(args) {
   return checkAllArgs(args, possibleMove);
 }
 
+function parseBasicMoveKey(args) {
+
+  return checkAllArgs(args, (arg) => {
+    if (moves[arg.toLowerCase()]) {
+      return { key: arg.toLowerCase(), value: moves[arg.toLowerCase()].name }
+    }
+  });
+
+}
+
 module.exports = { 
   checkAllArgs,
   parseUserIdFromMentionParam,
@@ -191,4 +200,5 @@ module.exports = {
   parseSpecialMoveKey,
   parseAllForNumber,
   parseInventoryUpdate,
+  parseBasicMoveKey
 };
