@@ -184,7 +184,7 @@ const ms = {
   },
   outcome: {
     fail: {
-      title: 'On a Failed Manipulate Somone...',
+      title: 'On a Failed Manipulate Someone...',
       description: `Offends the target or comes across as obtuse or annoying. Targets may see through a disguise, or refuse to believe a critical lie (or truth!). If used on another hunter, they mark experience if they decide not to do what you ask.`,
 
       footer: {
@@ -192,7 +192,7 @@ const ms = {
       }
     },
     success: {
-      title: 'On a 7-9 Manipulate Somone...',
+      title: 'On a 7-9 Manipulate Someone...',
       description: `For charming a normal person:\n`
         + `They’ll do it, but only if you do something for them right now to show that you mean it. If you asked too much, they’ll tell you what, if anything, it would take for them to do it.\n`
         + '\n'
@@ -245,7 +245,7 @@ const ps = {
         + ` - You hold the enemy back.`
     },
     advanced: {
-      title: 'On a 12+ Protect Somone...',
+      title: 'On a 12+ Protect Someone...',
       description: 'Both you and the character you are protecting are unharmed and out of danger. If you were protecting a bystander, they also become your ally.'
     }
   }

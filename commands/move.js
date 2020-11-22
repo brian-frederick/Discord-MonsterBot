@@ -44,9 +44,15 @@ module.exports = {
       const value = parseInt(args[0]);
       modifiers.push({ key: 'input', value: value });
     }
-      
-    const outcome = dice.roll(modifiers);
-    const outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext);
+    
+    // If a hunter has advanced a move, 
+    // they gain access to an even better result if a 12 or more is rolled.
+    const isMoveAdvanced = hunter.advancedMoves
+      && hunter.advancedMoves.length > 0
+      && hunter.advancedMoves.findIndex(am => am.key === alias) > -1;
+
+    const outcome = dice.roll(modifiers);    
+    const outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext, isMoveAdvanced);
 
     message.channel.send(`${hunter.firstName} rolls ${outcome.equation}`);
     message.channel.send(outcomeMessages.actionReport);

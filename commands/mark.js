@@ -17,6 +17,7 @@ module.exports = {
 
     if (!update) {
       message.channel.send('You must include a vital sign (experience, harm, or luck) to mark.');
+      return;
     }
 
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
