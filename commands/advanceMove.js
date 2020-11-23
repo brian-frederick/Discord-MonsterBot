@@ -14,6 +14,10 @@ module.exports = {
       name: '- Key (text) (required)', 
       value: "The key of the move to advance as part of a hunter improvement. Such as `ksa`, `aup`, `ho`, `iam`, `ms`, `ps`, `rabs`, `um` or the key for a special move."
     },
+    { 
+      name: '- Remove (text)', 
+      value: "With the text `remove`, `minus`, or `-`, the inputted key will be removed if present."
+    },
     tag
   ],
 	async execute(message, args) {
