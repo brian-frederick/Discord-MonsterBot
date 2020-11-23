@@ -75,14 +75,14 @@ function parseHunterVital(arg) {
   return;
 }
 
-const addInvTypes = [
+const addTypes = [
   'add',
   'plus',
   'put',
   '+'
 ];
 
-const removeInvTypes = [
+const removeTypes = [
   'remove',
   'subtract',
   'sub',
@@ -97,8 +97,8 @@ function parseInventoryUpdate(args) {
 
   // our item could be more than one word so we have to reconstruct.
   const inventoryItemDeconstructed = args.filter(arg => 
-    !removeInvTypes.includes(arg) &&
-    !addInvTypes.includes(arg) &&
+    !removeTypes.includes(arg) &&
+    !addTypes.includes(arg) &&
     !isUserMention(arg)
   );
     
@@ -114,11 +114,17 @@ function parseInventoryUpdate(args) {
 
 function parseInventoryUpdateType(arg) {
 
-  if (addInvTypes.includes(arg)) return 'add';
+  if (addTypes.includes(arg)) return 'add';
 
-  if (removeInvTypes.includes(arg)) return 'remove';
+  if (removeTypes.includes(arg)) return 'remove';
 
   return;
+}
+
+function isRemove(args) {
+  return checkAllArgs(args, (arg) => {
+    if (removeTypes.includes(arg)) return true;
+  });
 }
 
 function parseHunterProperty(arg) {
@@ -176,7 +182,11 @@ function parseSpecialMoveKey(args) {
       arg.length < 6 &&
       arg.length > 1;
 
-      return mightBe ? arg : null;
+      return (
+        mightBe && 
+        !removeTypes.includes(arg) && 
+        !addTypes.includes(arg)
+      ) ? arg : null;
   };
 
   return checkAllArgs(args, possibleMove);
@@ -200,5 +210,6 @@ module.exports = {
   parseSpecialMoveKey,
   parseAllForNumber,
   parseInventoryUpdate,
-  parseBasicMoveKey
+  parseBasicMoveKey,
+  isRemove
 };

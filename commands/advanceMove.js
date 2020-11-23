@@ -26,19 +26,39 @@ module.exports = {
       return;
     }
 
-    // TODO: Add ability to remove an advanced move from list
-
-    const moveToAdvance = params.parseBasicMoveKey(args);
-    // TODO: still need to search for special moves here if we don't find a basic move
-    if (!moveToAdvance) {
-      message.channel.send('BLARRR You must include a move you want to advance!');
-      return;
-    }
-
     const advancedMoves = hunter.advancedMoves ? hunter.advancedMoves : [];
 
-    advancedMoves.push(moveToAdvance);
+    // Do we just need to remove something here?
+    if (params.isRemove(args)) {
+      const keyToRemove = params.parseBasicMoveKey(args) ? params.parseBasicMoveKey(args).key : params.parseSpecialMoveKey(args);
+      const i = advancedMoves.findIndex(i => i.key === keyToRemove);
+      if (i < 0) {
+        message.channel.send(`Blrgh! Cannot find an advanced move with the key of ${keyToRemove}.`);
+        return;
+      }
+      advancedMoves.splice(i, 1);
+    } else { // Ok, it's not a remove. We need to add something.
+      let moveToAdvance = params.parseBasicMoveKey(args);
+  
+      // No basic move associated with the key. Let's check Special Moves.
+      if (!moveToAdvance) {
+        const specialMoveKey = params.parseSpecialMoveKey(args);
+        const specialMoveContext = await ddb.getMove(specialMoveKey);
+  
+        if (specialMoveContext) {
+          moveToAdvance = { key: specialMoveKey.toLowerCase(), value: specialMoveContext.name };
+        }
+      }
+  
+      // Hmmm doesn't look like a special move either. Let's bail.
+      if (!moveToAdvance) {
+        message.channel.send('BLARRR You must include the key of a move you want to advance!');
+        return;
+      }
+      advancedMoves.push(moveToAdvance);
+    }
 
+    // We've updated the advanced moves. Just need to save it now.
     const marshalled = DynamoDB.Converter.marshall({advancedMoves});
     // dynamodb properties
     const UpdateExpression = `set advancedMoves = :val`;
@@ -53,8 +73,6 @@ module.exports = {
       return;
     }
 
-    console.log('hunter passing in to stats embed', updatedHunter);
-    
     const statSheet = hunterHelper.statsEmbed(updatedHunter);
     message.channel.send({ embed: statSheet });
 	}

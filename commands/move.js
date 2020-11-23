@@ -5,7 +5,7 @@ const moves =  require('../utils/moves');
 const movesHelper = require('../utils/movesHelper');
 const params = require('../utils/params');
 const { getUserFromMention } = require('../utils/params');
-const { someHunter } = require('../utils/hunter');
+const { someHunter, isMoveAdvanced } = require('../utils/hunter');
 const { tag, modifier } = require('../content/commonParams');
 
 module.exports = {
@@ -47,12 +47,10 @@ module.exports = {
     
     // If a hunter has advanced a move, 
     // they gain access to an even better result if a 12 or more is rolled.
-    const isMoveAdvanced = hunter.advancedMoves
-      && hunter.advancedMoves.length > 0
-      && hunter.advancedMoves.findIndex(am => am.key === alias) > -1;
+    const isAdvanced = isMoveAdvanced(alias, hunter.advancedMoves);
 
     const outcome = dice.roll(modifiers);    
-    const outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext, isMoveAdvanced);
+    const outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext, isAdvanced);
 
     message.channel.send(`${hunter.firstName} rolls ${outcome.equation}`);
     message.channel.send(outcomeMessages.actionReport);

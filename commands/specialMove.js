@@ -4,9 +4,8 @@ const ddb = require('../utils/dynamodb');
 const moves =  require('../utils/moves');
 const movesHelper = require('../utils/movesHelper');
 const params = require('../utils/params');
-const move = require('./move');
 const specialMovesHelper = require('../utils/specialMovesHelper');
-const { someHunter } = require('../utils/hunter');
+const { someHunter, isMoveAdvanced } = require('../utils/hunter');
 const { tag, modifier } = require('../content/commonParams');
 
 module.exports = {
@@ -66,16 +65,17 @@ module.exports = {
     if (maybeInputMod) {
       modifiers.push({ key: 'input', value: maybeInputMod });
     }
-      
+    
+    const isAdvanced = isMoveAdvanced(moveKey, hunter.advancedMoves);
     const outcome = dice.roll(modifiers);
 
     let outcomeMessages;
 
     if (moveContext.type === 'modification') {
       const secondaryContext = moves[moveContext.moveToModify];
-      outcomeMessages = specialMovesHelper.createModificationMessages(hunter.firstName, outcome.total, moveContext, secondaryContext);
+      outcomeMessages = specialMovesHelper.createModificationMessages(hunter.firstName, outcome.total, moveContext, secondaryContext, isAdvanced);
     } else {
-      outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext);
+      outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext, isAdvanced);
     }
     
     message.channel.send(outcome.equation);
