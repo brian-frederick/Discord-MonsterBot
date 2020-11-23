@@ -169,7 +169,6 @@ function isUserMention(arg) {
 }
 
 function parseSpecialMoveKey(args) {
-  
   const possibleMove = (arg) => {
     const mightBe = 
       !/[^a-zA-Z]/.test(arg) && 
@@ -183,7 +182,6 @@ function parseSpecialMoveKey(args) {
 }
 
 function parseBasicMoveKey(args) {
-
   return checkAllArgs(args, (arg) => {
     if (moves[arg.toLowerCase()]) {
       return { key: arg.toLowerCase(), value: moves[arg.toLowerCase()].name }

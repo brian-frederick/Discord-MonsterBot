@@ -42,7 +42,7 @@ async function getHunter(userId) {
     const hunter = AWS.DynamoDB.Converter.unmarshall(data["Item"]);
     return hunter;
   } 
-  catch (error) {
+  catch(error) {
     console.log(error);
   }
 }
@@ -64,7 +64,7 @@ async function updateHunter(userId, UpdateExpression, ExpressionAttributeValues)
     const updatedHunter = AWS.DynamoDB.Converter.unmarshall(data["Attributes"]);
     return updatedHunter;
   }
-  catch (error) {
+  catch(error) {
     console.log(error);
   }
 }
@@ -82,7 +82,23 @@ async function getMove(moveKey) {
     const move = AWS.DynamoDB.Converter.unmarshall(data["Item"]);
     return move;
   } 
-  catch (error) {
+  catch(error) {
+    console.log(error);
+    return null;
+  }
+}
+
+async function getMoves(guildId) {
+  try {
+    const params = {
+      TableName: MOVES_TABLE
+    };
+
+    var data = await ddb.scan(params).promise();
+    const moves = data["Items"].map(item => AWS.DynamoDB.Converter.unmarshall(item));
+    return moves;
+  }
+  catch(error) {
     console.log(error);
     return null;
   }
@@ -128,5 +144,5 @@ async function getRecap(guildId, recordLimit=1) {
   }
 }
 
-module.exports = { getHunter, updateHunter, getMove, createRecap, getRecap, createHunter };
+module.exports = { getHunter, updateHunter, getMove, getMoves, createRecap, getRecap, createHunter };
 

@@ -4,7 +4,6 @@ const ddb = require('../utils/dynamodb');
 const moves =  require('../utils/moves');
 const movesHelper = require('../utils/movesHelper');
 const params = require('../utils/params');
-const { getUserFromMention } = require('../utils/params');
 const { someHunter } = require('../utils/hunter');
 const { tag, modifier } = require('../content/commonParams');
 

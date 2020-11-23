@@ -56,6 +56,7 @@ const umFields = [
 
 const ksa =  {
   name: 'kick some ass',
+  description: 'Fighting something that’s fighting you back.',
   modifiers: [{ type: 'property', plus: true, property: 'tough' }],
   failGif: {
     url: 'https://media.giphy.com/media/nKN7E76a27Uek/giphy.gif'
@@ -91,6 +92,7 @@ const ksa =  {
 
 const aup = {
   name: 'act under pressure',
+  description: 'Trying to do something under conditions of particular stress or danger.',
   modifiers: [{ type: 'property', plus: true, property: 'cool' }],
   failGif: {
     url: 'https://media.giphy.com/media/KHJw9NRFDMom487qyo/giphy-downsized.gif'
@@ -120,6 +122,7 @@ const aup = {
 
 const ho = {
   name: 'help out',
+  description: 'When you help another hunter with a move they are making.',
   modifiers: [{ type: 'property', plus: true, property: 'cool' }],
   failGif: {
     url: 'https://media.giphy.com/media/11StaZ9Lj74oCY/giphy.gif'
@@ -149,6 +152,7 @@ const ho = {
 
 const iam = {
   name: 'investigate a mystery',
+  description: 'Investigating that might give you more information about what’s going on.',
   modifiers: [{ type: 'property', plus: true, property: 'sharp' }],
   failGif: {
     url: 'https://media.giphy.com/media/10hO9c6zalcju/giphy.gif'
@@ -178,6 +182,7 @@ const iam = {
 
 const ms = {
   name: 'manipulate someone',
+  description: "When you want someone to do something and they don't want to do it.",
   modifiers: [{ type: 'property', plus: true, property: 'charm' }],
   failGif: {
     url: 'https://media.giphy.com/media/kDmsG1ei4P1Yc/giphy-downsized.gif'
@@ -220,6 +225,7 @@ const ms = {
 
 const ps = {
   name: 'protect someone',
+  description: 'If someone is about to suffer harm and you can somehow prevent it, then you can try to protect them.',
   modifiers: [{ type: 'property', plus: true, property: 'tough' }],
   failGif: {
     url: 'https://media.giphy.com/media/b5XRfyjS2xva0/giphy.gif'
@@ -253,6 +259,7 @@ const ps = {
 
 const rabs = {
   name: 'read a bad situation',
+  description: "When you look around and it's not good.",
   modifiers: [{ type: 'property', plus: true, property: 'sharp' }],
   failGif: {
     url: 'https://media.giphy.com/media/UXSB8HYbpLQNq/giphy.gif'
@@ -288,6 +295,7 @@ const rabs = {
 
 const um = {
   name: 'use magic',
+  description: "Say what you're trying to do and how you do the spell.",
   modifiers: [{ type: 'property', plus: true, property: 'weird' }],
   failGif: {
     url: 'https://media.giphy.com/media/myuLckXB7OjfGw1gSb/giphy-downsized.gif'

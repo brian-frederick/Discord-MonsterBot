@@ -1,11 +1,33 @@
+const moves = require('../utils/moves');
+const movesHelper = require('../utils/movesHelper');
+const ddb = require('../utils/dynamodb');
+
 module.exports = {
-  name: 'info',
+  name: 'moveInfo',
+  aliases: ['info', '!info', '!moveInfo'],
   description: 'Provides info on all basic moves.',
-  params: [{name: "Move (text) (required)", value: "Move name for which you would like info."}],
-	async execute(message, args) {
-    const moves =  require('../utils/moves');
+  params: [{name: "Move Key (text) (required)", value: "Move name for which you would like info."}],
+	async execute(message, args, alias) {
+
+
+    console.log('alias', alias);
+    // If no move keys, they must want the full list.
+    if (args.length < 1) {
+      if (alias && alias.includes('!')) {
+        // get special moves
+        const specialMoves = await ddb.getMoves(1);
+        const specialMovesEmbed = movesHelper.specialMovesInfoEmbed(specialMoves);
+        message.channel.send({embed: specialMovesEmbed});
+        return;
+      } else {
+        const movesInfoEmbed = movesHelper.movesInfoEmbed();
+        message.channel.send({embed: movesInfoEmbed});
+        return;
+      }
+    }
 
     const requestedMove = args[0];
+
 
     const moveContext = moves[requestedMove];
 

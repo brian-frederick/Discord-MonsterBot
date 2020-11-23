@@ -28,7 +28,7 @@ module.exports = {
     const existingHunter = await ddb.getHunter(requesterId);
     if (!_.isEmpty(existingHunter)) {
       await message.channel.send(
-        `Blrp Screee! I see you already have a hunter - ${existingHunter.firstName} ${existingHunter.lastName}. Do you wish to replace them? "Yes" or "No"?`
+        `Blrp Screee! I see you already have a hunter - ${existingHunter.firstName} ${existingHunter.lastName}. Do you wish to replace them? There's no turning back. "Yes" or "No"?`
       );
       const collection = await message.channel.awaitMessages(yesNoFilter, { max: 1, time: 120000 });
       
