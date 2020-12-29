@@ -14,7 +14,7 @@ const someHunter = {
   "type": "Other",
   "userId": "1",
   "weird": 0
-}
+};
 
 function statsEmbed(hunter) {
   let embed = new Discord.MessageEmbed();
@@ -33,7 +33,7 @@ function statsEmbed(hunter) {
   // handle advanced moves
   if (hunter.advancedMoves && hunter.advancedMoves.length > 0) {
     let moveString = '';
-    hunter.advancedMoves.forEach(move => moveString += ` - ${move.value} \n`);
+    hunter.advancedMoves.forEach(move => moveString += ` - ${move.value} (${move.key})\n`);
     fields.push({name: 'Advanced Moves', value: moveString});
   }
 
@@ -47,4 +47,10 @@ function statsEmbed(hunter) {
   return embed;
 };
 
-module.exports = { statsEmbed, someHunter };
+function isMoveAdvanced(key, advancedMoves) {
+  return advancedMoves
+    && advancedMoves.length > 0
+    && advancedMoves.findIndex(am => am.key === key) > -1;
+}
+
+module.exports = { statsEmbed, someHunter, isMoveAdvanced };
