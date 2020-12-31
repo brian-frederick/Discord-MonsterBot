@@ -5,6 +5,7 @@ const moves =  require('../utils/moves');
 const movesHelper = require('../utils/movesHelper');
 const params = require('../utils/params');
 const specialMovesHelper = require('../utils/specialMovesHelper');
+const specialMovesService = require('../services/specialMovesService');
 const { someHunter, isMoveAdvanced } = require('../utils/hunter');
 const { tag, modifier } = require('../content/commonParams');
 
@@ -21,7 +22,7 @@ module.exports = {
       return;
     }
 
-    const moveContext = await ddb.getMove(moveKey);
+    const moveContext = await specialMovesService.getSpecialMove(message.guild.id, moveKey);
     if (!moveContext || _.isEmpty(moveContext)) {
       message.channel.send('BLORP whimper whimper. Could not find a move by that name.');
       return;
