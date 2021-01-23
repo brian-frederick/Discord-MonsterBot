@@ -1,3 +1,5 @@
+const PUBLIC_GUILD_ID = "1";
+
 function createSimpleEmbed(name, move) {
   
   return {
@@ -33,4 +35,15 @@ function createModificationMessages(name, total, moveContext, secondaryContext, 
   }
 }
 
-module.exports = { createSimpleEmbed, createModificationMessages };
+// A guild specific move takes priority over a public move with the same key.
+function takePriority(moves, guildId) {
+  const guildIdStr = guildId.toString();
+
+  let move = moves.find(m => m.guildId === guildIdStr);
+  if (!move) {
+    move = moves.find(m => m.guildId === PUBLIC_GUILD_ID);
+  }
+  return move;
+}
+
+module.exports = { createSimpleEmbed, createModificationMessages, PUBLIC_GUILD_ID, takePriority };

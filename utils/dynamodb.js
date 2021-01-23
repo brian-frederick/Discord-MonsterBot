@@ -1,15 +1,20 @@
-// Load the AWS SDK for Node.js
+const { aws_profile } = require('../config.json');
 var AWS = require('aws-sdk');
 const { DynamoDB } = require('aws-sdk');
-// Set the region 
 AWS.config.update({region: 'us-east-1'});
+
+if (!!aws_profile) {
+  console.log(`Setting environment specific credentials for ${aws_profile}. For local dev only.`);
+  const credentials = new AWS.SharedIniFileCredentials({profile: 'monsterbot'});
+  AWS.config.credentials = credentials;
+}
 
 // Create the DynamoDB service object
 var ddb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
 
-const HUNTER_TABLE = 'monsterbot_hunters';
-const MOVES_TABLE = 'monsterbot_special_moves';
-const RECAPS_TABLE = 'monsterbot_session_recaps';
+const HUNTER_TABLE = 'hunters';
+const MOVES_TABLE = 'moves';
+const RECAPS_TABLE = 'session_recaps';
 
 async function createHunter(hunter) {
   const item = AWS.DynamoDB.Converter.marshall(hunter);
@@ -44,6 +49,7 @@ async function getHunter(userId) {
   } 
   catch (error) {
     console.log(error);
+    return;
   }
 }
 
@@ -66,25 +72,29 @@ async function updateHunter(userId, UpdateExpression, ExpressionAttributeValues)
   }
   catch (error) {
     console.log(error);
+    return;
   }
 }
 
-async function getMove(moveKey) {
+async function getSpecialMoves(keys) {
   try {
     const params = {
-      TableName: MOVES_TABLE,
-      Key: {
-        'key': {S: moveKey }
+      'RequestItems': {
+        [MOVES_TABLE]: {
+          Keys: keys
+        }
       }
     };
 
-    var data = await ddb.getItem(params).promise();
-    const move = AWS.DynamoDB.Converter.unmarshall(data["Item"]);
-    return move;
-  } 
+    let data = await ddb.batchGetItem(params).promise();
+    
+    const moves = data.Responses[MOVES_TABLE].map(item => AWS.DynamoDB.Converter.unmarshall(item));
+  
+    return moves;
+  }
   catch (error) {
     console.log(error);
-    return null;
+    return;
   }
 }
 
@@ -128,5 +138,5 @@ async function getRecap(guildId, recordLimit=1) {
   }
 }
 
-module.exports = { getHunter, updateHunter, getMove, createRecap, getRecap, createHunter };
+module.exports = { getHunter, updateHunter, getSpecialMoves, createRecap, getRecap, createHunter };
 

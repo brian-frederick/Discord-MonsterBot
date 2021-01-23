@@ -4,8 +4,13 @@ module.exports = {
 	execute(message) {
     const { BOT_SPEAK } = require('../motw.json');
 
-    console.log(`${message.author.username}:`, message.author.id);
-    console.log('message channel', message.channel);
+    console.log('username', message.author.username);
+    console.log('user id', message.author.id);
+    console.log('user discriminator', message.author.discriminator);
+
+    console.log('guild id', message.guild.id);
+    console.log('guild name', message.guild.name);
+
     message.channel.send(BOT_SPEAK);
 	},
 };

@@ -14,7 +14,15 @@ for (const file of commandFiles) {
 }
 
 client.once('ready', () => {
-	console.log('starting up! beep boop raaaarrr!');
+  console.log('starting up! beep boop raaaarrr!');
+  console.log('Sending out love to the following guilds!');
+
+  for (var g of client.guilds.cache) {
+    console.log('-----------------');
+
+    console.log('name', g[1].name);
+    console.log('name', g[1].id);
+  }
 });
 
 client.on('message', message => {
