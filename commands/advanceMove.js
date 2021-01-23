@@ -4,6 +4,7 @@ const _ = require('lodash');
 const ddb = require('../utils/dynamodb');
 const params = require('../utils/params');
 const hunterHelper = require('../utils/hunter');
+const specialMovesService = require('../services/specialMovesService');
 
 module.exports = {
   name: 'advancemove',
@@ -47,7 +48,12 @@ module.exports = {
       // No basic move associated with the key. Let's check Special Moves.
       if (!moveToAdvance) {
         const specialMoveKey = params.parseSpecialMoveKey(args);
-        const specialMoveContext = await ddb.getMove(specialMoveKey);
+
+        if (!specialMoveKey) {
+          message.channel.send(`Blrgh! You must include the key of a move!`);
+          return;
+        }
+        const specialMoveContext = await specialMovesService.getSpecialMove(message.guild.id, specialMoveKey);;
   
         if (specialMoveContext) {
           moveToAdvance = { key: specialMoveKey.toLowerCase(), value: specialMoveContext.name };
