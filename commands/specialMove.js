@@ -70,17 +70,15 @@ module.exports = {
     const isAdvanced = isMoveAdvanced(moveKey, hunter.advancedMoves);
     const outcome = dice.roll(modifiers);
 
-    let outcomeMessages;
+    let outcomeEmbed;
 
     if (moveContext.type === 'modification') {
       const secondaryContext = moves[moveContext.moveToModify];
-      outcomeMessages = specialMovesHelper.createModificationMessages(hunter.firstName, outcome.total, moveContext, secondaryContext, isAdvanced);
+      outcomeEmbed = specialMovesHelper.createModificationMessages(hunter.firstName, outcome.total, outcome.equation, moveContext, secondaryContext, isAdvanced);
     } else {
-      outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext, isAdvanced);
+      outcomeEmbed = movesHelper.createOutcomeEmbed(hunter.firstName, outcome.total, outcome.equation, moveContext, isAdvanced);
     }
     
-    message.channel.send(outcome.equation);
-    message.channel.send(outcomeMessages.actionReport);
-    message.channel.send({ embed: outcomeMessages.outcomeReport });
+    message.channel.send({ embed: outcomeEmbed });
 	}
 };
