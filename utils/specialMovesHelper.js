@@ -70,6 +70,11 @@ function createModificationMessages(name, total, equation, moveContext, secondar
 
 // A guild specific move takes priority over a public move with the same key.
 function takePriority(moves, guildId) {
+
+  if (!guildId) {
+    return moves[0];
+  }
+  
   const guildIdStr = guildId.toString();
 
   let move = moves.find(m => m.guildId === guildIdStr);

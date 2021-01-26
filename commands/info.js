@@ -1,68 +1,55 @@
+const moves =  require('../utils/moves');
+const { infoOutcomeFields, infoDescription } = require('../utils/movesHelper');
+const specialMovesService = require('../services/specialMovesService');
+const params = require('../utils/params');
+
 module.exports = {
   name: 'info',
   description: 'Provides info on all basic moves.',
   params: [{name: "Move (text) (required)", value: "Move name for which you would like info."}],
 	async execute(message, args) {
-    const moves =  require('../utils/moves');
+    let moveContext;
+    let requestedMove;
 
-    const requestedMove = args[0];
+    requestedMove = params.parseBasicMoveKey(args);
+    console.log('requestedMove: ', requestedMove)
 
-    const moveContext = moves[requestedMove];
+    if (requestedMove) {
+      moveContext = moves[requestedMove.key];
+    } else {
+      const specialMoveKey = params.parseSpecialMoveKey(args);
+
+      if (!specialMoveKey) {
+        message.channel.send(`Blrgh! You must include the key of a move!`);
+        return;
+      }
+      console.log('message: ', message);
+      moveContext = await specialMovesService.getSpecialMove(specialMoveKey, message.guild?.id);
+    }
+
+    if (!moveContext) {
+      message.channel.send(`Blrgh! Cannot find a move to give you info about!`);
+      return;
+    }
 
     let moveEmbed = {
       title: moveContext.name,
-      fields: []
     };
-  
-    // add description
-    if (moveContext.description && moveContext.modifiers) {
-      moveEmbed.description = `modifier: ${moveContext.modifiers.property} \n${moveContext.description}`
-    } else if (moveContext.modifiers) {
-      moveEmbed.description = `modifier: ${moveContext.modifiers[0].property}`;
-    } else if (moveContext.description) {
-      moveEmbed.description = moveContext.description;
-    }
 
-    // add success outcome
-    if (moveContext.outcome.success && moveContext.outcome.success.description) {
-      moveEmbed.fields.push(
-        {
-          name: 'On a 7-9...',
-          value: moveContext.outcome.success.description
-        }
-      );
-    }
+    const secondaryContext = (moveContext.type === 'modification') ?
+      moves[moveContext.moveToModify] :
+      null;
 
-    // add high success outcome
-    if (moveContext.outcome.high && moveContext.outcome.high.description) {
-      moveEmbed.fields.push(
-        {
-          name: 'On a 10-12...',
-          value: moveContext.outcome.high.description
-        }
-      );
-    }
+    moveEmbed.description = infoDescription(moveContext, secondaryContext)
 
-    // add advanced outcome
-    if (moveContext.outcome.advanced && moveContext.outcome.advanced.description) {
-      moveEmbed.fields.push(
-        {
-          name: 'On a 12+...',
-          value: moveContext.outcome.advanced.description
-        }
-      );
-    }
+    moveEmbed.fields = (moveContext.type === 'roll') ?
+      infoOutcomeFields(moveContext.outcome) :
+      null;
 
-    // add fail outcome
-    if (moveContext.outcome.fail && moveContext.outcome.fail.description) {
-      moveEmbed.fields.push(
-        {
-          name: 'On a miss...',
-          value: moveContext.outcome.fail.description
-        }
-      );
+    if (moveContext.guildId) {
+      moveEmbed.url = `https://www.monsterbot.io/moves/show/${moveContext.key}/guild/${moveContext.guildId}`;
     }
 
     message.channel.send({ embed: moveEmbed });
 	}
-};
+}

@@ -2,11 +2,14 @@ const { takePriority, PUBLIC_GUILD_ID } = require('../utils/specialMovesHelper')
 const { getSpecialMoves } = require('../utils/dynamodb');
 
 // Checks both the public and specified guild.
-async function getSpecialMove(guildId, key) {
+async function getSpecialMove(key, guildId) {
   const keys = [
     {key: {S:key}, "guildId": {S:PUBLIC_GUILD_ID}},
-    {key: {S:key}, guildId:{S: guildId}}
   ];
+
+  if (guildId) {
+    keys.push({key: {S:key}, guildId:{S: guildId}});
+  }
 
   const moves = await getSpecialMoves(keys);
 

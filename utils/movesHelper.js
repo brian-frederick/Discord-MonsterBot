@@ -70,4 +70,84 @@ const rollOutcomeEmbed = (color, actionReport, equation, moveName, moveDescripti
 
 }
 
-module.exports = { createOutcomeEmbed, rollOutcomeEmbed };
+const infoOutcomeFields = (outcome) => {
+  let fields = [];
+
+  if (outcome.success && outcome.success.description) {
+    fields.push(
+      {
+        name: 'On a 7-9...',
+        value: outcome.success.description
+      }
+    );
+  }
+
+  // add high success outcome
+  if (outcome.high && outcome.high.description) {
+    fields.push(
+      {
+        name: 'On a 10-12...',
+        value: outcome.high.description
+      }
+    );
+  }
+
+  // add advanced outcome
+  if (outcome.advanced && outcome.advanced.description) {
+    fields.push(
+      {
+        name: 'On a 12+...',
+        value: outcome.advanced.description
+      }
+    );
+  }
+
+  // add fail outcome
+  if (outcome.fail && outcome.fail.description) {
+    fields.push(
+      {
+        name: 'On a miss...',
+        value: outcome.fail.description
+      }
+    );
+  }
+
+  return fields;
+}
+
+const infoDescription = (moveContext, secondaryContext) => {
+  let description = '';
+
+  if (secondaryContext) {
+    description+= `Modifies ${secondaryContext.name}\n`;
+  }
+
+  if (moveContext.description && moveContext.modifiers) {
+    description += `${moveContext.description}\n \nModifiers: ${modifierList(moveContext.modifiers)} \n`
+  } else if (moveContext.modifiers) {
+    description += `modifier: ${moveContext.modifiers[0].property}`;
+  } else if (moveContext.description) {
+    description += moveContext.description;
+  }
+
+  return description;
+}
+
+const modifierInfo = (mod) => {
+  const mathType = mod.plus ? '+' : '-';
+  if (mod.type === 'property') {
+    return `${mathType} ${mod.property}`;
+  }
+  if (mod.type === 'extra') {
+    return `${mathType} ${mod.value} extra`;
+  }
+}
+
+const modifierList = (modifiers) => modifiers.reduce(
+  (acc, mod) => {
+    console.log('acc', acc);
+    return `${acc} \n ${modifierInfo(mod)}`
+  },''
+);
+
+module.exports = { createOutcomeEmbed, rollOutcomeEmbed, infoOutcomeFields, infoDescription };

@@ -43,6 +43,7 @@ const umKeeperMaySay = ` - The spell requires weird materials.\n`
 const ksa =  {
   name: 'Kick Some Ass',
   description: 'Fighting something that is fighting back.',
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'tough' }],
   failGif: {
     url: 'https://media.giphy.com/media/nKN7E76a27Uek/giphy.gif'
@@ -76,6 +77,7 @@ const ksa =  {
 const aup = {
   name: 'Act Under Pressure',
   description: 'Trying to do something under conditions of particular stress or danger.',
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'cool' }],
   failGif: {
     url: 'https://media.giphy.com/media/KHJw9NRFDMom487qyo/giphy-downsized.gif'
@@ -104,6 +106,7 @@ const ho = {
   name: 'Help Out',
   description: 'When you help another hunter with a move they are making.',
   modifiers: [{ type: 'property', plus: true, property: 'cool' }],
+  type: 'roll',
   failGif: {
     url: 'https://media.giphy.com/media/11StaZ9Lj74oCY/giphy.gif'
   },
@@ -130,6 +133,7 @@ const ho = {
 const iam = {
   name: 'Investigate A Mystery',
   description: `Investigating for more information about what's going on.`,
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'sharp' }],
   failGif: {
     url: 'https://media.giphy.com/media/10hO9c6zalcju/giphy.gif'
@@ -157,6 +161,7 @@ const iam = {
 const ms = {
   name: 'Manipulate Someone',
   description: `When you want someone to do something for you and they don't want to do it. To get them to do what you're asking, you'll need a good reason.`, 
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'charm' }],
   failGif: {
     url: 'https://media.giphy.com/media/kDmsG1ei4P1Yc/giphy-downsized.gif'
@@ -196,6 +201,7 @@ const ms = {
 const ps = {
   name: 'Protect Someone',
   description: 'If someone is about to suffer harm and you can somehow prevent it.',
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'tough' }],
   failGif: {
     url: 'https://media.giphy.com/media/b5XRfyjS2xva0/giphy.gif'
@@ -227,6 +233,7 @@ const ps = {
 const rabs = {
   name: 'Read a Bad Situation',
   description: 'When you look around and read a bad situation, one hold can be spent to ask the keeper a question.',
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'sharp' }],
   failGif: {
     url: 'https://media.giphy.com/media/UXSB8HYbpLQNq/giphy.gif'
@@ -256,6 +263,7 @@ const um = {
   description: `Say what you're trying to achieve and how you do the spell.\n` +
   `\nThe keeper may require one or more of the following:\n` +
    umKeeperMaySay,
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'weird' }],
   failGif: {
     url: 'https://media.giphy.com/media/myuLckXB7OjfGw1gSb/giphy-downsized.gif'

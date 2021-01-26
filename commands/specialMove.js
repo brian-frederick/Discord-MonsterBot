@@ -22,7 +22,7 @@ module.exports = {
       return;
     }
 
-    const moveContext = await specialMovesService.getSpecialMove(message.guild.id, moveKey);
+    const moveContext = await specialMovesService.getSpecialMove(moveKey, message.guild?.id);
     if (!moveContext || _.isEmpty(moveContext)) {
       message.channel.send('BLORP whimper whimper. Could not find a move by that name.');
       return;
