@@ -53,7 +53,7 @@ module.exports = {
           message.channel.send(`Blrgh! You must include the key of a move!`);
           return;
         }
-        const specialMoveContext = await specialMovesService.getSpecialMove(message.guild.id, specialMoveKey);;
+        const specialMoveContext = await specialMovesService.getSpecialMove(specialMoveKey, message.guild?.id);
   
         if (specialMoveContext) {
           moveToAdvance = { key: specialMoveKey.toLowerCase(), value: specialMoveContext.name };

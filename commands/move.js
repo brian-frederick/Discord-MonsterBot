@@ -50,10 +50,8 @@ module.exports = {
     const isAdvanced = isMoveAdvanced(alias, hunter.advancedMoves);
 
     const outcome = dice.roll(modifiers);    
-    const outcomeMessages = movesHelper.createMessages(hunter.firstName, outcome.total, moveContext, isAdvanced);
+    const outcomeEmbed = movesHelper.createOutcomeEmbed(hunter.firstName, outcome.total, outcome.equation, moveContext, isAdvanced);
 
-    message.channel.send(`${hunter.firstName} rolls ${outcome.equation}`);
-    message.channel.send(outcomeMessages.actionReport);
-    message.channel.send({ embed: outcomeMessages.outcomeReport });
+    message.channel.send({ embed: outcomeEmbed });
 	}
 };

@@ -3,7 +3,6 @@ const Discord = require('discord.js');
 const {prefix, token } = require('./config.json');
 const { addGuild, deleteGuild } = require('./db/guilds');
 
-// create a new Discord client
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 

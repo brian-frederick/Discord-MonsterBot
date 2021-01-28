@@ -39,23 +39,11 @@ const umKeeperMaySay = ` - The spell requires weird materials.\n`
   + ` - You need one or two people to help cast the spell.\n`
   + ` - You need to refer to a tome of magic for the details.\n`;
 
-const umFields = [
-  {
-    name: 'Effects',
-    value: umEffects
-  },
-  {
-    name: 'Glitches',
-    value: umGlitches
-  },
-  {
-    name: 'The Keeper may say that...',
-    value: umKeeperMaySay
-  }
-];
 
 const ksa =  {
-  name: 'kick some ass',
+  name: 'Kick Some Ass',
+  description: 'Fighting something that is fighting back.',
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'tough' }],
   failGif: {
     url: 'https://media.giphy.com/media/nKN7E76a27Uek/giphy.gif'
@@ -64,9 +52,6 @@ const ksa =  {
     fail: {
       title: 'On a miss...',
       description: 'They’re in a lot of trouble. Harm, capture, losing the monster, or other bad things.',
-      footer: {
-        text: `Shut your eyes and think of the Experience you've gained.`
-      }
     },
     success: {
       title: 'On a 7+ Kick Some Ass...',
@@ -90,7 +75,9 @@ const ksa =  {
 };
 
 const aup = {
-  name: 'act under pressure',
+  name: 'Act Under Pressure',
+  description: 'Trying to do something under conditions of particular stress or danger.',
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'cool' }],
   failGif: {
     url: 'https://media.giphy.com/media/KHJw9NRFDMom487qyo/giphy-downsized.gif'
@@ -99,9 +86,6 @@ const aup = {
     fail: {
       title: 'On a miss...',
       description: 'The pressure has overwhelmed the hunter.',
-      footer: {
-        text: `What a rich Experience.`
-      }
     },
     success: {
       title: 'On a 7-9 Act Under Pressure...',
@@ -119,8 +103,10 @@ const aup = {
 };
 
 const ho = {
-  name: 'help out',
+  name: 'Help Out',
+  description: 'When you help another hunter with a move they are making.',
   modifiers: [{ type: 'property', plus: true, property: 'cool' }],
+  type: 'roll',
   failGif: {
     url: 'https://media.giphy.com/media/11StaZ9Lj74oCY/giphy.gif'
   },
@@ -128,9 +114,6 @@ const ho = {
     fail: {
       title: 'On a miss...',
       description: 'The help does no good and the helper exposes themselves to trouble or danger.',
-      footer: {
-        text: `You're the proud owner of one new Experience point`
-      }
     },
     success: {
       title: 'On a 7-9 Help Out...',
@@ -148,7 +131,9 @@ const ho = {
 };
 
 const iam = {
-  name: 'investigate a mystery',
+  name: 'Investigate A Mystery',
+  description: `Investigating for more information about what's going on.`,
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'sharp' }],
   failGif: {
     url: 'https://media.giphy.com/media/10hO9c6zalcju/giphy.gif'
@@ -157,9 +142,6 @@ const iam = {
     fail: {
       title: 'On a miss...',
       description: 'There\'s trouble with normal people or giving away information to their enemies.',
-      footer: {
-        text: `Mark Experience.`
-      }
     },
     success: {
       title: 'On a 7-9 Investigate A Mystery...',
@@ -177,7 +159,9 @@ const iam = {
 };
 
 const ms = {
-  name: 'manipulate someone',
+  name: 'Manipulate Someone',
+  description: `When you want someone to do something for you and they don't want to do it. To get them to do what you're asking, you'll need a good reason.`, 
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'charm' }],
   failGif: {
     url: 'https://media.giphy.com/media/kDmsG1ei4P1Yc/giphy-downsized.gif'
@@ -186,10 +170,6 @@ const ms = {
     fail: {
       title: 'On a Failed Manipulate Someone...',
       description: `Offends the target or comes across as obtuse or annoying. Targets may see through a disguise, or refuse to believe a critical lie (or truth!). If used on another hunter, they mark experience if they decide not to do what you ask.`,
-
-      footer: {
-        text: `XP!`
-      }
     },
     success: {
       title: 'On a 7-9 Manipulate Someone...',
@@ -219,7 +199,9 @@ const ms = {
 };
 
 const ps = {
-  name: 'protect someone',
+  name: 'Protect Someone',
+  description: 'If someone is about to suffer harm and you can somehow prevent it.',
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'tough' }],
   failGif: {
     url: 'https://media.giphy.com/media/b5XRfyjS2xva0/giphy.gif'
@@ -228,9 +210,6 @@ const ps = {
     fail: {
       title: 'On a miss...',
       description: 'Harm to the protector and protectee as well as a potential future hard move.',
-      footer: {
-        text: `Experience!`
-      }
     },
     success: {
       title: 'On a 7-9 Protect Someone...',
@@ -252,7 +231,9 @@ const ps = {
 };
 
 const rabs = {
-  name: 'read a bad situation',
+  name: 'Read a Bad Situation',
+  description: 'When you look around and read a bad situation, one hold can be spent to ask the keeper a question.',
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'sharp' }],
   failGif: {
     url: 'https://media.giphy.com/media/UXSB8HYbpLQNq/giphy.gif'
@@ -261,9 +242,6 @@ const rabs = {
     fail: {
       title: 'On a miss...',
       description: 'Hunters put themselves in harms way or accidentally give away information to their enemies.',
-      footer: {
-        text: `That Experience though...`
-      }
     },
     success: {
       title: 'On a 7-9 Read A Bad Situation...',
@@ -275,19 +253,17 @@ const rabs = {
     },
     advanced: {
       title: 'On a 12+ Read A Bad Situation...',
-      description: 'You may ask the Keeper any question you want about the situation, not just the listed ones.',
-      fields: [
-        {
-          name: 'standard questions',
-          value: rabsQuestions
-        }      
-      ]
+      description: `You may ask the Keeper any question you want about the situation, not just these listed ones:\n` + rabsQuestions,
     }
   }
 };
 
 const um = {
-  name: 'use magic',
+  name: 'Use Magic',
+  description: `Say what you're trying to achieve and how you do the spell.\n` +
+  `\nThe keeper may require one or more of the following:\n` +
+   umKeeperMaySay,
+  type: 'roll',
   modifiers: [{ type: 'property', plus: true, property: 'weird' }],
   failGif: {
     url: 'https://media.giphy.com/media/myuLckXB7OjfGw1gSb/giphy-downsized.gif'
@@ -296,24 +272,26 @@ const um = {
     fail: {
       title: 'On a miss...',
       description: 'Keeper makes as hard a move as they like. Reversing the effect, harm, overall weirdness - anything can happen when magic goes wrong.',
-      footer: {
-        text: `The real magic is the friends we made along the way. Mark Experience.`
-      }
     },
     success: {
-      title: 'On a 7-9 Use Magic...',
-      description: 'It works imperfectly: choose your effect and a glitch. The Keeper will decide what effect the glitch has.',
-      fields: umFields
+      title: 'On a 7-9...',
+      description: `It works imperfectly: choose your effect and a glitch. The Keeper will decide the glitch.\n` +
+        `\nEffects:\n` +
+        umEffects +
+        `\nGlitches:\n` + 
+        umGlitches,
     },
     high: {
-      title: 'On a 10+ Use Magic...',
-      description: 'The magic works without issues: choose your effect.',
-      fields: umFields
+      title: 'On a 10+...',
+      description: `The magic works without issues. Choose your effect.\n` +
+      `\nEffects:\n` +
+      umEffects,
     },
     advanced: {
       title: 'On a 12+...',
-      description: 'The Keeper will offer you some added benefit.',
-      fields: umFields
+      description: `The Keeper will offer you some added benefit in addition to your chosen effect:\n` + 
+      `\nEffects:\n` +
+      umEffects,
     }
   }
 };
