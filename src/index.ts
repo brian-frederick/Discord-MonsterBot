@@ -1,10 +1,10 @@
-const fs = require('fs');
-const Discord = require('discord.js');
-const {prefix, token } = require('./config.json');
-const { addGuild, deleteGuild } = require('./db/guilds');
+import fs from 'fs';
+import Discord from 'discord.js';
+import { prefix, token } from  './config.json';
+import { addGuild, deleteGuild } from './db/guilds' ;
+import { command } from './interfaces/command';
 
 const client = new Discord.Client();
-client.commands = new Discord.Collection();
 
 client.once('ready', () => {
   console.log('starting up! beep boop raaaarrr!');
@@ -46,6 +46,7 @@ client.on('guildDelete', guild => {
   }
 })
 
+// @ts-ignore
 client.ws.on('INTERACTION_CREATE', async request => {
   console.log('interaction ahoy: ');
   console.log(request);
@@ -55,35 +56,54 @@ client.ws.on('INTERACTION_CREATE', async request => {
   const channel = client.channels.cache.get(request.channel_id);
 
   const interaction = interactions.get(request.data.name);
+
+  console.log('here is the interaction i will use: ', interaction);
   
   interaction.execute(channel, request.member.user, request.guild_id, request.data.options);
 })
 
+let commands: Map<string, command> = new Map();
+let aliasedCommands: Map<string, command> = new Map();
+
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	client.commands.set(command.name, command);
+	const command: command = require(`./commands/${file}`);
+  commands.set(command.name, command);
+  
+  if (command.aliases) {
+    command.aliases.forEach(alias => aliasedCommands.set(alias, command));
+  }
 }
 
 let interactions = new Map();
 
-const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.ts'));
+const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.js'));
+console.log('interaction files: ', interactionFiles);
 
 for (const file of interactionFiles) {
-	const interaction = require(`./interactions/${file}`);
-	interactions.set(interaction.name, interaction);
+  const interaction = require (`./interactions/${file}`);
+  console.log('interactionCommand: ', interaction)
+	interactions.set(interaction.default.name, interaction.default);
 }
 
+console.log('interactions', interactions);
+
 client.on('message', message => {
+  let command: command;
+  let aliasCommand: command;
+
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
 
-  const command = client.commands.get(commandName);
+  command = commands.get(commandName);
 
-  const aliasCommand = client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+  if (!command) {
+    aliasCommand = aliasedCommands.get(commandName);
+  }
+
 
   if (!command && !aliasCommand) return;
 
