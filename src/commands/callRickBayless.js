@@ -1,12 +1,12 @@
 const _ = require('lodash');
-const dice = require('../utils/dice');
-const ddb = require('../utils/dynamodb');
-const moves = require('../utils/moves');
-const movesHelper = require('../utils/movesHelper');
-const moveContext = require('../content/callRickBayless');
-const params = require('../utils/params');
-const { someHunter } = require('../utils/hunter');
-const { modifier, tag } = require('../content/commonParams');
+const dice = require('../../utils/dice');
+const ddb = require('../../utils/dynamodb');
+const moves = require('../../utils/moves');
+const movesHelper = require('../../utils/movesHelper');
+const moveContext = require('../../content/callRickBayless');
+const params = require('../../utils/params');
+const { someHunter } = require('../../utils/hunter');
+const { modifier, tag } = require('../../content/commonParams');
 
 module.exports = {
   name: 'callrickbayless',

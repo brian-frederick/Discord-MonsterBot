@@ -1,14 +1,14 @@
 const _ = require('lodash');
-const { tag } = require('../content/commonParams');
+const { tag } = require('../../content/commonParams');
 
 module.exports = {
   name: 'stats',
   description: 'Provides hunter stats.',
   params: [tag],
 	async execute(message, args) {
-    const ddb = require('../utils/dynamodb');
-    const params = require('../utils/params');
-    const hunterHelper = require('../utils/hunter');
+    const ddb = require('../../utils/dynamodb');
+    const params = require('../../utils/params');
+    const hunterHelper = require('../../utils/hunter');
 
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;

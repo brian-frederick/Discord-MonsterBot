@@ -1,12 +1,12 @@
 const _ = require('lodash');
-const dice = require('../utils/dice');
-const ddb = require('../utils/dynamodb');
-const moves =  require('../utils/moves');
-const movesHelper = require('../utils/movesHelper');
-const params = require('../utils/params');
-const { getUserFromMention } = require('../utils/params');
-const { someHunter, isMoveAdvanced } = require('../utils/hunter');
-const { tag, modifier } = require('../content/commonParams');
+const dice = require('../../utils/dice');
+const ddb = require('../../utils/dynamodb');
+const moves =  require('../../utils/moves');
+const movesHelper = require('../../utils/movesHelper');
+const params = require('../../utils/params');
+const { getUserFromMention } = require('../../utils/params');
+const { someHunter, isMoveAdvanced } = require('../../utils/hunter');
+const { tag, modifier } = require('../../content/commonParams');
 
 module.exports = {
   name: 'move',

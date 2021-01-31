@@ -1,5 +1,5 @@
-const ddb = require('../utils/dynamodb');
-const {yesNoQuestions} = require('../utils/recap');
+const ddb = require('../../utils/dynamodb');
+const {yesNoQuestions} = require('../../utils/recap');
 
 module.exports = {
   name: 'endsession',

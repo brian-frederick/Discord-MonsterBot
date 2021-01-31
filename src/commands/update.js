@@ -1,4 +1,4 @@
-const { tag } = require('../content/commonParams');
+const { tag } = require('../../content/commonParams');
 
 module.exports = {
   name: 'update',
@@ -13,9 +13,9 @@ module.exports = {
     }
   ],
 	async execute(message, args) {
-    const ddb = require('../utils/dynamodb');
-    const params = require('../utils/params');
-    const hunterHelper = require('../utils/hunter');
+    const ddb = require('../../utils/dynamodb');
+    const params = require('../../utils/params');
+    const hunterHelper = require('../../utils/hunter');
 
     const update = params.parseUpdateProperty(args);
 

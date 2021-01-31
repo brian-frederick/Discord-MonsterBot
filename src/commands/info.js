@@ -1,7 +1,7 @@
-const moves =  require('../utils/moves');
-const { infoOutcomeFields, infoDescription } = require('../utils/movesHelper');
-const specialMovesService = require('../services/specialMovesService');
-const params = require('../utils/params');
+const moves =  require('../../utils/moves');
+const { infoOutcomeFields, infoDescription } = require('../../utils/movesHelper');
+const specialMovesService = require('../../services/specialMovesService');
+const params = require('../../utils/params');
 
 module.exports = {
   name: 'info',
