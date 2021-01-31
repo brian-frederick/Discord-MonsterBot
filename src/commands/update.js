@@ -1,4 +1,4 @@
-const { tag } = require('../../content/commonParams');
+const { tag } = require('../content/commonParams');
 
 module.exports = {
   name: 'update',

@@ -1,5 +1,9 @@
 const { DynamoDB } = require('aws-sdk');
-const { tag } = require('../../content/commonParams');
+const _ = require('lodash');
+const ddb = require('../utils/dynamodb');
+const params = require('../utils/params');
+const inventoryHelper = require('../utils/inventory');
+const { tag } = require('../content/commonParams');
 
 module.exports = {
   name: 'inventory',
@@ -17,11 +21,7 @@ module.exports = {
     }
   ],
 	async execute(message, args) {
-    const _ = require('lodash');
-    const ddb = require('../../utils/dynamodb');
-    const params = require('../../utils/params');
-    const hunterHelper = require('../../utils/hunter');
-    const inventoryHelper = require('../../utils/inventory');
+
 
     const userIdFromMention = params.checkAllArgs(args, params.parseUserIdFromMentionParam);
     const userIdInQuestion = userIdFromMention ? userIdFromMention : message.author.id;

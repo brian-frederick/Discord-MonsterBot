@@ -1,8 +1,8 @@
 const moment = require('moment');
 const Discord = require('discord.js');
-const ddb = require('../../utils/dynamodb');
-const {createRecapEmbed, createRecapsEmbed } = require('../../utils/recap');
-const params = require('../../utils/params');
+const ddb = require('../utils/dynamodb');
+const {createRecapEmbed, createRecapsEmbed } = require('../utils/recap');
+const params = require('../utils/params');
 
 module.exports = {
   name: 'recap',

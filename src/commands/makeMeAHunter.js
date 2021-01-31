@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const ddb = require('../../utils/dynamodb');
-const hunterHelper = require('../../utils/hunter');
+const ddb = require('../utils/dynamodb');
+const hunterHelper = require('../utils/hunter');
 
 module.exports = {
   name: 'makemeahunter',

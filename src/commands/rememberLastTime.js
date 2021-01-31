@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const ddb = require('../../utils/dynamodb');
-const {createRecapEmbed } = require('../../utils/recap');
+const ddb = require('../utils/dynamodb');
+const {createRecapEmbed } = require('../utils/recap');
 
 function constructStatement(args) {
   return args.join(' ');

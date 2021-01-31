@@ -1,10 +1,10 @@
 const { DynamoDB } = require('aws-sdk');
-const { tag } = require('../../content/commonParams');
 const _ = require('lodash');
-const ddb = require('../../utils/dynamodb');
-const params = require('../../utils/params');
-const hunterHelper = require('../../utils/hunter');
-const specialMovesService = require('../../services/specialMovesService');
+const { tag } = require('../content/commonParams');
+const ddb = require('../utils/dynamodb');
+const params = require('../utils/params');
+const hunterHelper = require('../utils/hunter');
+const specialMovesService = require('../services/specialMovesService');
 
 module.exports = {
   name: 'advancemove',

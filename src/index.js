@@ -68,7 +68,7 @@ for (const file of commandFiles) {
 
 let interactions = new Map();
 
-const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.js'));
+const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.ts'));
 
 for (const file of interactionFiles) {
 	const interaction = require(`./interactions/${file}`);

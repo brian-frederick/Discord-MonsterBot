@@ -1,4 +1,7 @@
-const { tag, modifier } = require('../../content/commonParams');
+const { tag, modifier } = require('../content/commonParams');
+const ddb = require('../utils/dynamodb');
+const params = require('../utils/params');
+const hunterHelper = require('../utils/hunter');
 
 module.exports = {
   name: 'mark',
@@ -9,9 +12,6 @@ module.exports = {
     { name: `- Vital ('experience', 'harm', or 'luck') (required)`, value: 'A hunter vital to increment by the corresponding modifier.'}
   ],
 	async execute(message, args) {
-    const ddb = require('../../utils/dynamodb');
-    const params = require('../../utils/params');
-    const hunterHelper = require('../../utils/hunter');
 
     const update = params.parseUpdateVital(args);
 

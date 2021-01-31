@@ -1,5 +1,5 @@
-const dice = require('../../utils/dice');
-const { modifier } = require('../../content/commonParams');
+const dice = require('../utils/dice');
+const { modifier } = require('../content/commonParams');
 
 module.exports = {
 	name: 'roll',
