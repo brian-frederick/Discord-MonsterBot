@@ -46,11 +46,33 @@ client.on('guildDelete', guild => {
   }
 })
 
+client.ws.on('INTERACTION_CREATE', async request => {
+  console.log('interaction ahoy: ');
+  console.log(request);
+
+  request.data.options?.forEach(option => {console.log(option)});
+
+  const channel = client.channels.cache.get(request.channel_id);
+
+  const interaction = interactions.get(request.data.name);
+  
+  interaction.execute(channel, request.member.user, request.guild_id, request.data.options);
+})
+
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
+}
+
+let interactions = new Map();
+
+const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.js'));
+
+for (const file of interactionFiles) {
+	const interaction = require(`./interactions/${file}`);
+	interactions.set(interaction.name, interaction);
 }
 
 client.on('message', message => {
