@@ -174,6 +174,12 @@ function isUserMention(arg) {
   return false;
 }
 
+function chooseHunterId(userId, args) {
+  const userIdFromMention = checkAllArgs(args, parseUserIdFromMentionParam);
+  return userIdFromMention ? userIdFromMention : userId;
+}
+
+
 function parseSpecialMoveKey(args) {
   
   const possibleMove = (arg) => {
@@ -211,5 +217,6 @@ module.exports = {
   parseAllForNumber,
   parseInventoryUpdate,
   parseBasicMoveKey,
-  isRemove
+  isRemove,
+  chooseHunterId
 };

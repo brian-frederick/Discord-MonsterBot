@@ -1,4 +1,4 @@
-export interface hunter {
+export interface Hunter {
   userId: string;
   firstName: string;
   lastName: string;
@@ -18,10 +18,10 @@ export interface hunter {
 
   // other
   inventory: string[];
-  advancedMoves: advancedMove[];
+  advancedMoves: AdvancedMove[];
 }
 
-interface advancedMove {
+interface AdvancedMove {
   key: string;
   value: string;
 }

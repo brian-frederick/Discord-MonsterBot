@@ -1,37 +1,30 @@
 import Discord from 'discord.js';
-import { option } from '../interfaces/discordInteractions';
-import { getParam } from '../utils/interactionParams';
+import { Option } from '../interfaces/discordInteractions';
+import { InventoryTransaction } from '../interfaces/enums';
+import { chooseHunterId, getParam } from '../utils/interactionParams';
+import inventoryAction from '../actions/inventory';
 
 export default {
   name: 'inventory',
-  async execute(channel: Discord.TextChannel, user: Discord.User, guildId, options: option[] = []) {
+  async execute(channel: Discord.TextChannel, user: Discord.User, guildId, options: Option[] = []) {
     let item;
     let transaction;
-    let hunter;
-    
+    let hunterId;
     
     console.log('user', user);
     console.log('options', options);
 
+    hunterId = chooseHunterId(user.id, options);
     if (options.length > 0) {
       item = getParam('item', options);
-      transaction = getParam('transaction', options);
-      hunter = getParam('hunter', options);
-    }
-
-    if (item && !transaction) {
-      channel.send('Blrrgh. If you enter an item you must tell me whether to add or remove it!');
-      return;
-    }
-    
-    if (transaction && !item) {
-      channel.send(`Blrrgh. I don't know what item to ${transaction}.`);
-      return;
+      transaction = getParam('transaction', options) as InventoryTransaction;
     }
 
 
-    console.log(`item: ${item}, transaction: ${transaction}, hunter: ${hunter} `);
-    channel.send('Oh I am going to do something with this for sure. wink!');
+  console.log(`Interaction params - item: ${item}, transaction: ${transaction}, hunterId: ${hunterId} `);
+
+
+    await inventoryAction.execute(channel, hunterId, transaction, item);
 
     return null;
   }

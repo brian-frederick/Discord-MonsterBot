@@ -2,7 +2,7 @@ import fs from 'fs';
 import Discord from 'discord.js';
 import { prefix, token } from  './config.json';
 import { addGuild, deleteGuild } from './db/guilds' ;
-import { command } from './interfaces/command';
+import { Command } from './interfaces/command';
 
 const client = new Discord.Client();
 
@@ -62,13 +62,12 @@ client.ws.on('INTERACTION_CREATE', async request => {
   interaction.execute(channel, request.member.user, request.guild_id, request.data.options);
 })
 
-let commands: Map<string, command> = new Map();
-let aliasedCommands: Map<string, command> = new Map();
+let commands: Map<string, Command> = new Map();
+let aliasedCommands: Map<string, Command> = new Map();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
 for (const file of commandFiles) {
-	const command: command = require(`./commands/${file}`);
+  const command: Command = require(`./commands/${file}`);
   commands.set(command.name, command);
   
   if (command.aliases) {
@@ -87,11 +86,9 @@ for (const file of interactionFiles) {
 	interactions.set(interaction.default.name, interaction.default);
 }
 
-console.log('interactions', interactions);
-
 client.on('message', message => {
-  let command: command;
-  let aliasCommand: command;
+  let command: Command;
+  let aliasCommand: Command;
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
