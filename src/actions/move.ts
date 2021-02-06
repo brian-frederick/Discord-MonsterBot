@@ -17,7 +17,7 @@ export default {
     moveKey: string,
     forward?: number
   ): Promise<void> {
-    
+
     let hunter = await ddb.getHunter(hunterId);
     if (_.isEmpty(hunter)) {
       channel.send('Could not find your hunter. Rolling with some hunter.')

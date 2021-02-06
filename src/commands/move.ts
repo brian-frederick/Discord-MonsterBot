@@ -23,11 +23,9 @@ module.exports = {
 
     moveKey = alias;
     hunterId = chooseHunterId(message.author.id, args);
+    forward = parseAllForNumber(args);
 
-    const maybeForward = parseAllForNumber(args);
-    forward = maybeForward ? maybeForward.toString() : null;
-
-    await moveAction.execute(message.channel, hunterId, forward);
+    await moveAction.execute(message.channel, hunterId, moveKey, forward);
     
     return;
 	}
