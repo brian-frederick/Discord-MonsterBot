@@ -1,0 +1,16 @@
+{
+  "name": "protectsomeone",
+  "description": "Rolls 2d6 + tough. If someone is about to suffer harm and you can somehow prevent it.",
+  "options": [
+    {
+      "name": "forward",
+      "description": "Additional modifier to the roll.",
+      "type": 4
+    },
+    {
+      "name": "hunter",
+      "description": "Adding a tag for this command will perform it for that hunter. Default is the current user’s Hunter.",
+      "type": 6
+    }
+  ]
+}

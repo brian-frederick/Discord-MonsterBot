@@ -1,0 +1,32 @@
+{
+  "name": "move",
+  "description": "Execute a basic move.",
+  "options": [
+    {
+      "name": "move",
+      "description": "The basic move to execute.",
+      "required": true,
+      "type": 3,
+      "choices": [
+        { "name": "act under pressure", "value": "aup" },
+        { "name": "help out", "value": "ho" },
+        { "name": "investigate a mystery", "value": "iam" },
+        { "name": "kick some ass", "value": "ksa" },
+        { "name": "manipulate someone", "value": "ms" },
+        { "name": "protect someone", "value": "ps" },
+        { "name": "read a bad situation", "value": "rabs" },
+        { "name": "use magic", "value": "um" }
+      ]
+    }, 
+    {
+      "name": "forward",
+      "description": "Additional modifiers to the roll.",
+      "type": 4
+    },
+    {
+      "name": "hunter",
+      "description": "Adding a tag for this command will perform it for that hunter. Default is the current user’s Hunter.",
+      "type": 6
+    }
+  ]
+}

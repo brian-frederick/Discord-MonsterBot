@@ -20,9 +20,7 @@ export default {
       transaction = getParam('transaction', options) as InventoryTransaction;
     }
 
-
-  console.log(`Interaction params - item: ${item}, transaction: ${transaction}, hunterId: ${hunterId} `);
-
+    console.log(`Interaction params - item: ${item}, transaction: ${transaction}, hunterId: ${hunterId} `);
 
     await inventoryAction.execute(channel, hunterId, transaction, item);
 
