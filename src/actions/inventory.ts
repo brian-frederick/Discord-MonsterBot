@@ -1,10 +1,8 @@
 import Discord from 'discord.js';
-const { DynamoDB } = require('aws-sdk');
-const _ = require('lodash');
-const ddb = require('../utils/dynamodb');
-const params = require('../utils/params');
-const inventoryHelper = require('../utils/inventory');
-const { tag } = require('../content/commonParams');
+import { DynamoDB } from 'aws-sdk';
+import _ from 'lodash';
+import ddb from '../utils/dynamodb';
+import inventoryHelper from '../utils/inventory';
 import { InventoryTransaction } from '../interfaces/enums';
 
 export default {

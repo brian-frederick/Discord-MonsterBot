@@ -12,36 +12,8 @@ function checkAllArgs(args, check) {
   return;
 }
 
-function parseUpdateVital(args) {
-  const key = checkAllArgs(args, parseHunterVital);
-
-  if (!key) {
-    return;
-  }
-
-  const value = checkAllArgs(args, parseNumber);
-
-  return {
-    key,
-    value: value ? value : 1
-  };
-
-}
-
-function parseUpdateProperty(args) {
-  const key = checkAllArgs(args, parseHunterProperty);
-
-  if (!key) {
-    return;
-  }
-
-  const value = checkAllArgs(args, parseNumber);
-
-  if (!value && value !== 0 ) {
-    return;
-  }
-
-  return { key, value: value };
+function parseUpdateStat(args) {
+  return checkAllArgs(args, parseHunterStat);
 }
 
 function parseNumber(arg) {
@@ -57,6 +29,10 @@ function parseAllForNumber(args) {
   return checkAllArgs(args, parseNumber);
 }
 
+function parseAllForVital(args) {
+  return checkAllArgs(args, parseHunterVital);
+}
+
 function parseHunterVital(arg) {
   const hunterProperties = [
     'experience',
@@ -68,7 +44,7 @@ function parseHunterVital(arg) {
     return arg;
   }
 
-  if (arg === 'xp') {
+  if (arg === 'xp' || arg === 'exp') {
     return 'experience';
   }
 
@@ -127,7 +103,7 @@ function isRemove(args) {
   });
 }
 
-function parseHunterProperty(arg) {
+function parseHunterStat(arg) {
   const hunterProperties = [
     'experience',
     'harm',
@@ -211,12 +187,14 @@ function parseBasicMoveKey(args) {
 module.exports = { 
   checkAllArgs,
   parseUserIdFromMentionParam,
-  parseUpdateVital,
-  parseUpdateProperty,
+  parseUpdateStat,
   parseSpecialMoveKey,
   parseAllForNumber,
   parseInventoryUpdate,
   parseBasicMoveKey,
+  parseHunterStat,
+  parseHunterVital,
+  parseAllForVital,
   isRemove,
   chooseHunterId
 };

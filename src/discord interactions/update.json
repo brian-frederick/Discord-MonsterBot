@@ -1,0 +1,33 @@
+{
+  "name": "update",
+  "description": "Updates hunter stats like cool, charm, tough, etc.",
+  "options": [
+    {
+      "name": "stat",
+      "description": "The hunter property to update.",
+      "required": true,
+      "type": 3,
+      "choices": [
+        { "name": "charm", "value": "charm" },
+        { "name": "cool", "value": "cool" },
+        { "name": "sharp", "value": "sharp" },
+        { "name": "tough", "value": "tough" },
+        { "name": "weird", "value": "weird" },
+        { "name": "experience", "value": "experience" },
+        { "name": "harm", "value": "harm" },
+        { "name": "luck", "value": "luck" }
+      ]
+    }, 
+    {
+      "name": "value",
+      "required": true,
+      "description": "The new value to set for the stat.",
+      "type": 4
+    },
+    {
+      "name": "hunter",
+      "description": "Tagging another user will perform it for their hunter. Default is your hunter.",
+      "type": 6
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "name": "stats",
+  "description": "Displays the hunter's stats.",
+  "options": [
+    {
+      "name": "hunter",
+      "description": "Tagging another user will perform this for their hunter. Default is your hunter.",
+      "type": 6
+    }
+  ]
+}
