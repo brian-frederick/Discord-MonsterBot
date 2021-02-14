@@ -167,7 +167,8 @@ function parseSpecialMoveKey(args) {
       return (
         mightBe && 
         !removeTypes.includes(arg) && 
-        !addTypes.includes(arg)
+        !addTypes.includes(arg) &&
+        !moves[arg.toLowerCase()]
       ) ? arg : null;
   };
 
