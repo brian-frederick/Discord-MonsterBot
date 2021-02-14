@@ -1,5 +1,5 @@
 import ddb from '../utils/dynamodb';
-import { createRecapEmbed, createRecapsEmbed } from '../utils/recap';
+import { createRecapEmbed } from '../utils/recap';
 import Discord from 'discord.js';
 export default {
   validate(guildId) {
@@ -29,16 +29,18 @@ export default {
       return;
     }
 
-    // see all recaps provided
-    if (recapsLimit > 1) {
-      const recapsEmbed = createRecapsEmbed(recaps);
-      channel.send({embed: recapsEmbed});
+    // if we've only got one recap, show it and bail
+    if (recaps.length === 1) {
+      const recapEmbed = createRecapEmbed(recaps[0], true);
+      channel.send({embed: recapEmbed});
       return;
-    } 
+    }
 
-    // just get latest
-    const recapEmbed = createRecapEmbed(recaps[0]);
-    channel.send({embed: recapEmbed});
+    // if we've got multiple, there's more work to do
+    recaps.reverse().forEach(recap => {
+      const embed = createRecapEmbed(recap, false);
+      channel.send({ embed: embed });
+    });
 
     return;
   }

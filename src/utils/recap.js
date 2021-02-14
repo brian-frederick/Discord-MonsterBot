@@ -8,31 +8,22 @@ const yesNoQuestions = [
   { prompt: 'Did we learn something new and important about one of the hunters?', response: 'didLearnAboutHunter' },
 ];
 
-function createRecapEmbed(recap) {
+function createRecapEmbed(recap, includeQAndA) {
   const recapDate = moment(recap.timestamp).utcOffset(-5).format("MMMM Do");
   let recapEmbed = new Discord.MessageEmbed();
   recapEmbed.setTitle(`On ${recapDate}...`);
   recapEmbed.setDescription(recap.recap);
 
-  const fields = yesNoQuestions.map(q => {
+  if (includeQAndA) {
+    const fields = yesNoQuestions.map(q => {
       return { name: q.prompt, value: recap[q.response]}
-  });
+    });
 
-  recapEmbed.addFields(fields);
+    recapEmbed.addFields(fields);
+  }
 
   return recapEmbed;
 }
 
-function createRecapsEmbed(recaps) {
-  let recapsEmbed = new Discord.MessageEmbed();
-  recapsEmbed.setTitle('Recaps');
-  
-  const fields = recaps.reverse().map(r => {
-    return {name: moment(r.timestamp).utcOffset(-5).format("MMMM Do"), value: r.recap}
-  });
-  recapsEmbed.addFields(fields);
 
-  return recapsEmbed;
-}
-
-module.exports = { yesNoQuestions, createRecapEmbed, createRecapsEmbed };
+module.exports = { yesNoQuestions, createRecapEmbed };
