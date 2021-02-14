@@ -1,6 +1,6 @@
 {
   "name": "inventory",
-  "description": "Provides information about or updates a hunter's inventory. To view inventory, don't include an item or transaction.",
+  "description": "Provides info about or updates inventory. To view inventory, don't include item or transaction.",
   "options": [
       {
           "name": "transaction",
