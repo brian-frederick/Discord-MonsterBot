@@ -13,8 +13,7 @@ export default {
     maybeRecordLimit: number | undefined,
   ): Promise<void> {
     let recaps;
-
-    const guildId = channel.guild.id;
+    const guildId = channel?.guild?.id;
     const recapsLimit = maybeRecordLimit ? maybeRecordLimit : 0;
 
     const errorMessage = this.validate(guildId);
