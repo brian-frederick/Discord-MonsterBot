@@ -22,9 +22,8 @@ module.exports = {
     hunterId = params.chooseHunterId(message.author.id, args);
     value = params.parseAllForNumber(args);
     statName = params.parseUpdateStat(args);
-    console.log('statName', statName);
     
-    updateAction.execute(message.channel, hunterId, statName, value)
+    await updateAction.execute(message.channel, hunterId, statName, value)
     return;
 	}
 };
