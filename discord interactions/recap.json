@@ -1,0 +1,11 @@
+{
+  "name": "recap",
+  "description": "Recaps the most recent session(s) based on end session comments.",
+  "options": [
+    {
+      "name": "number",
+      "description": "How many previous sessions to display.",
+      "type": 4
+    }
+  ]
+}
