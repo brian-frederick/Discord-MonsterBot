@@ -1,0 +1,37 @@
+{
+  "name": "advancemove",
+  "description": "Qualifies the hunter for a move's advanced outcome.",
+  "options": [
+    {
+      "name": "basicmove",
+      "description": "The basic move to advance.",
+      "required": false,
+      "type": 3,
+      "choices": [
+        { "name": "act under pressure", "value": "aup" },
+        { "name": "help out", "value": "ho" },
+        { "name": "investigate a mystery", "value": "iam" },
+        { "name": "kick some ass", "value": "ksa" },
+        { "name": "manipulate someone", "value": "ms" },
+        { "name": "protect someone", "value": "ps" },
+        { "name": "read a bad situation", "value": "rabs" },
+        { "name": "use magic", "value": "um" }
+      ]
+    },
+    {
+      "name": "specialmovekey",
+      "description": "The key of a special move to advance.",
+      "type": 3
+    },
+    {
+      "name": "remove",
+      "description": "Remove an advanced move. Defaults to false.",
+      "type": 5
+    },
+    {
+      "name": "hunter",
+      "description": "Adding a tag for this command will perform it for that hunter. Default is the current user’s Hunter.",
+      "type": 6
+    }
+  ]
+}

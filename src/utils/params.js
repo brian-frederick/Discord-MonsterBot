@@ -178,10 +178,9 @@ function parseBasicMoveKey(args) {
 
   return checkAllArgs(args, (arg) => {
     if (moves[arg.toLowerCase()]) {
-      return { key: arg.toLowerCase(), value: moves[arg.toLowerCase()].name }
+      return arg.toLowerCase()
     }
   });
-
 }
 
 module.exports = { 
