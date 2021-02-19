@@ -1,0 +1,27 @@
+{
+  "name": "info",
+  "description": "Provides info and outcomes on basic and special moves.",
+  "options": [
+    {
+      "name": "basicmove",
+      "description": "The basic move you'd like info on.",
+      "required": false,
+      "type": 3,
+      "choices": [
+        { "name": "act under pressure", "value": "aup" },
+        { "name": "help out", "value": "ho" },
+        { "name": "investigate a mystery", "value": "iam" },
+        { "name": "kick some ass", "value": "ksa" },
+        { "name": "manipulate someone", "value": "ms" },
+        { "name": "protect someone", "value": "ps" },
+        { "name": "read a bad situation", "value": "rabs" },
+        { "name": "use magic", "value": "um" }
+      ]
+    },
+    {
+      "name": "specialmovekey",
+      "description": "The key of the special move you'd like info on.",
+      "type": 3
+    }
+  ]
+}

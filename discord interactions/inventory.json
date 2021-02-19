@@ -1,0 +1,25 @@
+{
+  "name": "inventory",
+  "description": "Provides info about or updates inventory. To view inventory, don't include item or transaction.",
+  "options": [
+      {
+          "name": "transaction",
+          "description": "Whether we should add or remove the item",
+          "type": 3,
+          "choices": [
+              { "name": "add", "value": "add" },
+              { "name": "remove", "value": "remove" }
+          ]
+      }, 
+      {
+          "name": "item",
+          "description": "The item to be added or removed.",
+          "type": 3
+      },
+      {
+          "name": "hunter",
+          "description": "Adding a tag for this command will perform it for that hunter.",
+          "type": 6
+      }
+  ]
+}

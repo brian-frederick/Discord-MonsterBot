@@ -1,0 +1,5 @@
+{
+  "name": "endsession",
+  "description": "Asks end session questions, tabulates experience points, and creates a recap.",
+  "options": []
+}

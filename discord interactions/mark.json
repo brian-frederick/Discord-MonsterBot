@@ -1,0 +1,27 @@
+{
+  "name": "mark",
+  "description": "Adds value to a hunter's vital sign.",
+  "options": [
+    {
+      "name": "vital",
+      "description": "The hunter's vital to update.",
+      "required": true,
+      "type": 3,
+      "choices": [
+        { "name": "experience", "value": "experience" },
+        { "name": "harm", "value": "harm" },
+        { "name": "luck", "value": "luck" }
+      ]
+    }, 
+    {
+      "name": "value",
+      "description": "The value to add to the vital.",
+      "type": 4
+    },
+    {
+      "name": "hunter",
+      "description": "Tagging another user will perform it for their hunter. Default is your hunter.",
+      "type": 6
+    }
+  ]
+}
