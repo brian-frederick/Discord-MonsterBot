@@ -1,7 +1,7 @@
 import ddb from '../utils/dynamodb';
 import Discord from 'discord.js';
 import _ from 'lodash';
-import hunterHelper from '../utils/hunter';
+import * as hunterHelper from '../utils/hunter';
 
 export default {
   async execute(

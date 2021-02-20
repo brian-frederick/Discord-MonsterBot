@@ -4,7 +4,7 @@ import _ from 'lodash';
 import ddb from '../utils/dynamodb';
 import moves from '../utils/moves';
 import specialMovesService from '../services/specialMovesService';
-import hunterHelper from '../utils/hunter';
+import * as hunterHelper from '../utils/hunter';
 import { updateHunterProperty } from '../services/hunterService';
 
 export default {
