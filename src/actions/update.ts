@@ -1,7 +1,8 @@
 import Discord from 'discord.js';
 import ddb from '../utils/dynamodb';
 import { Stat } from '../interfaces/enums';
-import hunterHelper from '../utils/hunter';
+import * as hunterHelper from '../utils/hunter';
+import { updateHunterProperty } from '../services/hunterService';
 
 export default {
   validate(hunterId: string, stat: Stat, value: number): string {
@@ -34,14 +35,8 @@ export default {
       channel.send(errMsg);
       return;
     }
-
-    // dynamodb properties
-    const UpdateExpression = `set ${stat} = :val`;
-    const ExpressionAttributeValues = {
-      ":val": { "N": value.toString() }
-    };
     
-    const updatedHunter = await ddb.updateHunter(hunterId, UpdateExpression, ExpressionAttributeValues);
+    const updatedHunter = await updateHunterProperty(hunterId, stat, value);
     if (!updatedHunter) {
       channel.send('Something has gone wrong! Help!');
       return;

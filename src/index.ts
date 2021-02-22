@@ -52,14 +52,21 @@ client.ws.on('INTERACTION_CREATE', async request => {
   console.log(request);
 
   request.data.options?.forEach(option => {console.log(option)});
+  
+  let channel = client.channels.cache.get(request.channel_id);
+  if (!channel) {
+    console.log('trying a fetch');
+    channel = await client.channels.fetch(request.channel_id);
+  }
 
-  const channel = client.channels.cache.get(request.channel_id);
+  // if this is a dm, the user object is one level higher.
+  const user = request.member ? request.member.user : request.user;
 
   const interaction = interactions.get(request.data.name);
 
-  console.log('here is the interaction i will use: ', interaction);
+  console.log('using interaction: ', interaction);
   
-  interaction.execute(channel, request.member.user, request.guild_id, request.data.options);
+  interaction.execute(channel, user, request.guild_id, request.data.options);
 })
 
 let commands: Map<string, Command> = new Map();

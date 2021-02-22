@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
 import ddb from '../utils/dynamodb';
 const _ = require('lodash');
-import hunterHelper from '../utils/hunter';
+import * as hunterHelper from '../utils/hunter';
 import { Vital } from '../interfaces/enums';
 
 export default {

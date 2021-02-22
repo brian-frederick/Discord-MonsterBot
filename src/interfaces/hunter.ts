@@ -16,12 +16,17 @@ export interface Hunter {
   tough: number;
   weird: number;
 
-  // other
-  inventory: string[];
-  advancedMoves: AdvancedMove[];
+  inventory?: string[];
+  advancedMoves?: AdvancedMove[];
+  customProps?: CustomProp[];
 }
 
 interface AdvancedMove {
   key: string;
   value: string;
+}
+
+export interface CustomProp {
+  key: string,
+  value: number
 }

@@ -4,7 +4,8 @@ import _ from 'lodash';
 import ddb from '../utils/dynamodb';
 import moves from '../utils/moves';
 import specialMovesService from '../services/specialMovesService';
-import hunterHelper from '../utils/hunter';
+import * as hunterHelper from '../utils/hunter';
+import { updateHunterProperty } from '../services/hunterService';
 
 export default {
   validate(
@@ -90,16 +91,7 @@ export default {
       advancedMoves.push(moveToAdvance);
     }
 
-    // We've updated the advanced moves. Just need to save it now.
-    const marshalled = DynamoDB.Converter.marshall({advancedMoves});
-    // dynamodb properties
-    const UpdateExpression = `set advancedMoves = :val`;
-    const ExpressionAttributeValues = {
-      ":val": marshalled.advancedMoves,
-    };
-    
-    const updatedHunter = await ddb.updateHunter(hunterId, UpdateExpression, ExpressionAttributeValues);
-
+    const updatedHunter = await updateHunterProperty(hunterId, "advancedMoves", advancedMoves);
     if (!updatedHunter) {
       channel.send('Something has gone wrong! Help!');
       return;

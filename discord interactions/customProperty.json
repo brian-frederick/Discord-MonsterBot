@@ -1,0 +1,33 @@
+{
+  "name": "customproperty",
+  "description": "Creates, removes, or updates a custom property to the hunter's stats.",
+  "options": [
+    {
+      "name": "transaction",
+      "description": "Whether to create, remove, or update the value of the property.",
+      "type": 3,
+      "required": true,
+      "choices": [
+          { "name": "create", "value": "create" },
+          { "name": "remove", "value": "remove" },
+          { "name": "update", "value": "update" }
+      ]
+    }, 
+    {
+      "name": "name",
+      "description": "The name of the property to edit.",
+      "required": true,
+      "type": 3
+    },
+    {
+      "name": "value",
+      "description": "The value for the property.",
+      "type": 4
+    },
+    {
+      "name": "hunter",
+      "description": "Adding a tag for this command will perform it for that hunter. Default is the current user’s Hunter.",
+      "type": 6
+    }
+  ]
+}
