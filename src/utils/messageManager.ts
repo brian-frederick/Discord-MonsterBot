@@ -15,10 +15,10 @@ export const requesterFilter = (requesterId, msg) => msg.author.id === requester
 
 export const hasYesMsg = (coll: Discord.Collection<string, Discord.Message>) => {
   return coll.size > 0 && 
-    coll.first().content.toLowerCase() === 'yes';
+    coll.first().content.toLowerCase().includes('yes');
 };
 
 export const hasNoMsg = (coll: Discord.Collection<string, Discord.Message>) => {
   return coll.size > 0 && 
-    coll.first().content.toLowerCase() === 'no';
+    coll.first().content.toLowerCase().includes('no');
 };
