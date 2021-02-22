@@ -4,6 +4,19 @@ import _ from 'lodash';
 import ddb from '../utils/dynamodb';
 import inventoryHelper from '../utils/inventory';
 import { InventoryTransaction } from '../interfaces/enums';
+import { yesNoFilter, hasYesMsg } from '../utils/messageManager';
+
+const confirmPossibleMatch = async (channel, hunterId, possibleMatch: string): Promise<boolean> => {
+
+  await channel.send(`Hrrmmm. Do you want me to remove the ${possibleMatch}? (yes/no)`);
+  const collection: Discord.Collection<string, Discord.Message> = await channel.awaitMessages(yesNoFilter, { max: 1, time: 30000 });
+  if (collection.size < 1) {
+    channel.send(`Grrr blorp. Monster not have patience. Try again.`);
+    return false;
+  }
+
+  return hasYesMsg(collection);
+}
 
 export default {
   validate(
@@ -49,7 +62,7 @@ export default {
       return;
     }
 
-    let inventory = hunter.inventory ? hunter.inventory : [];
+    let inventory: string[] = hunter.inventory ? hunter.inventory : [];
 
     // if no transaction type, just show existing inventory
     if (!transaction) {
@@ -58,11 +71,27 @@ export default {
     }
 
     if (transaction == InventoryTransaction.REMOVE) {
-      if (!inventory.includes(item)) {
-        channel.send(`Could not find a ${item}`)
-      } else {
-        inventoryHelper.removeItem(item, inventory);
+    
+      let itemToRemove = inventory.find(inv => inv.toLowerCase() === item.toLowerCase());
+
+      if (!itemToRemove) {
+      // look for a possible match
+        const possibleMatch = inventory.find(inv => inv.toLowerCase().startsWith(item));
+        if (!possibleMatch) {
+          channel.send(`BLAR! Cannot find ${item} to remove!`);
+          return;
+        }
+
+        const confirmed = await confirmPossibleMatch(channel, hunterId, possibleMatch);
+        if (!confirmed) {
+          channel.send(`BLAR! Very well hunter. Nothing to do here.`);
+          return;
+        }
+
+        itemToRemove = possibleMatch;
       }
+      
+      inventoryHelper.removeItem(item, inventory);
     }
 
     if (transaction == InventoryTransaction.ADD) {
