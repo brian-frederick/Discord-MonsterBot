@@ -1,6 +1,7 @@
 import ddb from '../utils/dynamodb';
 import Discord from 'discord.js';
 import { yesNoQuestions } from '../utils/recap';
+import { yesNoFilter, hasYesMsg } from '../utils/messageManager';
 
 export default {
   validate(guildId) {
@@ -34,13 +35,6 @@ export default {
       recap: null
     };
 
-    const yesNoFilter = msg => {
-      return (
-        msg.content.toLowerCase().includes('yes') ||
-        msg.content.toLowerCase().includes('no')
-      );
-    };
-
     channel.send(`Your answers to the next four questions should include the words 'yes' or 'no'.`);
 
     // cycle through end session questions
@@ -53,29 +47,25 @@ export default {
         return;
       }
       
-      const answer = collection.first().content;
-      
-      if (answer.toLowerCase().includes('yes')) {
+      if (hasYesMsg(collection)) {
         yesCount++;
       }
 
-      sessionSummary[q.response] = answer;
+      sessionSummary[q.response] = collection.first().content;
     }
 
     // Create a recap of the session
     let recap = '';
 
     await channel.send(`Everyone should answer this one. What happened in this session? You have 1 minute starting NOW!`);
-    let recapCollection = await channel.awaitMessages(msg => !msg.author.bot, { time: 40000 });
+    
+    setTimeout(() => channel.send('20 more seconds to provide a recap...'), 40000);
+    setTimeout(() => channel.send('Grrrr Beeeep CANNOT HOLD IT MUCH LONGER SEND IT NOW!'), 55000);
+    
+    let recapCollection = await channel.awaitMessages(msg => !msg.author.bot, { time: 65000 });
     recapCollection.forEach(msg => recap += `${msg.content} - ${msg.author}\n`);
 
-    await channel.send(`20 more seconds to provide a recap...`);
-    let recapCollectionFinalSeconds = await channel.awaitMessages(msg => !msg.author.bot, { time: 20000 });  
-    recapCollectionFinalSeconds.forEach(msg => recap += `${msg.content} - ${msg.author}\n`);
 
-    await channel.send(`Grrrr Beeeep CAN'T HOLD IT MUCH LONGER SEND IT NOW!`);
-    let recapCollectionLastChance = await channel.awaitMessages(msg => !msg.author.bot, { time: 5000 });  
-    recapCollectionLastChance.forEach(msg => recap += `${msg.content} - ${msg.author}\n`);
     sessionSummary.recap = recap;
 
     // Add admin fields to summary

@@ -2,6 +2,7 @@ import ddb from '../utils/dynamodb';
 import Discord from 'discord.js';
 import _ from 'lodash';
 import * as hunterHelper from '../utils/hunter';
+import { yesNoFilter, numFilter, requesterFilter, hasNoMsg } from '../utils/messageManager';
 
 export default {
   async execute(
@@ -11,18 +12,19 @@ export default {
     
     const requesterId = userId;
 
-    const yesNoFilter = msg => {
+    const isRequesterYesNoFilter = msg => {
       return (
-        isFromRequesterFilter(msg) &&
-        (msg.content.toLowerCase().includes('yes') || msg.content.toLowerCase().includes('no'))
+        requesterFilter(requesterId, msg) &&
+        yesNoFilter(msg)
       );
     };
 
-    const isFromRequesterFilter = (msg) => msg.author.id === requesterId;
+    const isFromRequesterFilter = msg => requesterFilter(requesterId, msg);
 
-    const numFilter = msg => {
+    const isRequesterNumFilter = msg => {
       return (
-        isFromRequesterFilter(msg) && !isNaN(msg.content)
+        requesterFilter(requesterId, msg) &&
+        numFilter(msg)
       );
     };
 
@@ -32,16 +34,14 @@ export default {
       await channel.send(
         `Blrp Screee! I see you already have a hunter - ${existingHunter.firstName} ${existingHunter.lastName}. Do you wish to replace them? "Yes" or "No"?`
       );
-      const collection = await channel.awaitMessages(yesNoFilter, { max: 1, time: 120000 });
+      const collection = await channel.awaitMessages(isRequesterYesNoFilter, { max: 1, time: 120000 });
       
       if (collection.size < 1) {
         channel.send(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
         return;
       }
       
-      const shouldProceed = collection.first().content;
-
-      if (shouldProceed.toLowerCase() === 'no') {
+      if (hasNoMsg(collection)) {
         channel.send('Bluuurp Beep Boop. Very well hunter. Safe travels.');
         return;
       }
@@ -52,11 +52,11 @@ export default {
       { prompt: `What is your hunter's first name? (Text)`, property: 'firstName', filter: isFromRequesterFilter},
       { prompt: `What is your hunter's last name? (Text)`, property: 'lastName', filter: isFromRequesterFilter},
       { prompt: `What is your hunter's type? (Text)`, property: 'type', filter: isFromRequesterFilter},
-      { prompt: `What is your hunter's charm? (Number)`, property: 'charm', filter: numFilter},
-      { prompt: `What is your hunter's cool? (Number)`, property: 'cool', filter: numFilter},
-      { prompt: `What is your hunter's sharp? (Number)`, property: 'sharp', filter: numFilter},
-      { prompt: `What is your hunter's tough? (Number)`, property: 'tough', filter: numFilter},
-      { prompt: `What is your hunter's weird? (Number)`, property: 'weird', filter: numFilter},
+      { prompt: `What is your hunter's charm? (Number)`, property: 'charm', filter: isRequesterNumFilter},
+      { prompt: `What is your hunter's cool? (Number)`, property: 'cool', filter: isRequesterNumFilter},
+      { prompt: `What is your hunter's sharp? (Number)`, property: 'sharp', filter: isRequesterNumFilter},
+      { prompt: `What is your hunter's tough? (Number)`, property: 'tough', filter: isRequesterNumFilter},
+      { prompt: `What is your hunter's weird? (Number)`, property: 'weird', filter: isRequesterNumFilter},
     ];
 
     let hunter = {
@@ -87,7 +87,7 @@ export default {
         return;
       }
       
-      const answer = q.filter === numFilter ? parseInt(collection.first().content) : collection.first().content;
+      const answer = q.filter === isRequesterNumFilter ? parseInt(collection.first().content) : collection.first().content;
 
       hunter[q.property] = answer;
     }
