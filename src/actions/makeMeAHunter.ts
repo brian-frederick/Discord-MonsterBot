@@ -51,7 +51,7 @@ export default {
     const hunterQuestions = [
       { prompt: `What is your hunter's first name? (Text)`, property: 'firstName', filter: isFromRequesterFilter},
       { prompt: `What is your hunter's last name? (Text)`, property: 'lastName', filter: isFromRequesterFilter},
-      { prompt: `What is your hunter's type? (Text)`, property: 'type', filter: isFromRequesterFilter},
+      { prompt: `What is your hunter's type? (The Chosen, The Mundane, etc.) (Text)`, property: 'type', filter: isFromRequesterFilter},
       { prompt: `What is your hunter's charm? (Number)`, property: 'charm', filter: isRequesterNumFilter},
       { prompt: `What is your hunter's cool? (Number)`, property: 'cool', filter: isRequesterNumFilter},
       { prompt: `What is your hunter's sharp? (Number)`, property: 'sharp', filter: isRequesterNumFilter},
