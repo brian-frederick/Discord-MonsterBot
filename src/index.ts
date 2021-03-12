@@ -3,8 +3,33 @@ import Discord from 'discord.js';
 import { prefix, token } from  './config.json';
 import { addGuild, deleteGuild } from './db/guilds' ;
 import { Command } from './interfaces/command';
+import { confirmInteraction } from './services/interactionService';
 
 const client = new Discord.Client();
+
+// dynamically create commands
+let commands: Map<string, Command> = new Map();
+let aliasedCommands: Map<string, Command> = new Map();
+
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+for (const file of commandFiles) {
+  const command: Command = require(`./commands/${file}`);
+  commands.set(command.name, command);
+  
+  if (command.aliases) {
+    command.aliases.forEach(alias => aliasedCommands.set(alias, command));
+  }
+}
+
+// dynamically create interactions
+let interactions = new Map();
+
+const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.js'));
+
+for (const file of interactionFiles) {
+  const interaction = require (`./interactions/${file}`);
+	interactions.set(interaction.default.name, interaction.default);
+}
 
 client.once('ready', () => {
   console.log('starting up! beep boop raaaarrr!');
@@ -50,8 +75,6 @@ client.on('guildDelete', guild => {
 client.ws.on('INTERACTION_CREATE', async request => {
   console.log('interaction ahoy: ');
   console.log(request);
-
-  request.data.options?.forEach(option => {console.log(option)});
   
   let channel = client.channels.cache.get(request.channel_id);
   if (!channel) {
@@ -64,34 +87,13 @@ client.ws.on('INTERACTION_CREATE', async request => {
 
   const interaction = interactions.get(request.data.name);
 
-  console.log('using interaction: ', interaction);
-  
+  if (interaction && request.id && request.token) {
+    const msg = `beep blorp ${user.username}.`;
+    await confirmInteraction(request.id, request.token, msg);
+  }
+
   interaction.execute(channel, user, request.guild_id, request.data.options);
 })
-
-let commands: Map<string, Command> = new Map();
-let aliasedCommands: Map<string, Command> = new Map();
-
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-for (const file of commandFiles) {
-  const command: Command = require(`./commands/${file}`);
-  commands.set(command.name, command);
-  
-  if (command.aliases) {
-    command.aliases.forEach(alias => aliasedCommands.set(alias, command));
-  }
-}
-
-let interactions = new Map();
-
-const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.js'));
-console.log('interaction files: ', interactionFiles);
-
-for (const file of interactionFiles) {
-  const interaction = require (`./interactions/${file}`);
-  console.log('interactionCommand: ', interaction)
-	interactions.set(interaction.default.name, interaction.default);
-}
 
 client.on('message', message => {
   let command: Command;
