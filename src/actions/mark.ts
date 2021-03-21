@@ -1,8 +1,8 @@
-import Discord from 'discord.js';
 import ddb from '../utils/dynamodb';
 const _ = require('lodash');
 import * as hunterHelper from '../utils/hunter';
 import { Vital } from '../interfaces/enums';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   validate(hunterId: string, vital: Vital, value: number): string {
@@ -22,7 +22,7 @@ export default {
   },
 
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     hunterId: string,
     vital: Vital,
     value: number,
@@ -33,7 +33,7 @@ export default {
 
     const errMsg = this.validate(hunterId, vital, vitalValue);
     if (errMsg) {
-      channel.send(errMsg);
+      messenger.respond(errMsg);
       return;
     }
 
@@ -44,13 +44,12 @@ export default {
     
     const updatedHunter = await ddb.updateHunter(hunterId, UpdateExpression, ExpressionAttributeValues);
     if (!updatedHunter) {
-      channel.send('Something has gone wrong! Help!');
+      messenger.respond('Something has gone wrong! Help!');
       return;
     }
 
-    channel.send(`Marked ${vital} plus ${vitalValue}.`);
     const statSheet = hunterHelper.statsEmbed(updatedHunter);
-    channel.send({ embed: statSheet });
+    messenger.respondWithEmbed(statSheet);
 
     return;
   }

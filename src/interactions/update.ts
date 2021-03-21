@@ -2,10 +2,11 @@ import Discord from 'discord.js';
 import { Option } from '../interfaces/DiscordInteractions';
 import { chooseHunterId, getParam } from '../utils/interactionParams';
 import updateAction from '../actions/update';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   name: 'update',
-  async execute(channel: Discord.TextChannel, user: Discord.User, guildId, options: Option[] = []) {
+  async execute(messenger: DiscordMessenger, user: Discord.User, guildId, options: Option[] = []) {
     let stat;
     let hunterId;
     let value;
@@ -16,7 +17,7 @@ export default {
       value = getParam('value', options);
     }
 
-    await updateAction.execute(channel, hunterId, stat, value);
+    await updateAction.execute(messenger, hunterId, stat, value);
 
     return;
   }

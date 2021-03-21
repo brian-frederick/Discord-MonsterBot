@@ -2,10 +2,11 @@ import Discord from 'discord.js';
 import customProperty from '../actions/customProperty';
 import { Option } from '../interfaces/DiscordInteractions';
 import { chooseHunterId, getParam } from '../utils/interactionParams';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   name: 'customproperty',
-  async execute(channel: Discord.TextChannel, user: Discord.User, guildId, options: Option[] = []) {
+  async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
     let hunterId: string;
     let transaction: string;
     let name: string;
@@ -18,7 +19,7 @@ export default {
       transaction = getParam('transaction', options);
     }
 
-    await customProperty.execute(channel, hunterId, transaction, name, maybeValue);
+    await customProperty.execute(messenger, hunterId, transaction, name, maybeValue);
     return;
   }
 }

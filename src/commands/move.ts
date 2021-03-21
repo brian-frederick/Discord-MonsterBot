@@ -1,6 +1,7 @@
 import { chooseHunterId, parseAllForNumber } from '../utils/params';
 import { tag, modifier } from '../content/commonParams';
 import moveAction from '../actions/move';
+import { CommandMessenger } from '../models/CommandMessenger';
 
 module.exports = {
   name: 'move',
@@ -11,7 +12,7 @@ module.exports = {
     modifier,
     tag,
   ],
-	async execute(message, args, alias) {
+	async execute(messenger: CommandMessenger, message, args, alias) {
     let moveKey;
     let forward;
     let hunterId: string;
@@ -25,7 +26,7 @@ module.exports = {
     hunterId = chooseHunterId(message.author.id, args);
     forward = parseAllForNumber(args);
 
-    await moveAction.execute(message.channel, hunterId, moveKey, forward);
+    await moveAction.execute(messenger, hunterId, moveKey, forward);
     
     return;
 	}

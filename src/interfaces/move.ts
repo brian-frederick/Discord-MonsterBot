@@ -3,7 +3,7 @@ import Discord from 'discord.js';
 import { Option } from './DiscordInteractions';
 import { chooseHunterId, getParam } from '../utils/interactionParams';
 import moveAction from '../actions/move';
-
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 export class BasicMove {
   moveKey: MoveType;
 
@@ -11,7 +11,7 @@ export class BasicMove {
     this.moveKey = key;
   }
 
-  async execute(channel: Discord.TextChannel, user: Discord.User, guildId, options: Option[] = []) {
+  async execute(messenger: DiscordMessenger, user: Discord.User, guildId, options: Option[] = []) {
     let forward: number;
     let hunterId: string;
 
@@ -21,7 +21,7 @@ export class BasicMove {
       forward = parseInt(forwardParam);
     }
 
-    await moveAction.execute(channel, hunterId, this.moveKey, forward);
+    await moveAction.execute(messenger, hunterId, this.moveKey, forward);
 
     return;
   }

@@ -2,10 +2,11 @@ import Discord from 'discord.js';
 import { Option } from '../interfaces/DiscordInteractions';
 import { chooseHunterId, getParam } from '../utils/interactionParams';
 import advanceMoveAction from '../actions/advanceMove';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   name: 'advancemove',
-  async execute(channel: Discord.TextChannel, user: Discord.User, guildId, options: Option[] = []) {
+  async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
     let hunterId: string | undefined;
     let maybeBasicMoveKey: string;
     let isRemove: boolean;
@@ -18,7 +19,7 @@ export default {
       isRemove = !!getParam('remove', options);
     }
 
-    await advanceMoveAction.execute(channel, hunterId, maybeBasicMoveKey, maybeSpecialMoveKey, isRemove);
+    await advanceMoveAction.execute(messenger, hunterId, maybeBasicMoveKey, maybeSpecialMoveKey, isRemove);
 
     return null;
   }

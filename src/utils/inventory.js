@@ -3,14 +3,9 @@ function printInventory(firstName, inventory) {
     let inventoryString = '';
     inventory.forEach(item => inventoryString += ` - ${item} \n`);
     return { 
-      embed: { 
-        title: `${firstName}'s Inventory:`,
-        description: inventoryString
-      }
+      title: `${firstName}'s Inventory:`,
+      description: inventoryString
     };
-  }
-  else {
-    return `${firstName}'s inventory is empty`;
   }
 }
 

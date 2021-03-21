@@ -1,11 +1,10 @@
-import Discord from 'discord.js';
-import { DynamoDB } from 'aws-sdk';
 import _ from 'lodash';
 import ddb from '../utils/dynamodb';
 import moves from '../utils/moves';
 import specialMovesService from '../services/specialMovesService';
 import * as hunterHelper from '../utils/hunter';
 import { updateHunterProperty } from '../services/hunterService';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   validate(
@@ -29,7 +28,7 @@ export default {
   },
 
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     hunterId: string | undefined, 
     maybeBasicMoveKey:string | undefined,
     maybeSpecialMoveKey: string | undefined,
@@ -41,13 +40,13 @@ export default {
     
     const errorMessage = this.validate(hunterId, maybeBasicMoveKey, maybeSpecialMoveKey);
     if (errorMessage){
-      channel.send(errorMessage);
+      messenger.respond(errorMessage);
       return;
     }
 
     const hunter = await ddb.getHunter(hunterId);
     if (_.isEmpty(hunter)) {
-      channel.send("Could not find your hunter!");
+      messenger.respond("Could not find your hunter!");
       return;
     }
 
@@ -58,7 +57,7 @@ export default {
       const keyToRemove = maybeBasicMoveKey ? maybeBasicMoveKey : maybeSpecialMoveKey;
       const i = advancedMoves.findIndex(i => i.key === keyToRemove);
       if (i < 0) {
-        channel.send(`Blrgh! Cannot find an advanced move with the key of ${keyToRemove}.`);
+        messenger.respond(`Blrgh! Cannot find an advanced move with the key of ${keyToRemove}.`);
         return;
       }
       
@@ -75,7 +74,7 @@ export default {
       
       if (maybeSpecialMoveKey) {
 
-        const specialMoveContext = await specialMovesService.getSpecialMove(maybeSpecialMoveKey, channel.guild?.id);
+        const specialMoveContext = await specialMovesService.getSpecialMove(maybeSpecialMoveKey, messenger.channel.guild?.id);
   
         if (specialMoveContext) {
           moveToAdvance = { key: maybeSpecialMoveKey, value: specialMoveContext.name };
@@ -84,7 +83,7 @@ export default {
   
       // Hmmm doesn't look like a special move either. Let's bail.
       if (!moveToAdvance) {
-        channel.send('BLARRR We could not find a move to advance!!');
+        messenger.respond('BLARRR We could not find a move to advance!!');
         return;
       }
 
@@ -93,12 +92,12 @@ export default {
 
     const updatedHunter = await updateHunterProperty(hunterId, "advancedMoves", advancedMoves);
     if (!updatedHunter) {
-      channel.send('Something has gone wrong! Help!');
+      messenger.respond('Something has gone wrong! Help!');
       return;
     }
 
-    const statSheet = hunterHelper.statsEmbed(updatedHunter);
-    channel.send({ embed: statSheet });
+    const statSheetEmbed = hunterHelper.statsEmbed(updatedHunter);
+    messenger.respondWithEmbed(statSheetEmbed);
 
     return;
   }

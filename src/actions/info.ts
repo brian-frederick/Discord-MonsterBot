@@ -1,7 +1,7 @@
-import Discord from 'discord.js';
 import moves from '../utils/moves';
 import specialMovesService from '../services/specialMovesService';
 import { infoOutcomeFields, infoDescription } from '../utils/movesHelper';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   validate(
@@ -20,7 +20,7 @@ export default {
   },
 
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     maybeBasicMoveKey:string | undefined,
     maybeSpecialMoveKey: string | undefined,
   ): Promise<void> {
@@ -32,7 +32,7 @@ export default {
 
     const errorMessage = this.validate(maybeBasicMoveKey, maybeSpecialMoveKey);
     if (errorMessage){
-      channel.send(errorMessage);
+      messenger.respond(errorMessage);
       return;
     }
     
@@ -41,11 +41,11 @@ export default {
     }
 
     if (maybeSpecialMoveKey) {
-      moveContext = await specialMovesService.getSpecialMove(maybeSpecialMoveKey, channel?.guild?.id);
+      moveContext = await specialMovesService.getSpecialMove(maybeSpecialMoveKey, messenger.channel?.guild?.id);
     }
 
     if (!moveContext) {
-      channel.send(`Blrgh! Cannot find a move to give you info about!`);
+      messenger.channel.send(`Blrgh! Cannot find a move to give you info about!`);
       return;
     }
 
@@ -70,7 +70,7 @@ export default {
       moveEmbed.url = `https://www.monsterbot.io/moves/show/${moveContext.key}/guild/${moveContext.guildId}`;
     }
 
-    channel.send({ embed: moveEmbed });
+    messenger.respondWithEmbed(moveEmbed);
     return;
   }
 }

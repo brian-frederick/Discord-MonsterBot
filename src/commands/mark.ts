@@ -3,6 +3,7 @@ const ddb = require('../utils/dynamodb');
 const params = require('../utils/params');
 const hunterHelper = require('../utils/hunter');
 import markAction from '../actions/mark';
+import { CommandMessenger } from '../models/CommandMessenger';
 
 module.exports = {
   name: 'mark',
@@ -12,7 +13,7 @@ module.exports = {
     tag,  
     { name: `- Vital ('experience', 'harm', or 'luck') (required)`, value: 'A hunter vital to increment by the corresponding modifier.'}
   ],
-	async execute(message, args) {
+	async execute(messenger: CommandMessenger, message, args) {
     let vital;
     let value;
     let hunterId;
@@ -22,7 +23,7 @@ module.exports = {
     value = params.parseAllForNumber(args);
 
     console.log('vital', vital);
-    await markAction.execute(message.channel, hunterId, vital, value);
+    await markAction.execute(messenger, hunterId, vital, value);
 
     return;
 	}

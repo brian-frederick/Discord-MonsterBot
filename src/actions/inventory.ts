@@ -5,13 +5,14 @@ import ddb from '../utils/dynamodb';
 import inventoryHelper from '../utils/inventory';
 import { InventoryTransaction } from '../interfaces/enums';
 import { yesNoFilter, hasYesMsg } from '../utils/messageManager';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
-const confirmPossibleMatch = async (channel, hunterId, possibleMatch: string): Promise<boolean> => {
+const confirmPossibleMatch = async (messenger: DiscordMessenger, hunterId, possibleMatch: string): Promise<boolean> => {
 
-  await channel.send(`Hrrmmm. Do you want me to remove the ${possibleMatch}? (yes/no)`);
-  const collection: Discord.Collection<string, Discord.Message> = await channel.awaitMessages(yesNoFilter, { max: 1, time: 30000 });
+  await messenger.followup(`Hrrmmm. Do you want me to remove the ${possibleMatch}? (yes/no)`);
+  const collection: Discord.Collection<string, Discord.Message> = await messenger.channel.awaitMessages(yesNoFilter, { max: 1, time: 30000 });
   if (collection.size < 1) {
-    channel.send(`Grrr blorp. Monster not have patience. Try again.`);
+    messenger.followup(`Grrr blorp. Monster not have patience. Try again.`);
     return false;
   }
 
@@ -40,7 +41,7 @@ export default {
   },
 
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     hunterId: string, 
     transaction,
     item: string
@@ -52,13 +53,13 @@ export default {
     
     const errorMessage = this.validate(hunterId, transaction, item);
     if (errorMessage){
-      channel.send(errorMessage);
+      messenger.respond(errorMessage);
       return;
     }
 
     const hunter = await ddb.getHunter(hunterId);
     if (_.isEmpty(hunter)) {
-      channel.send("Could not find your hunter!");
+      messenger.respond("Could not find your hunter!");
       return;
     }
 
@@ -66,10 +67,15 @@ export default {
 
     // if no transaction type, just show existing inventory
     if (!transaction) {
-      channel.send(inventoryHelper.printInventory(hunter.firstName, inventory));
+      if (inventory.length < 1) {
+        messenger.respond(`${hunter.firstName}'s inventory is empty`);
+      } else {
+        messenger.respondWithEmbed(inventoryHelper.printInventory(hunter.firstName, inventory));
+      }
       return;
     }
 
+    await messenger.respond(`Blar! Attempting to ${transaction} item: ${item}...`)
     if (transaction == InventoryTransaction.REMOVE) {
     
       let itemToRemove = inventory.find(inv => inv.toLowerCase() === item.toLowerCase());
@@ -78,13 +84,13 @@ export default {
       // look for a possible match
         const possibleMatch = inventory.find(inv => inv.toLowerCase().startsWith(item));
         if (!possibleMatch) {
-          channel.send(`BLAR! Cannot find ${item} to remove!`);
+          messenger.followup(`BLAR! Cannot find ${item} to remove!`);
           return;
         }
 
-        const confirmed = await confirmPossibleMatch(channel, hunterId, possibleMatch);
+        const confirmed = await confirmPossibleMatch(messenger, hunterId, possibleMatch);
         if (!confirmed) {
-          channel.send(`BLAR! Very well hunter. Nothing to do here.`);
+          messenger.followup(`BLAR! Very well hunter. Nothing to do here.`);
           return;
         }
 
@@ -108,11 +114,15 @@ export default {
     const updatedHunter = await ddb.updateHunter(hunterId, UpdateExpression, ExpressionAttributeValues);
 
     if (!updatedHunter) {
-      channel.send('GrrrOooph! Something has gone wrong updating our monster data! It hurts!');
+      messenger.followup('GrrrOooph! Something has gone wrong updating our monster data! It hurts!');
       return;
     }
-
-    channel.send(inventoryHelper.printInventory(hunter.firstName, inventory));
+    
+    if (inventory.length < 1) {
+      messenger.followup(`${hunter.firstName}'s inventory is empty`);
+    } else {
+      messenger.followupWithEmbed(inventoryHelper.printInventory(hunter.firstName, inventory));
+    }
     return;
   }
 }

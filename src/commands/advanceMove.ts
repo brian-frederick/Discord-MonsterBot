@@ -1,6 +1,7 @@
 import { tag } from '../content/commonParams';
 import params from '../utils/params';
 import advanceMoveAction from '../actions/advanceMove';
+import { CommandMessenger } from '../models/CommandMessenger';
 
 module.exports = {
   name: 'advancemove',
@@ -17,7 +18,7 @@ module.exports = {
     },
     tag
   ],
-	async execute(message, args) {
+	async execute(messenger: CommandMessenger, message, args) {
     let hunterId: string | undefined;
     let maybeBasicMoveKey: string;
     let isRemove: boolean;
@@ -32,7 +33,7 @@ module.exports = {
     maybeBasicMoveKey = maybeBasicMoveKey ? maybeBasicMoveKey.toLowerCase() : undefined;
     maybeSpecialMoveKey = maybeSpecialMoveKey ? maybeSpecialMoveKey.toLowerCase() : undefined;
 
-    await advanceMoveAction.execute(message.channel, hunterId, maybeBasicMoveKey, maybeSpecialMoveKey, isRemove);
+    await advanceMoveAction.execute(messenger, hunterId, maybeBasicMoveKey, maybeSpecialMoveKey, isRemove);
     return;
 	}
 };
