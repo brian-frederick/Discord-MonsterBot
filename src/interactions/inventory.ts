@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import { Option } from '../interfaces/discordInteractions';
+import { Option } from '../interfaces/DiscordInteractions';
 import { InventoryTransaction } from '../interfaces/enums';
 import { chooseHunterId, getParam } from '../utils/interactionParams';
 import inventoryAction from '../actions/inventory';

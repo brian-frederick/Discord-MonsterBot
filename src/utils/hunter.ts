@@ -1,4 +1,4 @@
-import { Hunter, CustomProp } from '../interfaces/hunter';
+import { Hunter, CustomProp } from '../interfaces/Hunter';
 
 export const someHunter = {
   "charm": 0,

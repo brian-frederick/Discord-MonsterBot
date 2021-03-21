@@ -1,4 +1,4 @@
-import { Option } from '../interfaces/discordInteractions';
+import { Option } from '../interfaces/DiscordInteractions';
 
 export const getParam = (name: string, options: Option[]) => 
   options.find( option => 

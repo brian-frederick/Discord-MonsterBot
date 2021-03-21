@@ -1,6 +1,6 @@
 import makeMeAHunterAction from '../actions/makeMeAHunter';
 import Discord from 'discord.js';
-import { Option } from '../interfaces/discordInteractions';
+import { Option } from '../interfaces/DiscordInteractions';
 
 
 export default {

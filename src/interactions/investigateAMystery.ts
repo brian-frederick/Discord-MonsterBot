@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import { Option } from '../interfaces/discordInteractions';
+import { Option } from '../interfaces/DiscordInteractions';
 import { MoveType } from '../interfaces/enums';
 import { BasicMove } from '../interfaces/move';
 

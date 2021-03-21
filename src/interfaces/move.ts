@@ -1,6 +1,6 @@
 import { MoveType } from '../interfaces/enums';
 import Discord from 'discord.js';
-import { Option } from '../interfaces/discordInteractions';
+import { Option } from './DiscordInteractions';
 import { chooseHunterId, getParam } from '../utils/interactionParams';
 import moveAction from '../actions/move';
 

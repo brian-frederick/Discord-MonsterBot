@@ -1,6 +1,6 @@
 import Discord from 'discord.js';
 import customProperty from '../actions/customProperty';
-import { Option } from '../interfaces/discordInteractions';
+import { Option } from '../interfaces/DiscordInteractions';
 import { chooseHunterId, getParam } from '../utils/interactionParams';
 
 export default {

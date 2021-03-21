@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 import _ from 'lodash';
 import * as hunterHelper from '../utils/hunter';
 import ddb from '../utils/dynamodb';
-import { CustomProp } from '../interfaces/hunter';
+import { CustomProp } from '../interfaces/Hunter';
 import { updateHunterProperty } from '../services/hunterService';
 
 export default {

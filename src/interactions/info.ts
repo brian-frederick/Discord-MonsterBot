@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import { Option } from '../interfaces/discordInteractions';
+import { Option } from '../interfaces/DiscordInteractions';
 import { getParam } from '../utils/interactionParams';
 import infoAction from '../actions/info';
 

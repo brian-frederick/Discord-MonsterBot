@@ -2,7 +2,7 @@ import fs from 'fs';
 import Discord from 'discord.js';
 import { prefix, token } from  './config.json';
 import { addGuild, deleteGuild } from './db/guilds' ;
-import { Command } from './interfaces/command';
+import { Command } from './interfaces/Command';
 import { confirmInteraction } from './services/interactionService';
 
 const client = new Discord.Client();
