@@ -2,10 +2,11 @@ import Discord from 'discord.js';
 import { Option } from '../interfaces/DiscordInteractions';
 import { chooseHunterId, getParam } from '../utils/interactionParams';
 import moveAction from '../actions/move';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   name: 'move',
-  async execute(channel: Discord.TextChannel, user: Discord.User, guildId, options: Option[] = []) {
+  async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
     let moveKey: string;
     let forward: number;
     let hunterId: string;
@@ -22,7 +23,7 @@ export default {
 
     console.log(`move params - moveKey: ${moveKey}, forward: ${forward}, hunterId: ${hunterId} `);
 
-    await moveAction.execute(channel, hunterId, moveKey, forward);
+    await moveAction.execute(messenger, hunterId, moveKey, forward);
 
     return;
   }

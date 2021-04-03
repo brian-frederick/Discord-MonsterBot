@@ -1,17 +1,18 @@
-import { String } from 'aws-sdk/clients/acm';
 import axios from 'axios';
+import { applicationId } from '../config.json';
 
-const url = (interactionId: string, interactionToken: String) => 
+
+const url = (interactionId: string, interactionToken: string) => 
   `https://discord.com/api/v8/interactions/${interactionId}/${interactionToken}/callback`;
 
-export async function postInteraction(interactionId: string, interactionToken: string, msg: string) {
+const followupUrl = (interactionToken: string) => 
+`https://discord.com/api/v8/webhooks/${applicationId}/${interactionToken}`;
+
+export async function postInteraction(interactionId: string, interactionToken: string, data: any) {
   const confirmUrl = url(interactionId, interactionToken);
   const body = {
     "type": 4,
-    "data": {
-      "content": msg,
-      "flags": 64
-    }
+    data
   };
 
   try {
@@ -24,3 +25,18 @@ export async function postInteraction(interactionId: string, interactionToken: s
     return;
   }
 }
+
+export async function followup(interactionToken: string, data: any) {
+  const confirmUrl = followupUrl(interactionToken);
+
+  try {
+    let res = await axios.post(confirmUrl, data);
+    console.log('confirmed followup result');
+    return res.data;
+  
+  } catch (error) {
+    console.log('error followup result: ', error);
+    return;
+  }
+}
+

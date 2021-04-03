@@ -3,10 +3,11 @@ import { Option } from '../interfaces/DiscordInteractions';
 import { chooseHunterId, getParam } from '../utils/interactionParams';
 import markAction from '../actions/mark';
 import { Vital } from '../interfaces/enums';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   name: 'mark',
-  async execute(channel: Discord.TextChannel, user: Discord.User, guildId, options: Option[] = []) {
+  async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
     let vital: Vital;
     let hunterId: string;
     let value: number;
@@ -17,7 +18,7 @@ export default {
       value = parseInt(getParam('value', options));
     }
 
-    await markAction.execute(channel, hunterId, vital, value);
+    await markAction.execute(messenger, hunterId, vital, value);
 
     return;
   }

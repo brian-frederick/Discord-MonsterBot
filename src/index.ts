@@ -3,7 +3,8 @@ import Discord from 'discord.js';
 import { prefix, token } from  './config.json';
 import { addGuild, deleteGuild } from './db/guilds' ;
 import { Command } from './interfaces/Command';
-import { confirmInteraction } from './services/interactionService';
+import { SlashCommandMessenger } from './models/SlashMessenger';
+import { CommandMessenger } from './models/CommandMessenger';
 
 const client = new Discord.Client();
 
@@ -82,17 +83,22 @@ client.ws.on('INTERACTION_CREATE', async request => {
     channel = await client.channels.fetch(request.channel_id);
   }
 
+  const messenger = new SlashCommandMessenger(
+    channel as Discord.TextChannel,
+    request.token,
+    request.id
+  );
+
   // if this is a dm, the user object is one level higher.
   const user = request.member ? request.member.user : request.user;
 
   const interaction = interactions.get(request.data.name);
-
-  if (interaction && request.id && request.token) {
-    const msg = `beep blorp ${user.username}.`;
-    await confirmInteraction(request.id, request.token, msg);
+  if (!interaction) {
+    console.log('Could not find an interaction for the following request:', request);
+    return;
   }
 
-  interaction.execute(channel, user, request.guild_id, request.data.options);
+  interaction.execute(messenger, user, request.guild_id, request.data.options);
 })
 
 client.on('message', message => {
@@ -110,15 +116,15 @@ client.on('message', message => {
     aliasCommand = aliasedCommands.get(commandName);
   }
 
-
   if (!command && !aliasCommand) return;
 
 	try {
+    const messenger = new CommandMessenger(message.channel as Discord.TextChannel);
     if (command) {
-      command.execute(message, args);
+      command.execute(messenger, message, args);
     }
     else {
-      aliasCommand.execute(message, args, commandName);
+      aliasCommand.execute(messenger, message, args, commandName);
     }
 	} catch (error) {
 		console.error(error);

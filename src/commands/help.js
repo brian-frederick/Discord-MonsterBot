@@ -1,12 +1,11 @@
 const Discord = require('discord.js');
 const fs = require('fs');
 
-
 module.exports = {
 	name: 'help',
   description: 'Provides details on all commands.',
   params: [{name: '- Command (text)', value: 'Name of command you would like details for.'}],
-	execute(message, args) {
+	execute(messenger, message, args) {
     let commands = [];
     let embed = new Discord.MessageEmbed();
 
@@ -24,7 +23,7 @@ module.exports = {
       );
       
       if (!command) {
-        message.channel.send(`Please enter a valid command name for details. Could not find command with name ${args[0]}.`);
+        messenger.respond(`Please enter a valid command name for details. Could not find command with name ${args[0]}.`);
         return;
       }
 
@@ -46,6 +45,6 @@ module.exports = {
       });
     }
 
-    message.channel.send(embed);
+    messenger.respond(embed);
 	},
 };

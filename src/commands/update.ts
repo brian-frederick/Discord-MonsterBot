@@ -1,6 +1,7 @@
 import { tag } from '../content/commonParams';
 import params from '../utils/params';
 import updateAction from '../actions/update';
+import { CommandMessenger } from '../models/CommandMessenger';
 
 module.exports = {
   name: 'update',
@@ -14,7 +15,7 @@ module.exports = {
       value: 'A positive or negative number which will replace the existing value of the given property.'
     }
   ],
-	async execute(message, args) {
+	async execute(messenger: CommandMessenger, message, args) {
     let hunterId;
     let statName;
     let value;
@@ -23,7 +24,7 @@ module.exports = {
     value = params.parseAllForNumber(args);
     statName = params.parseUpdateStat(args);
     
-    await updateAction.execute(message.channel, hunterId, statName, value)
+    await updateAction.execute(messenger, hunterId, statName, value)
     return;
 	}
 };

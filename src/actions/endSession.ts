@@ -1,7 +1,7 @@
 import ddb from '../utils/dynamodb';
-import Discord from 'discord.js';
 import { yesNoQuestions } from '../utils/recap';
 import { yesNoFilter, hasYesMsg } from '../utils/messageManager';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   validate(guildId) {
@@ -11,15 +11,15 @@ export default {
     return;
   },
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
   ): Promise<void> {
     
-    console.log('here is the channel', channel);
-    const guildId = channel.guild?.id;
+    console.log('here is the channel', messenger.channel);
+    const guildId = messenger.channel.guild?.id;
 
     const errorMessage = this.validate(guildId);
     if (errorMessage){
-      channel.send(errorMessage);
+      messenger.respond(errorMessage);
       return;
     }
 
@@ -35,15 +35,15 @@ export default {
       recap: null
     };
 
-    channel.send(`Your answers to the next four questions should include the words 'yes' or 'no'.`);
+    messenger.respond(`Your answers to the next four questions should include the words 'yes' or 'no'.`);
 
     // cycle through end session questions
     for (var q of yesNoQuestions) {
-      await channel.send(q.prompt);
-      const collection = await channel.awaitMessages(yesNoFilter, { max: 1, time: 120000 });
+      await messenger.followup(q.prompt);
+      const collection = await messenger.channel.awaitMessages(yesNoFilter, { max: 1, time: 120000 });
       
       if (collection.size < 1) {
-        channel.send(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
+        messenger.followup(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
         return;
       }
       
@@ -57,12 +57,12 @@ export default {
     // Create a recap of the session
     let recap = '';
 
-    await channel.send(`Everyone should answer this one. What happened in this session? You have 1 minute starting NOW!`);
+    await messenger.followup(`Everyone should answer this one. What happened in this session? You have 1 minute starting NOW!`);
     
-    setTimeout(() => channel.send('20 more seconds to provide a recap...'), 40000);
-    setTimeout(() => channel.send('Grrrr Beeeep CANNOT HOLD IT MUCH LONGER SEND IT NOW!'), 55000);
+    setTimeout(() => messenger.followup('20 more seconds to provide a recap...'), 40000);
+    setTimeout(() => messenger.followup('Grrrr Beeeep CANNOT HOLD IT MUCH LONGER SEND IT NOW!'), 55000);
     
-    let recapCollection = await channel.awaitMessages(msg => !msg.author.bot, { time: 65000 });
+    let recapCollection = await messenger.channel.awaitMessages(msg => !msg.author.bot, { time: 65000 });
     recapCollection.forEach(msg => recap += `${msg.content} - ${msg.author}\n`);
 
 
@@ -77,20 +77,24 @@ export default {
     const response = await ddb.createRecap(sessionSummary);
     console.log('new endsession response', response);
     if (!response) {
-      channel.send(`Grrr Bleep Blorp SCREEEEE. Monsterbot has failed you.`);
+      messenger.followup('Grrr Bleep Blorp SCREEEEE. Monsterbot has failed you.');
       return;
     }
 
-    channel.send(`Grrr Bleep Blorp. Your session has ended and your answers are saved.`);
+    messenger.followup(`Grrr Bleep Blorp. Your session has ended and your answers are saved.`);
+
+    let experienceMsg: string;
 
     // Assess XP gained
     if (yesCount > 2) {
-      channel.send('Mark 2 Experience!');
+      experienceMsg = 'Mark 2 Experience!';
     } else if (yesCount > 0) {
-      channel.send('Mark 1 Experience.')
+      experienceMsg = 'Mark 1 Experience.'
     } else {
-      channel.send('No experience this time. :disappointed_relieved:')
+      experienceMsg = 'No experience this time. :disappointed_relieved:'
     }
+
+    messenger.followup(experienceMsg);
 
     return;
   }

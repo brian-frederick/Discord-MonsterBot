@@ -1,6 +1,7 @@
 import ddb from '../utils/dynamodb';
 import { createRecapEmbed } from '../utils/recap';
-import Discord from 'discord.js';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
+
 export default {
   validate(guildId) {
     if (!guildId) {
@@ -9,37 +10,36 @@ export default {
     return;
   },
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     maybeRecordLimit: number | undefined,
   ): Promise<void> {
     let recaps;
-    const guildId = channel?.guild?.id;
-    const recapsLimit = maybeRecordLimit ? maybeRecordLimit : 0;
+    const guildId = messenger.channel?.guild?.id;
+    const recapsLimit = maybeRecordLimit ? maybeRecordLimit : 1;
 
     const errorMessage = this.validate(guildId);
     if (errorMessage){
-      channel.send(errorMessage);
+      messenger.respond(errorMessage);
       return;
     }
 
     recaps = await ddb.getRecap(guildId, maybeRecordLimit);
+
     if (!recaps || recaps.length < 1) {
-      channel.send(`Grrr Bleep Blorp SCREEEEE. Monsterbot has failed you.`);
+      messenger.respond(`Grrr Bleep Blorp SCREEEEE. Monsterbot has failed you.`);
       return;
     }
 
     // if we've only got one recap, show it and bail
     if (recaps.length === 1) {
       const recapEmbed = createRecapEmbed(recaps[0], true);
-      channel.send({embed: recapEmbed});
+      messenger.respondWithEmbed(recapEmbed);
       return;
     }
 
-    // if we've got multiple, there's more work to do
-    recaps.reverse().forEach(recap => {
-      const embed = createRecapEmbed(recap, false);
-      channel.send({ embed: embed });
-    });
+    // if multiple recaps, there's more work to do.
+    const embeds = recaps.reverse().map(recap => createRecapEmbed(recap, false));
+    messenger.respondWithEmbeds(embeds);
 
     return;
   }

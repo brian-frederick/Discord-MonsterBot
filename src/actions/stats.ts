@@ -1,22 +1,23 @@
 import Discord from 'discord.js';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 import ddb from '../utils/dynamodb';
 const _ = require('lodash');
 import * as hunterHelper from '../utils/hunter';
 
 export default {
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     hunterId: string
   ): Promise<void> {
 
     const hunter = await ddb.getHunter(hunterId);
     if (_.isEmpty(hunter)) {
-      channel.send("Could not find your hunter!");
+      messenger.respond("Could not find your hunter!");
       return;
     }
 
-    const statSheet = hunterHelper.statsEmbed(hunter);
-    channel.send({embed: statSheet});
+    const statSheetEmbed = hunterHelper.statsEmbed(hunter);
+    messenger.respondWithEmbed(statSheetEmbed);
 
     return;
   }

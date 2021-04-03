@@ -1,10 +1,11 @@
-import Discord from "discord.js";
 const _ = require('lodash');
 const ddb = require('../utils/dynamodb');
 const { someHunter, isMoveAdvanced } = require('../utils/hunter');
 const moves =  require('../utils/moves');
 const dice = require('../utils/dice');
 const movesHelper = require('../utils/movesHelper');
+import { Message } from 'discord.js';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   validate(): string {
@@ -12,7 +13,7 @@ export default {
   },
 
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     hunterId: string,
     moveKey: string,
     forward?: number
@@ -20,7 +21,7 @@ export default {
 
     let hunter = await ddb.getHunter(hunterId);
     if (_.isEmpty(hunter)) {
-      channel.send('Could not find your hunter. Rolling with some hunter.')
+      messenger.channel.send('Could not find your hunter. Rolling with some hunter.')
       hunter = someHunter;
     }
 
@@ -41,7 +42,7 @@ export default {
     const outcome = dice.roll(modifiers);    
     const outcomeEmbed = movesHelper.createOutcomeEmbed(hunter.firstName, outcome.total, outcome.equation, moveContext, isAdvanced);
 
-    channel.send({ embed: outcomeEmbed });
+    messenger.respondWithEmbed(outcomeEmbed);
 
     return;
   }

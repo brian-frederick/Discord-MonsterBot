@@ -1,8 +1,7 @@
-import Discord from 'discord.js';
-import ddb from '../utils/dynamodb';
 import { Stat } from '../interfaces/enums';
 import * as hunterHelper from '../utils/hunter';
 import { updateHunterProperty } from '../services/hunterService';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   validate(hunterId: string, stat: Stat, value: number): string {
@@ -22,7 +21,7 @@ export default {
   },
 
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     hunterId: string,
     stat: Stat,
     value: number
@@ -32,20 +31,19 @@ export default {
 
     const errMsg = this.validate(hunterId, stat, value);
     if (errMsg) {
-      channel.send(errMsg);
+      messenger.respond(errMsg);
       return;
     }
     
     const updatedHunter = await updateHunterProperty(hunterId, stat, value);
     if (!updatedHunter) {
-      channel.send('Something has gone wrong! Help!');
+      messenger.respond('Something has gone wrong! Help!');
       return;
     }
 
-    channel.send(`updated ${stat} to ${value}.`);
 
     const statSheet = hunterHelper.statsEmbed(updatedHunter);
-    channel.send({ embed: statSheet });
+    messenger.respondWithEmbed(statSheet);
     
     return;
   }

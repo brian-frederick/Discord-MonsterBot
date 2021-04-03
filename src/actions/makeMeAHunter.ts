@@ -1,12 +1,12 @@
 import ddb from '../utils/dynamodb';
-import Discord from 'discord.js';
 import _ from 'lodash';
 import * as hunterHelper from '../utils/hunter';
 import { yesNoFilter, numFilter, requesterFilter, hasNoMsg } from '../utils/messageManager';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     userId: string,
   ): Promise<void> {
     
@@ -28,26 +28,6 @@ export default {
       );
     };
 
-    // Warn them we will overwrite if they have an existing hunter
-    const existingHunter = await ddb.getHunter(requesterId);
-    if (!_.isEmpty(existingHunter)) {
-      await channel.send(
-        `Blrp Screee! I see you already have a hunter - ${existingHunter.firstName} ${existingHunter.lastName}. Do you wish to replace them? "Yes" or "No"?`
-      );
-      const collection = await channel.awaitMessages(isRequesterYesNoFilter, { max: 1, time: 120000 });
-      
-      if (collection.size < 1) {
-        channel.send(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
-        return;
-      }
-      
-      if (hasNoMsg(collection)) {
-        channel.send('Bluuurp Beep Boop. Very well hunter. Safe travels.');
-        return;
-      }
-    }
-
-    // If no existing hunter or they're okay with overwriting, proceed with questions.
     const hunterQuestions = [
       { prompt: `What is your hunter's first name? (Text)`, property: 'firstName', filter: isFromRequesterFilter},
       { prompt: `What is your hunter's last name? (Text)`, property: 'lastName', filter: isFromRequesterFilter},
@@ -76,14 +56,36 @@ export default {
       advancedMoves: []
     };
 
-    channel.send('Krrrrcchhhhhh Snarrrrrl bleeep. So you wish to hunt monsters...');
+    messenger.respond('Krrrrcchhhhhh Snarrrrrl bleeep. So you wish to hunt monsters...');
 
-    for (var q of hunterQuestions) {
-      await channel.send(q.prompt);
-      const collection = await channel.awaitMessages(q.filter, { max: 1, time: 120000 });
+    // Warn them we will overwrite if they have an existing hunter
+    const existingHunter = await ddb.getHunter(requesterId);
+    if (!_.isEmpty(existingHunter)) {
+      await messenger.followup(
+        `Blrp Screee! I see you already have a hunter - ${existingHunter.firstName} ${existingHunter.lastName}. Do you wish to replace them? "Yes" or "No"?`
+      );
+      const collection = await messenger.channel.awaitMessages(isRequesterYesNoFilter, { max: 1, time: 120000 });
       
       if (collection.size < 1) {
-        channel.send(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
+        messenger.followup(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
+        return;
+      }
+      
+      if (hasNoMsg(collection)) {
+        messenger.followup('Bluuurp Beep Boop. Very well hunter. Safe travels.');
+        return;
+      }
+    }
+
+    // If no existing hunter or they're okay with overwriting, proceed with questions.
+ 
+
+    for (var q of hunterQuestions) {
+      await messenger.followup(q.prompt);
+      const collection = await messenger.channel.awaitMessages(q.filter, { max: 1, time: 120000 });
+      
+      if (collection.size < 1) {
+        messenger.followup(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
         return;
       }
       
@@ -95,14 +97,14 @@ export default {
     const response = await ddb.createHunter(hunter);
     console.log('endsession response', response);
     if (!response) {
-      channel.send(`Grrr Bleep Blorp SCREEEEE. Monsterbot has failed you.`);
+      messenger.followup(`Grrr Bleep Blorp SCREEEEE. Monsterbot has failed you.`);
       return;
     }
 
     const statSheet = hunterHelper.statsEmbed(hunter);
-    channel.send({ embed: statSheet });
+    messenger.followupWithEmbed(statSheet);
 
-    channel.send(`Grrr Bleep Blorp. Welcome to the fight, ${hunter.firstName}. You're a hunter. Keep your head on a swivel.`);
+    messenger.followup(`Grrr Bleep Blorp. Welcome to the fight, ${hunter.firstName}. You're a hunter. Keep your head on a swivel.`);
 
     return;
   }

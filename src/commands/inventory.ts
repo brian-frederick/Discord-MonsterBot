@@ -2,6 +2,7 @@ import params from '../utils/params';
 import { tag }  from '../content/commonParams';
 import inventoryAction from '../actions/inventory';
 import { InventoryTransaction } from '../interfaces/enums';
+import { CommandMessenger } from '../models/CommandMessenger';
 
 module.exports = {
   name: 'inventory',
@@ -18,7 +19,7 @@ module.exports = {
       value: `Add or remove an item from inventory. Can also use the words 'plus', 'put', '+', '-', 'minus', 'subtract', 'sub', or 'take'.`
     }
   ],
-	async execute(message, args) {
+	async execute(messenger: CommandMessenger, message, args) {
 
     let item;
     let transaction;
@@ -32,7 +33,7 @@ module.exports = {
       transaction = update.type as InventoryTransaction;
     }
 
-    await inventoryAction.execute(message.channel, hunterId, transaction, item);
+    await inventoryAction.execute(messenger, hunterId, transaction, item);
     return;
 	}
 };

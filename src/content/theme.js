@@ -1,8 +1,8 @@
 const hexColors = {
-  yellow: "FCFF68",
-  green: "68FF71",
-  purple: "#CF68FF",
-  red: "#FF6868"
+  yellow: 12745742,
+  green: 2067276,
+  purple: 7419530,
+  red: 10038562
 };
 
 module.exports = { hexColors };

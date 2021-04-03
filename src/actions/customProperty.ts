@@ -1,9 +1,9 @@
-import Discord from 'discord.js';
 import _ from 'lodash';
 import * as hunterHelper from '../utils/hunter';
 import ddb from '../utils/dynamodb';
 import { CustomProp } from '../interfaces/Hunter';
 import { updateHunterProperty } from '../services/hunterService';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   validate(transaction: string, maybeValue: number | undefined): string | void {
@@ -14,7 +14,7 @@ export default {
     return;
   },
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     hunterId: string,
     transaction: string,
     name: string,
@@ -24,13 +24,13 @@ export default {
 
     const errorMessage = this.validate(transaction, maybeValue);
     if (errorMessage){
-      channel.send(errorMessage);
+      messenger.respond(errorMessage);
       return;
     }
 
     const hunter = await ddb.getHunter(hunterId);
     if (_.isEmpty(hunter)) {
-      channel.send("Could not find your hunter!");
+      messenger.respond("Could not find your hunter!");
       return;
     }
 
@@ -41,7 +41,7 @@ export default {
       (transaction === 'remove' || transaction === 'update') &&
       propIndex < 0
     ) {
-      channel.send(`Grrgle Yarrgh. Could not find property ${name} to remove.`);
+      messenger.respond(`Grrgle Yarrgh. Could not find property ${name} to remove.`);
       return;
     }
 
@@ -61,12 +61,12 @@ export default {
     
     const updatedHunter = await updateHunterProperty(hunterId, "customProps", customProps);
     if (!updatedHunter) {
-      channel.send('Something has gone wrong! Help!');
+      messenger.respond('Something has gone wrong! Help!');
       return;
     }
 
     const statSheet = hunterHelper.statsEmbed(updatedHunter);
-    channel.send({ embed: statSheet });
+    messenger.respondWithEmbed(statSheet);
 
     return;
   }

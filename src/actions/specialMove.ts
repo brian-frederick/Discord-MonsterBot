@@ -1,4 +1,3 @@
-import Discord from "discord.js";
 const _ = require('lodash');
 const ddb = require('../utils/dynamodb');
 const { someHunter, isMoveAdvanced } = require('../utils/hunter');
@@ -7,6 +6,7 @@ const dice = require('../utils/dice');
 const movesHelper = require('../utils/movesHelper');
 import specialMovesService from '../services/specialMovesService';
 import specialMovesHelper from '../utils/specialMovesHelper';
+import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
   validate(hunterId: string | undefined, key: string | undefined ): string {
@@ -23,7 +23,7 @@ export default {
   },
 
   async execute(
-    channel: Discord.TextChannel,
+    messenger: DiscordMessenger,
     hunterId: string,
     key: string,
     forward?: number
@@ -31,25 +31,25 @@ export default {
 
     const errMsg = this.validate(hunterId, key);
     if (errMsg) {
-      channel.send(errMsg);
+      messenger.respond(errMsg);
       return;
     }
 
     let hunter = await ddb.getHunter(hunterId);
     if (_.isEmpty(hunter)) {
-      channel.send('Could not find your hunter. Rolling with some hunter.')
+      messenger.channel.send('Could not find your hunter. Rolling with some hunter.')
       hunter = someHunter;
     }
 
-    const moveContext = await specialMovesService.getSpecialMove(key, channel.guild?.id);
+    const moveContext = await specialMovesService.getSpecialMove(key, messenger.channel.guild?.id);
     if (!moveContext || _.isEmpty(moveContext)) {
-      channel.send('BLORP whimper whimper. Could not find a move by that name.');
+      messenger.respond('BLORP whimper whimper. Could not find a move by that name.');
       return;
     }
 
     if (moveContext.type === 'simple') {
       const simpleEmbed = specialMovesHelper.createSimpleEmbed(hunter.firstName, moveContext);
-      channel.send(simpleEmbed);
+      messenger.respondWithEmbed(simpleEmbed);
       return;
     }
 
@@ -89,7 +89,7 @@ export default {
       outcomeEmbed = movesHelper.createOutcomeEmbed(hunter.firstName, outcome.total, outcome.equation, moveContext, isAdvanced);
     }
     
-    channel.send({ embed: outcomeEmbed });
+    messenger.respondWithEmbed(outcomeEmbed);
 
     return;
   }
