@@ -21,7 +21,7 @@
       "type": 1
     },
     {
-      "name": "remove",
+      "name": "delete",
       "description": "Delete one of your hunters.",
       "type": 1,
       "options": [
@@ -32,6 +32,11 @@
           "required": true
         }
       ]
+    },
+    {
+      "name": "view",
+      "description": "See all of your hunters.",
+      "type": 1
     }
   ]
 }
