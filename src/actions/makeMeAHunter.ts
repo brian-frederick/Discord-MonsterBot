@@ -4,6 +4,7 @@ import * as hunterHelper from '../utils/hunter';
 import { yesNoFilter, numFilter, requesterFilter, hasNoMsg } from '../utils/messageManager';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
+//TODO: Deprecate this once hunter subcommands are up and no one is using .m commands anymore
 export default {
   async execute(
     messenger: DiscordMessenger,
@@ -78,8 +79,6 @@ export default {
     }
 
     // If no existing hunter or they're okay with overwriting, proceed with questions.
- 
-
     for (var q of hunterQuestions) {
       await messenger.followup(q.prompt);
       const collection = await messenger.channel.awaitMessages(q.filter, { max: 1, time: 120000 });

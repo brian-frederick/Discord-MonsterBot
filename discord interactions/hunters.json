@@ -1,10 +1,10 @@
 {
   "name": "hunters",
-  "description": "View your hunters.",
+  "description": "Operations for your hunters.",
   "options": [
     {
       "name": "activate",
-      "description": "Delete one of your hunters.",
+      "description": "Make one of your hunters active, using their stats, inventory, etc. Only one can be active at a time.",
       "type": 1,
       "options": [
         {

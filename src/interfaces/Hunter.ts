@@ -2,6 +2,7 @@ export interface Hunter {
   // db identifiers
   userId: string;
   hunterId?: string;
+  active?: boolean;
 
   // basic info
   firstName: string;

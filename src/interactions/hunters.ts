@@ -11,10 +11,8 @@ import view from '../actions/hunters/view';
 export default {
   name: 'hunters',
   async execute(messenger: DiscordMessenger, user: Discord.User, guildId: string, options: Option[] = []) {
-    let userId;
-    let subcommand;
 
-    subcommand = options.find(o => o.type === 1);
+    const subcommand = options.find(o => o.type === 1);
     
     // If they call base command just show a view of all users.
     // Also invokable with view subcommand.
@@ -24,17 +22,17 @@ export default {
     }
 
     if (subcommand.name === 'create') {
-      await create.execute(messenger, userId);
+      await create.execute(messenger, user.id);
       return;
     }
 
     if (subcommand.name === 'remove') {
-      await remove.execute(messenger, userId);
+      await remove.execute(messenger, user.id);
       return;
     }
 
     if (subcommand.name === 'activate') {
-      await activate.execute(messenger, userId);
+      await activate.execute(messenger, user.id);
       return;
     }
 
