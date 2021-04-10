@@ -5,7 +5,7 @@ export default {
     messenger: DiscordMessenger,
     userId: string
   ): Promise<void> {
-    messenger.respond('This is where we would activate a hunter.');
+    messenger.respond('This is where we would delete a hunter.');
     return;
   }
 }
