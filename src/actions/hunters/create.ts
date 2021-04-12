@@ -2,7 +2,7 @@ import { DiscordMessenger } from '../../interfaces/DiscordMessenger';
 import { yesNoFilter, numFilter, requesterFilter, hasNoMsg } from '../../utils/messageManager';
 import { Hunter } from '../../interfaces/Hunter';
 import * as hunterHelper from '../../utils/hunter';
-import { create } from '../../db/huntersV2';
+import { create, getAll } from '../../db/huntersV2';
 
 export default {
   async execute(
@@ -71,7 +71,8 @@ export default {
       hunterForm[q.property] = answer;
     }
 
-    // TODO: Get all the user's hunters.
+    const existingHunters = await getAll(userId);
+    console.log('existingHunters', existingHunters);
     // TODO: Deactivate any active hunters for user.
     // TODO: make sure the hunterId we're creating is unique.
     const hunterId = hunterForm.firstName[0] + hunterForm.lastName[0];

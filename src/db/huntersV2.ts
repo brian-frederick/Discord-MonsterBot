@@ -20,3 +20,24 @@ export async function create(hunter: Hunter): Promise<Hunter | null> {
     return null;
   }
 }
+
+export async function getAll(userId: string): Promise<any | null> {
+  var params: AWS.DynamoDB.QueryInput = {
+    TableName: TABLE,
+    KeyConditionExpression: "userId = :userId",
+    ExpressionAttributeValues: {
+      ":userId": {"S": userId}
+    }
+  };
+  
+  try {
+    var data = await client.query(params).promise();
+    const hunters = data.Items.map(item => AWS.DynamoDB.Converter.unmarshall(item));
+    console.log('hunters');
+    return hunters;
+  }
+  catch (error) {
+    console.log('Error creating hunter in hunters_v2. Error:', error);
+    return null;
+  }
+}
