@@ -1,6 +1,7 @@
 import Discord from 'discord.js';
 import { Option } from '../interfaces/DiscordInteractions';
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
+import { getParam } from '../utils/interactionParams';
 
 import activate from '../actions/hunters/activate';
 import create from '../actions/hunters/create';
@@ -26,13 +27,19 @@ export default {
       return;
     }
 
+    // Subcommands have nested options.
+    const nestedOptions = options.length ? options[0].options : [];
+    //Remove and Activate both require a hunterId;
+    const hunterId = getParam('id', nestedOptions);
+
     if (subcommand.name === 'remove') {
-      await remove.execute(messenger, user.id);
+      await remove.execute(messenger, user.id, hunterId);
       return;
     }
 
     if (subcommand.name === 'activate') {
-      await activate.execute(messenger, user.id);
+
+      await activate.execute(messenger, user.id, hunterId);
       return;
     }
 

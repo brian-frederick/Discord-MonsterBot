@@ -56,10 +56,10 @@ async function getHunter(userId) {
 async function updateHunter(userId, UpdateExpression, ExpressionAttributeValues) {
 
   try {
-    var params = {
+    const params = {
       TableName: HUNTER_TABLE,
       Key: {
-        'userId': {S: userId }
+        'userId': { S: userId }
       },
       UpdateExpression,
       ExpressionAttributeValues,
