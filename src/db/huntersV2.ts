@@ -1,26 +1,9 @@
-import AWS, { DynamoDB } from 'aws-sdk';
+import AWS from 'aws-sdk';
 import { DeleteItemInput, TransactWriteItem } from 'aws-sdk/clients/dynamodb';
 import { Hunter } from '../interfaces/Hunter';
 import { CLIENT as client } from '../utils/dynamoDbClient';
 
 export const TABLE = 'hunters_v2';
-
-export async function create(hunter: Hunter): Promise<Hunter | null> {
-  const item = AWS.DynamoDB.Converter.marshall(hunter);
-  var params: AWS.DynamoDB.PutItemInput = {
-    TableName: TABLE,
-    Item: item
-  };
-  
-  try {
-    await client.putItem(params).promise();
-    return hunter;
-  }
-  catch (error) {
-    console.log('Error creating hunter in hunters_v2. Error:', error);
-    return null;
-  }
-}
 
 export async function remove(params: DeleteItemInput): Promise<boolean> {
   let success;
@@ -79,29 +62,4 @@ export async function getAll(userId: string): Promise<any | null> {
     console.log('Error creating hunter in hunters_v2. Error:', error);
     return null;
   }
-}
-
-/**
- * Conducts multiple updates at once. Returns true or false depending on success.
- * @param userId 
- * @param transactions 
- */
-export async function transactWrite(transactions: TransactWriteItem[]): Promise<boolean> {
-  const params = {
-    TransactItems: transactions
-  };
-
-  let success;
-
-  try {
-    await client.transactWriteItems(params).promise();
-    success = true;
-  } catch (error) {
-    console.error('error attempting transact write.');
-    console.error('params:', params);
-    console.error('error:', error);
-    success = false;
-  }
-
-  return success;
 }

@@ -2,8 +2,8 @@ import { DiscordMessenger } from '../../interfaces/DiscordMessenger';
 import { yesNoFilter, numFilter, requesterFilter, hasNoMsg } from '../../utils/messageManager';
 import { Hunter } from '../../interfaces/Hunter';
 import * as hunterHelper from '../../utils/hunter';
-import { create, getAll } from '../../db/huntersV2';
-import { createUniqueId } from '../../services/hunterServiceV2';
+import { getAll } from '../../db/huntersV2';
+import { createUniqueId, createHunter } from '../../services/hunterServiceV2';
 
 export default {
   async execute(
@@ -40,7 +40,6 @@ export default {
     ];
 
     messenger.respond('Blar! Creating Hunter.');
-    // TODO: check existing hunters...
     
     let hunterForm = {
       firstName: '',
@@ -72,11 +71,9 @@ export default {
       hunterForm[q.property] = answer;
     }
 
-    const existingHunters = await getAll(userId);
-    console.log('existingHunters', existingHunters);
-    // TODO: Deactivate any active hunters for user.
-    // TODO: make sure the hunterId we're creating is unique.
-    const initials = hunterForm.firstName[0] + hunterForm.lastName[0];
+    const existingHunters: Hunter[] = await getAll(userId);
+
+    const initials = hunterForm.firstName[0].toLowerCase() + hunterForm.lastName[0].toLowerCase();
     const hunterId = createUniqueId(initials, existingHunters);
 
     const hunterToCreate: Hunter = {
@@ -86,7 +83,9 @@ export default {
      ...hunterForm 
     };
 
-    const createSuccess = await create(hunterToCreate);
+    const hunterIdsToDeactivate = existingHunters.filter(h => h.active).map(h => h.hunterId);
+
+    const createSuccess = await createHunter(userId, hunterToCreate, hunterIdsToDeactivate);
     if (!createSuccess) {
       messenger.followup("NAAARRRR. I've failed you.");
       return;

@@ -19,7 +19,14 @@ export default {
       return;
     }
 
-    const hunterIdsToDeactivate: string[] = allHunters.filter(h => h.active).map(h => h.hunterId);
+    const hunterIdsToDeactivate: string[] = allHunters
+      .filter(h => h.active && h.hunterId !== hunterToActivate.hunterId)
+      .map(h => h.hunterId);
+
+    if (hunterToActivate.active && !hunterIdsToDeactivate.length) {
+      messenger.respond(`Yarr! Hunter with id ${hunterId} is already active!`);
+      return;
+    }
     
     const result = await changeActiveHunter(userId, hunterToActivate.hunterId, hunterIdsToDeactivate);
 
