@@ -1,10 +1,9 @@
 const _ = require('lodash');
-const ddb = require('../utils/dynamodb');
 const { someHunter, isMoveAdvanced } = require('../utils/hunter');
 const moves =  require('../utils/moves');
 const dice = require('../utils/dice');
 const movesHelper = require('../utils/movesHelper');
-import { Message } from 'discord.js';
+import { getActiveHunter } from '../services/hunterServiceV2';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
@@ -19,7 +18,7 @@ export default {
     forward?: number
   ): Promise<void> {
 
-    let hunter = await ddb.getHunter(hunterId);
+    let hunter = await getActiveHunter(hunterId);
     if (_.isEmpty(hunter)) {
       messenger.channel.send('Could not find your hunter. Rolling with some hunter.')
       hunter = someHunter;

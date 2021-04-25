@@ -1,0 +1,42 @@
+{
+  "name": "hunters",
+  "description": "Operations for your hunters.",
+  "options": [
+    {
+      "name": "activate",
+      "description": "Make one of your hunters active, using their stats, inventory, etc. Only one can be active at a time.",
+      "type": 1,
+      "options": [
+        {
+          "name": "id",
+          "description": "Id (initials usually) of the hunter to activate.",
+          "type": 3,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "create",
+      "description": "Create a new hunter.",
+      "type": 1
+    },
+    {
+      "name": "remove",
+      "description": "Delete one of your hunters.",
+      "type": 1,
+      "options": [
+        {
+          "name": "id",
+          "description": "Id (initials usually) of the hunter to remove.",
+          "type": 3,
+          "required": true
+        }
+      ]
+    },
+    {
+      "name": "view",
+      "description": "See all of your hunters.",
+      "type": 1
+    }
+  ]
+}

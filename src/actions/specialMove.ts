@@ -1,9 +1,9 @@
 const _ = require('lodash');
-const ddb = require('../utils/dynamodb');
 const { someHunter, isMoveAdvanced } = require('../utils/hunter');
 const moves =  require('../utils/moves');
 const dice = require('../utils/dice');
 const movesHelper = require('../utils/movesHelper');
+import { getActiveHunter } from '../services/hunterServiceV2';
 import specialMovesService from '../services/specialMovesService';
 import specialMovesHelper from '../utils/specialMovesHelper';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
@@ -24,18 +24,18 @@ export default {
 
   async execute(
     messenger: DiscordMessenger,
-    hunterId: string,
+    userId: string,
     key: string,
     forward?: number
   ): Promise<void> {
 
-    const errMsg = this.validate(hunterId, key);
+    const errMsg = this.validate(userId, key);
     if (errMsg) {
       messenger.respond(errMsg);
       return;
     }
 
-    let hunter = await ddb.getHunter(hunterId);
+    let hunter = await getActiveHunter(userId);
     if (_.isEmpty(hunter)) {
       messenger.channel.send('Could not find your hunter. Rolling with some hunter.')
       hunter = someHunter;

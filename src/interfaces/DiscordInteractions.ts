@@ -1,4 +1,6 @@
 export interface Option {
-  value: string,
-  name: string
+  name: string,
+  type?: number
+  value?: string
+  options?: Option[]
 }

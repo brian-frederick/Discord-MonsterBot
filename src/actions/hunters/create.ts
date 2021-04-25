@@ -1,19 +1,16 @@
-import ddb from '../utils/dynamodb';
-import _ from 'lodash';
-import * as hunterHelper from '../utils/hunter';
-import { yesNoFilter, numFilter, requesterFilter } from '../utils/messageManager';
-import { DiscordMessenger } from '../interfaces/DiscordMessenger';
-import { getAll } from '../db/huntersV2';
-import { createHunter } from '../services/hunterServiceV2';
-import { Hunter } from '../interfaces/Hunter';
+import { DiscordMessenger } from '../../interfaces/DiscordMessenger';
+import { yesNoFilter, numFilter, requesterFilter, hasNoMsg } from '../../utils/messageManager';
+import { Hunter } from '../../interfaces/Hunter';
+import * as hunterHelper from '../../utils/hunter';
+import { getAll } from '../../db/huntersV2';
+import { createHunter } from '../../services/hunterServiceV2';
+import { createUniqueId } from '../../utils/hunter';
 
-//TODO: Deprecate this once hunter subcommands are up and no one is using .m commands anymore
 export default {
   async execute(
     messenger: DiscordMessenger,
-    userId: string,
+    userId: string
   ): Promise<void> {
-    
     const requesterId = userId;
 
     const isRequesterYesNoFilter = msg => {
@@ -43,6 +40,8 @@ export default {
       { prompt: `What is your hunter's weird? (Number)`, property: 'weird', filter: isRequesterNumFilter},
     ];
 
+    messenger.respond('Blar! Creating Hunter.');
+    
     let hunterForm = {
       firstName: '',
       lastName: '',
@@ -58,10 +57,7 @@ export default {
       inventory: [],
       advancedMoves: []
     };
-
-    messenger.respond('Krrrrcchhhhhh Snarrrrrl bleeep. So you wish to hunt monsters...');
-
-    // If no existing hunter or they're okay with overwriting, proceed with questions.
+    
     for (var q of hunterQuestions) {
       await messenger.followup(q.prompt);
       const collection = await messenger.channel.awaitMessages(q.filter, { max: 1, time: 120000 });
@@ -77,14 +73,15 @@ export default {
     }
 
     const existingHunters: Hunter[] = await getAll(userId);
+
     const initials = hunterForm.firstName[0].toLowerCase() + hunterForm.lastName[0].toLowerCase();
-    const hunterId = hunterHelper.createUniqueId(initials, existingHunters);
+    const hunterId = createUniqueId(initials, existingHunters);
 
     const hunterToCreate: Hunter = {
-      userId,
-      hunterId,
-      active: true,
-      ...hunterForm 
+     userId,
+     hunterId,
+     active: true,
+     ...hunterForm 
     };
 
     const hunterIdsToDeactivate = existingHunters.filter(h => h.active).map(h => h.hunterId);
@@ -94,11 +91,11 @@ export default {
       messenger.followup("NAAARRRR. I've failed you.");
       return;
     }
-
+  
     const statSheet = hunterHelper.statsEmbed(hunterToCreate);
     messenger.followupWithEmbed(statSheet);
 
-    messenger.followup(`Grrr Bleep Blorp. Welcome to the fight, ${hunterForm.firstName}. You're a hunter. Keep your head on a swivel.`);
+    messenger.followup(`Grrr Bleep Blorp. Welcome to the fight, ${hunterToCreate.firstName}. You're a hunter. Keep your head on a swivel.`);
 
     return;
   }

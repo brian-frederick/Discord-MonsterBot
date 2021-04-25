@@ -1,13 +1,12 @@
 import Discord from 'discord.js';
-import { DynamoDB } from 'aws-sdk';
 import _ from 'lodash';
-import ddb from '../utils/dynamodb';
 import inventoryHelper from '../utils/inventory';
 import { InventoryTransaction } from '../interfaces/enums';
 import { yesNoFilter, hasYesMsg } from '../utils/messageManager';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
+import { getActiveHunter, updateHunterProperty } from '../services/hunterServiceV2';
 
-const confirmPossibleMatch = async (messenger: DiscordMessenger, hunterId, possibleMatch: string): Promise<boolean> => {
+const confirmPossibleMatch = async (messenger: DiscordMessenger, possibleMatch: string): Promise<boolean> => {
 
   await messenger.followup(`Hrrmmm. Do you want me to remove the ${possibleMatch}? (yes/no)`);
   const collection: Discord.Collection<string, Discord.Message> = await messenger.channel.awaitMessages(yesNoFilter, { max: 1, time: 30000 });
@@ -21,11 +20,11 @@ const confirmPossibleMatch = async (messenger: DiscordMessenger, hunterId, possi
 
 export default {
   validate(
-    hunterId: string, 
+    userId: string, 
     transaction: InventoryTransaction,
     item: string
   ): string {
-    if (!hunterId) {
+    if (!userId) {
       return 'Yrrrgh! I do not know which hunter to use!'
     }
 
@@ -42,22 +41,22 @@ export default {
 
   async execute(
     messenger: DiscordMessenger,
-    hunterId: string, 
+    userId: string, 
     transaction,
     item: string
   ): Promise<void> {
 
     console.log('We are in the action now!');
 
-    console.log(`Action params - item: ${item}, transaction: ${transaction}, hunterId: ${hunterId} `);
+    console.log(`Action params - item: ${item}, transaction: ${transaction}, hunterId: ${userId} `);
     
-    const errorMessage = this.validate(hunterId, transaction, item);
+    const errorMessage = this.validate(userId, transaction, item);
     if (errorMessage){
       messenger.respond(errorMessage);
       return;
     }
 
-    const hunter = await ddb.getHunter(hunterId);
+    const hunter = await getActiveHunter(userId);
     if (_.isEmpty(hunter)) {
       messenger.respond("Could not find your hunter!");
       return;
@@ -88,7 +87,7 @@ export default {
           return;
         }
 
-        const confirmed = await confirmPossibleMatch(messenger, hunterId, possibleMatch);
+        const confirmed = await confirmPossibleMatch(messenger, userId, possibleMatch);
         if (!confirmed) {
           messenger.followup(`BLAR! Very well hunter. Nothing to do here.`);
           return;
@@ -103,15 +102,8 @@ export default {
     if (transaction == InventoryTransaction.ADD) {
       inventory.push(item);
     }
-
-    const marshalledInventory = DynamoDB.Converter.marshall({inventory});
-    // dynamodb properties
-    const UpdateExpression = `set inventory = :val`;
-    const ExpressionAttributeValues = {
-      ":val": marshalledInventory.inventory,
-    };
     
-    const updatedHunter = await ddb.updateHunter(hunterId, UpdateExpression, ExpressionAttributeValues);
+    const updatedHunter = await updateHunterProperty(userId, hunter.hunterId, 'inventory', inventory);
 
     if (!updatedHunter) {
       messenger.followup('GrrrOooph! Something has gone wrong updating our monster data! It hurts!');
