@@ -3,7 +3,8 @@ import { yesNoFilter, numFilter, requesterFilter, hasNoMsg } from '../../utils/m
 import { Hunter } from '../../interfaces/Hunter';
 import * as hunterHelper from '../../utils/hunter';
 import { getAll } from '../../db/huntersV2';
-import { createUniqueId, createHunter } from '../../services/hunterServiceV2';
+import { createHunter } from '../../services/hunterServiceV2';
+import { createUniqueId } from '../../utils/hunter';
 
 export default {
   async execute(

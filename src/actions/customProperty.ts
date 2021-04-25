@@ -1,9 +1,8 @@
 import _ from 'lodash';
 import * as hunterHelper from '../utils/hunter';
-import ddb from '../utils/dynamodb';
 import { CustomProp } from '../interfaces/Hunter';
-import { updateHunterProperty } from '../services/hunterService';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
+import { getActiveHunter, updateHunterProperty } from '../services/hunterServiceV2';
 
 export default {
   validate(transaction: string, maybeValue: number | undefined): string | void {
@@ -15,7 +14,7 @@ export default {
   },
   async execute(
     messenger: DiscordMessenger,
-    hunterId: string,
+    userId: string,
     transaction: string,
     name: string,
     maybeValue: number | undefined,
@@ -28,7 +27,7 @@ export default {
       return;
     }
 
-    const hunter = await ddb.getHunter(hunterId);
+    const hunter = await getActiveHunter(userId);
     if (_.isEmpty(hunter)) {
       messenger.respond("Could not find your hunter!");
       return;
@@ -59,7 +58,7 @@ export default {
       customProps.push(newProp);
     }
     
-    const updatedHunter = await updateHunterProperty(hunterId, "customProps", customProps);
+    const updatedHunter = await updateHunterProperty(userId, hunter.hunterId, "customProps", customProps);
     if (!updatedHunter) {
       messenger.respond('Something has gone wrong! Help!');
       return;

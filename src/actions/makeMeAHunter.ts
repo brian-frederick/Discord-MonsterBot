@@ -1,8 +1,11 @@
 import ddb from '../utils/dynamodb';
 import _ from 'lodash';
 import * as hunterHelper from '../utils/hunter';
-import { yesNoFilter, numFilter, requesterFilter, hasNoMsg } from '../utils/messageManager';
+import { yesNoFilter, numFilter, requesterFilter } from '../utils/messageManager';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
+import { getAll } from '../db/huntersV2';
+import { createHunter } from '../services/hunterServiceV2';
+import { Hunter } from '../interfaces/Hunter';
 
 //TODO: Deprecate this once hunter subcommands are up and no one is using .m commands anymore
 export default {
@@ -40,8 +43,7 @@ export default {
       { prompt: `What is your hunter's weird? (Number)`, property: 'weird', filter: isRequesterNumFilter},
     ];
 
-    let hunter = {
-      userId: requesterId,
+    let hunterForm = {
       firstName: '',
       lastName: '',
       type: '',
@@ -59,25 +61,6 @@ export default {
 
     messenger.respond('Krrrrcchhhhhh Snarrrrrl bleeep. So you wish to hunt monsters...');
 
-    // Warn them we will overwrite if they have an existing hunter
-    const existingHunter = await ddb.getHunter(requesterId);
-    if (!_.isEmpty(existingHunter)) {
-      await messenger.followup(
-        `Blrp Screee! I see you already have a hunter - ${existingHunter.firstName} ${existingHunter.lastName}. Do you wish to replace them? "Yes" or "No"?`
-      );
-      const collection = await messenger.channel.awaitMessages(isRequesterYesNoFilter, { max: 1, time: 120000 });
-      
-      if (collection.size < 1) {
-        messenger.followup(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
-        return;
-      }
-      
-      if (hasNoMsg(collection)) {
-        messenger.followup('Bluuurp Beep Boop. Very well hunter. Safe travels.');
-        return;
-      }
-    }
-
     // If no existing hunter or they're okay with overwriting, proceed with questions.
     for (var q of hunterQuestions) {
       await messenger.followup(q.prompt);
@@ -90,20 +73,32 @@ export default {
       
       const answer = q.filter === isRequesterNumFilter ? parseInt(collection.first().content) : collection.first().content;
 
-      hunter[q.property] = answer;
+      hunterForm[q.property] = answer;
     }
 
-    const response = await ddb.createHunter(hunter);
-    console.log('endsession response', response);
-    if (!response) {
-      messenger.followup(`Grrr Bleep Blorp SCREEEEE. Monsterbot has failed you.`);
+    const existingHunters: Hunter[] = await getAll(userId);
+    const initials = hunterForm.firstName[0].toLowerCase() + hunterForm.lastName[0].toLowerCase();
+    const hunterId = hunterHelper.createUniqueId(initials, existingHunters);
+
+    const hunterToCreate: Hunter = {
+      userId,
+      hunterId,
+      active: true,
+      ...hunterForm 
+    };
+
+    const hunterIdsToDeactivate = existingHunters.filter(h => h.active).map(h => h.hunterId);
+
+    const createSuccess = await createHunter(userId, hunterToCreate, hunterIdsToDeactivate);
+    if (!createSuccess) {
+      messenger.followup("NAAARRRR. I've failed you.");
       return;
     }
 
-    const statSheet = hunterHelper.statsEmbed(hunter);
+    const statSheet = hunterHelper.statsEmbed(hunterToCreate);
     messenger.followupWithEmbed(statSheet);
 
-    messenger.followup(`Grrr Bleep Blorp. Welcome to the fight, ${hunter.firstName}. You're a hunter. Keep your head on a swivel.`);
+    messenger.followup(`Grrr Bleep Blorp. Welcome to the fight, ${hunterForm.firstName}. You're a hunter. Keep your head on a swivel.`);
 
     return;
   }

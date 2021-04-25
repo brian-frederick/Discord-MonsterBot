@@ -1,9 +1,15 @@
 import AWS, { DynamoDB } from 'aws-sdk';
 import { TransactWriteItem, DeleteItemInput } from 'aws-sdk/clients/dynamodb';
 
-import { TABLE, update, remove } from '../db/huntersV2';
+import { TABLE, getAll, update, remove } from '../db/huntersV2';
 import { transactWrite } from '../db/transactions';
 import { Hunter } from '../interfaces/Hunter';
+
+export async function getActiveHunter(userId): Promise<Hunter | null> {
+  // should only ever be one active hunter but just to be safe, we'll treat this as an array.
+  const activeHunters = await getAll(userId, true);
+  return activeHunters?.length ? activeHunters[0] : null;
+}
 
 export async function updateHunterProperty(userId: string, hunterId: string, propertyName: string, newVal: any) {
   const marshalled = DynamoDB.Converter.marshall({newVal});
@@ -26,25 +32,6 @@ export async function deleteHunter(userId: string, hunterId: string): Promise<bo
   };
 
   return await remove(params);
-}
-
-export function createUniqueId(initials: string, existingHunters: Hunter[]): string {
-
-  const existingIds: string[] = existingHunters.map(h => h.hunterId);
-
-  const createUniqueIdLoop = (modifier?: number): string => {
-    const potentialId = modifier ? initials + modifier.toString() : initials;
-    
-    if (existingIds.includes(potentialId)) {
-      const nextModifier = modifier ? modifier + 1 : 1;
-      return createUniqueIdLoop(nextModifier);
-    } else {
-      return potentialId;
-    }
-  };
-
-  return createUniqueIdLoop();
-
 }
 
 export async function changeActiveHunter(userId, hunterIdToActivate: string, hunterIdsToDeactivate: string[]): Promise<boolean> {

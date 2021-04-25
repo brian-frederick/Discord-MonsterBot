@@ -73,3 +73,22 @@ export function isMoveAdvanced(key, advancedMoves) {
     && advancedMoves.length > 0
     && advancedMoves.findIndex(am => am.key === key) > -1;
 }
+
+export function createUniqueId(initials: string, existingHunters: Hunter[]): string {
+
+  const existingIds: string[] = existingHunters.map(h => h.hunterId);
+
+  const createUniqueIdLoop = (modifier?: number): string => {
+    const potentialId = modifier ? initials + modifier.toString() : initials;
+    
+    if (existingIds.includes(potentialId)) {
+      const nextModifier = modifier ? modifier + 1 : 1;
+      return createUniqueIdLoop(nextModifier);
+    } else {
+      return potentialId;
+    }
+  };
+
+  return createUniqueIdLoop();
+
+}

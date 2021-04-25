@@ -43,15 +43,16 @@ export async function update(userId: string, hunterId: string, updateExpression:
   }
 }
 
-export async function getAll(userId: string): Promise<any | null> {
-  var params: AWS.DynamoDB.QueryInput = {
+export async function getAll(userId: string, activeOnly: boolean = false): Promise<any | null> {
+  let params: AWS.DynamoDB.QueryInput = {
     TableName: TABLE,
     KeyConditionExpression: "userId = :userId",
-    ExpressionAttributeValues: {
-      ":userId": {"S": userId}
-    }
+    FilterExpression: activeOnly ? "active = :active" : null,
+    ExpressionAttributeValues: activeOnly ?
+      { ":userId": {"S": userId}, ":active": {"BOOL": true} } :
+      { ":userId": {"S": userId} },
   };
-  
+
   try {
     var data = await client.query(params).promise();
     const hunters = data.Items.map(item => AWS.DynamoDB.Converter.unmarshall(item)) as Hunter[];

@@ -33,48 +33,6 @@ async function createHunter(hunter) {
   return hunter;
 }
 
-async function getHunter(userId) {
-
-  try {
-    var params = {
-      TableName: HUNTER_TABLE,
-      Key: {
-        'userId': {S: userId }
-      }
-    };
-
-    var data = await ddb.getItem(params).promise();
-    const hunter = AWS.DynamoDB.Converter.unmarshall(data["Item"]);
-    return hunter;
-  } 
-  catch (error) {
-    console.log(error);
-    return;
-  }
-}
-
-async function updateHunter(userId, UpdateExpression, ExpressionAttributeValues) {
-
-  try {
-    const params = {
-      TableName: HUNTER_TABLE,
-      Key: {
-        'userId': { S: userId }
-      },
-      UpdateExpression,
-      ExpressionAttributeValues,
-      ReturnValues: "ALL_NEW"
-    };
-  
-    let data = await ddb.updateItem(params).promise();
-    const updatedHunter = AWS.DynamoDB.Converter.unmarshall(data["Attributes"]);
-    return updatedHunter;
-  }
-  catch (error) {
-    console.log(error);
-    return;
-  }
-}
 
 async function getSpecialMoves(keys) {
   try {
@@ -138,5 +96,5 @@ async function getRecap(guildId, recordLimit=1) {
   }
 }
 
-module.exports = { getHunter, updateHunter, getSpecialMoves, createRecap, getRecap, createHunter };
+module.exports = { getSpecialMoves, createRecap, getRecap, createHunter };
 

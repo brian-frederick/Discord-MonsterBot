@@ -1,10 +1,9 @@
 import _ from 'lodash';
-import ddb from '../utils/dynamodb';
 import moves from '../utils/moves';
 import specialMovesService from '../services/specialMovesService';
 import * as hunterHelper from '../utils/hunter';
-import { updateHunterProperty } from '../services/hunterService';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
+import { getActiveHunter, updateHunterProperty } from '../services/hunterServiceV2';
 
 export default {
   validate(
@@ -29,22 +28,22 @@ export default {
 
   async execute(
     messenger: DiscordMessenger,
-    hunterId: string | undefined, 
+    userId: string | undefined, 
     maybeBasicMoveKey:string | undefined,
     maybeSpecialMoveKey: string | undefined,
     isRemove: boolean,
   ): Promise<void> {
 
     console.log('We are in the action now!');
-    console.log(`Action params - maybeBasicMoveKey: ${maybeBasicMoveKey}, maybeSpecialMoveKey: ${maybeSpecialMoveKey}, isRemove: ${isRemove}, hunterId: ${hunterId} `);
+    console.log(`Action params - maybeBasicMoveKey: ${maybeBasicMoveKey}, maybeSpecialMoveKey: ${maybeSpecialMoveKey}, isRemove: ${isRemove}, hunterId: ${userId} `);
     
-    const errorMessage = this.validate(hunterId, maybeBasicMoveKey, maybeSpecialMoveKey);
+    const errorMessage = this.validate(userId, maybeBasicMoveKey, maybeSpecialMoveKey);
     if (errorMessage){
       messenger.respond(errorMessage);
       return;
     }
 
-    const hunter = await ddb.getHunter(hunterId);
+    const hunter = await getActiveHunter(userId);
     if (_.isEmpty(hunter)) {
       messenger.respond("Could not find your hunter!");
       return;
@@ -90,7 +89,7 @@ export default {
       advancedMoves.push(moveToAdvance);
     }
 
-    const updatedHunter = await updateHunterProperty(hunterId, "advancedMoves", advancedMoves);
+    const updatedHunter = await updateHunterProperty(userId, hunter.hunterId, "advancedMoves", advancedMoves);
     if (!updatedHunter) {
       messenger.respond('Something has gone wrong! Help!');
       return;
