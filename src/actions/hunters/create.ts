@@ -3,6 +3,7 @@ import { yesNoFilter, numFilter, requesterFilter, hasNoMsg } from '../../utils/m
 import { Hunter } from '../../interfaces/Hunter';
 import * as hunterHelper from '../../utils/hunter';
 import { create, getAll } from '../../db/huntersV2';
+import { createUniqueId } from '../../services/hunterServiceV2';
 
 export default {
   async execute(
@@ -75,7 +76,8 @@ export default {
     console.log('existingHunters', existingHunters);
     // TODO: Deactivate any active hunters for user.
     // TODO: make sure the hunterId we're creating is unique.
-    const hunterId = hunterForm.firstName[0] + hunterForm.lastName[0];
+    const initials = hunterForm.firstName[0] + hunterForm.lastName[0];
+    const hunterId = createUniqueId(initials, existingHunters);
 
     const hunterToCreate: Hunter = {
      userId,
