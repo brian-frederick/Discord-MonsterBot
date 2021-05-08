@@ -87,7 +87,7 @@ export default {
           return;
         }
 
-        const confirmed = await confirmPossibleMatch(messenger, userId, possibleMatch);
+        const confirmed = await confirmPossibleMatch(messenger, possibleMatch);
         if (!confirmed) {
           messenger.followup(`BLAR! Very well hunter. Nothing to do here.`);
           return;
@@ -95,8 +95,8 @@ export default {
 
         itemToRemove = possibleMatch;
       }
-      
-      inventoryHelper.removeItem(item, inventory);
+
+      inventoryHelper.removeItem(itemToRemove, inventory);
     }
 
     if (transaction == InventoryTransaction.ADD) {
