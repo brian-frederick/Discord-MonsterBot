@@ -4,12 +4,9 @@ const { hexColors } = require('../content/theme');
 const PUBLIC_GUILD_ID = "1";
 
 function createSimpleEmbed(name, move) {
-  
   return {
-    embed: {
-      title: `${name} just used ${move.name}.`,
-      description: move.description,
-    }    
+    title: `${name} just used ${move.name}.`,
+    description: move.description
   };
 }
 
