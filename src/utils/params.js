@@ -12,7 +12,7 @@ function checkAllArgs(args, check) {
   return;
 }
 
-function parseUpdateStat(args) {
+function parseAllForHunterStat(args) {
   return checkAllArgs(args, parseHunterStat);
 }
 
@@ -187,7 +187,7 @@ function parseBasicMoveKey(args) {
 module.exports = { 
   checkAllArgs,
   parseUserIdFromMentionParam,
-  parseUpdateStat,
+  parseAllForHunterStat,
   parseSpecialMoveKey,
   parseAllForNumber,
   parseInventoryUpdate,

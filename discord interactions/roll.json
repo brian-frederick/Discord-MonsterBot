@@ -1,0 +1,28 @@
+{
+  "name": "roll",
+  "description": "Rolls 2 d6.",
+  "options": [
+    {
+      "name": "plus",
+      "description": "The hunter property to add to the roll.",
+      "type": 3,
+      "choices": [
+        { "name": "charm", "value": "charm" },
+        { "name": "cool", "value": "cool" },
+        { "name": "sharp", "value": "sharp" },
+        { "name": "tough", "value": "tough" },
+        { "name": "weird", "value": "weird" }
+      ]
+    }, 
+    {
+      "name": "fwd",
+      "description": "Additional value to add to roll",
+      "type": 4
+    },
+    {
+      "name": "hunter",
+      "description": "Tagging another user will perform it for their hunter. Default is your hunter.",
+      "type": 6
+    }
+  ]
+}

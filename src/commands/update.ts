@@ -22,7 +22,7 @@ module.exports = {
 
     hunterId = params.chooseHunterId(message.author.id, args);
     value = params.parseAllForNumber(args);
-    statName = params.parseUpdateStat(args);
+    statName = params.parseAllForHunterStat(args);
     
     await updateAction.execute(messenger, hunterId, statName, value)
     return;
