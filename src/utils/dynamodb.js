@@ -33,7 +33,7 @@ async function createHunter(hunter) {
   return hunter;
 }
 
-
+/** Deprecated in favor of db/moves/get. */
 async function getSpecialMoves(keys) {
   try {
     const params = {

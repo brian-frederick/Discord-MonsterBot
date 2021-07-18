@@ -1,6 +1,6 @@
 import moves from '../utils/moves';
 import specialMovesService from '../services/specialMovesService';
-import { infoOutcomeFields, infoDescription } from '../utils/movesHelper';
+import { createInfoEmbed } from '../utils/movesHelper';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
@@ -49,26 +49,7 @@ export default {
       return;
     }
 
-    let moveEmbed = {
-      title: moveContext.name,
-      description: '',
-      fields: [],
-      url: ''
-    };
-
-    const secondaryContext = (moveContext.type === 'modification') ?
-      moves[moveContext.moveToModify] :
-      null;
-
-    moveEmbed.description = infoDescription(moveContext, secondaryContext)
-
-    moveEmbed.fields = (moveContext.type === 'roll') ?
-      infoOutcomeFields(moveContext.outcome) :
-      null;
-
-    if (moveContext.guildId) {
-      moveEmbed.url = `https://www.monsterbot.io/moves/show/${moveContext.key}/guild/${moveContext.guildId}`;
-    }
+    const moveEmbed = createInfoEmbed(moveContext);
 
     messenger.respondWithEmbed(moveEmbed);
     return;

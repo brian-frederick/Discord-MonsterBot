@@ -1,4 +1,5 @@
 const { hexColors } = require('../content/theme');
+import moves from '../utils/moves';
 
 function createOutcomeEmbed(name, total, equation, moveContext, advanced) {
 
@@ -51,7 +52,7 @@ function createOutcomeEmbed(name, total, equation, moveContext, advanced) {
 
 const rollOutcomeEmbed = (color, actionReport, equation, moveName, moveDescription, outcome, failGif) => {
 
-  return outcomeEmbed = {
+  return {
     title: actionReport,
     description: equation,
     color: color,
@@ -69,6 +70,32 @@ const rollOutcomeEmbed = (color, actionReport, equation, moveName, moveDescripti
   };
 
 }
+
+const createInfoEmbed = (moveContext) => {
+  let moveEmbed = {
+    title: moveContext.name,
+    description: '',
+    fields: [],
+    url: ''
+  };
+
+  const secondaryContext = (moveContext.type === 'modification') ?
+    moves[moveContext.moveToModify] :
+    null;
+
+  moveEmbed.description = infoDescription(moveContext, secondaryContext)
+
+  moveEmbed.fields = (moveContext.type === 'roll') ?
+    infoOutcomeFields(moveContext.outcome) :
+    null;
+
+  if (moveContext.guildId) {
+    moveEmbed.url = `https://www.monsterbot.io/moves/show/${moveContext.key}/guild/${moveContext.guildId}`;
+  }
+
+  return moveEmbed;
+};
+
 
 const infoOutcomeFields = (outcome) => {
   let fields = [];
@@ -145,9 +172,8 @@ const modifierInfo = (mod) => {
 
 const modifierList = (modifiers) => modifiers.reduce(
   (acc, mod) => {
-    console.log('acc', acc);
     return `${acc} \n ${modifierInfo(mod)}`
   },''
 );
 
-module.exports = { createOutcomeEmbed, rollOutcomeEmbed, infoOutcomeFields, infoDescription };
+module.exports = { createOutcomeEmbed, createInfoEmbed, rollOutcomeEmbed, infoOutcomeFields, infoDescription };

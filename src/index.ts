@@ -92,13 +92,20 @@ client.ws.on('INTERACTION_CREATE', async request => {
   // if this is a dm, the user object is one level higher.
   const user = request.member ? request.member.user : request.user;
 
-  const interaction = interactions.get(request.data.name);
+  let interaction = interactions.get(request.data.name);
+  let options = request.data.options;
+
+  // If we couldn't find an interaction - maybe this is a custom slash command.
+  // Since they're custom, we have no idea what they're named!
   if (!interaction) {
-    console.log('Could not find an interaction for the following request:', request);
-    return;
+    interaction = interactions.get('specialmovev2');
+    const commandNameAsOption = { name: 'key', value: request.data.name };
+    options = request.data.options ? 
+      [...request.data.options, commandNameAsOption] :
+      [commandNameAsOption];
   }
 
-  interaction.execute(messenger, user, request.guild_id, request.data.options);
+  interaction.execute(messenger, user, request.guild_id, options);
 })
 
 client.on('message', message => {
