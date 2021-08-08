@@ -1,5 +1,5 @@
 import AWS from 'aws-sdk';
-import { DeleteItemInput, TransactWriteItem } from 'aws-sdk/clients/dynamodb';
+import { DeleteItemInput } from 'aws-sdk/clients/dynamodb';
 import { Hunter } from '../interfaces/Hunter';
 import { CLIENT as client } from '../utils/dynamoDbClient';
 
@@ -34,7 +34,7 @@ export async function update(userId: string, hunterId: string, updateExpression:
   };
 
   try {
-    const data =  await client.updateItem(params).promise();
+    const data = await client.updateItem(params).promise();
     const updatedHunter = AWS.DynamoDB.Converter.unmarshall(data["Attributes"]);
     return updatedHunter;
   } catch (error) {
