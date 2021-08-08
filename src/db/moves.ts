@@ -1,4 +1,5 @@
-import AWS from 'aws-sdk';import { CLIENT as client } from '../utils/dynamoDbClient';
+import AWS from 'aws-sdk';
+import { CLIENT as client } from '../utils/dynamoDbClient';
 
 const TABLE = 'moves';
 
