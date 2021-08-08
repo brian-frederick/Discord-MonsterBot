@@ -1,6 +1,6 @@
 import moves from '../utils/moves';
 import specialMovesService from '../services/specialMovesService';
-import { createInfoEmbed } from '../utils/movesHelper';
+const { createInfoEmbed } = require('../utils/movesHelper');
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
@@ -25,7 +25,6 @@ export default {
     maybeSpecialMoveKey: string | undefined,
   ): Promise<void> {
     let moveContext;
-    let requestedMove;
 
     console.log('We are in the action now!');
     console.log(`Action params - maybeBasicMoveKey: ${maybeBasicMoveKey}, maybeSpecialMoveKey: ${maybeSpecialMoveKey}.`);
