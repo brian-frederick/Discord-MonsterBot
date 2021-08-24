@@ -5,7 +5,7 @@ import { BasicMove } from '../interfaces/move';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
-  name: 'protectSomeone',
+  name: 'protectsomeone',
   async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
     const move = new BasicMove(MoveType.ProtectSomeone);
     await move.execute(messenger, user, guildId, options);
