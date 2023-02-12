@@ -5,6 +5,8 @@ import { addGuild, deleteGuild } from './db/guilds' ;
 import { Command } from './interfaces/Command';
 import { SlashCommandMessenger } from './models/SlashMessenger';
 import { CommandMessenger } from './models/CommandMessenger';
+import { DiscordInteractionType } from './interfaces/enums';
+import { parseCustomIdComponentInteraction } from './utils/componentInteractionParams';
 
 const client = new Discord.Client();
 
@@ -25,12 +27,25 @@ for (const file of commandFiles) {
 // dynamically create interactions
 let interactions = new Map();
 
+// looks for js files even though we're using ts.
+// Build process converts back to js.
 const interactionFiles = fs.readdirSync('./interactions').filter(file => file.endsWith('.js'));
 
 for (const file of interactionFiles) {
   const interaction = require (`./interactions/${file}`);
 	interactions.set(interaction.default.name, interaction.default);
 }
+
+
+let componentInteractions = new Map();
+const componentInteractionFiles = fs.readdirSync('./component-interactions').filter(file => file.endsWith('.js'));
+
+for (const file of componentInteractionFiles) {
+  const componentInteraction = require (`./component-interactions/${file}`);
+	componentInteractions.set(componentInteraction.default.name, componentInteraction.default);
+}
+
+console.log('component-interactions...', componentInteractions);
 
 client.once('ready', () => {
   console.log('starting up! beep boop raaaarrr!');
@@ -92,20 +107,32 @@ client.ws.on('INTERACTION_CREATE', async request => {
   // if this is a dm, the user object is one level higher.
   const user = request.member ? request.member.user : request.user;
 
-  let interaction = interactions.get(request.data.name);
-  let options = request.data.options;
+  if ((request.type === DiscordInteractionType.messageComponent)) {
+    const customId = request.data.custom_id;
+    const componentInteractionName = parseCustomIdComponentInteraction(customId);
+    const componentInteraction = componentInteractions.get(componentInteractionName);
+    if (!componentInteraction) {
+      console.log('Blurgh we could not find a component interaction using custom id:', customId);
+    }
 
-  // If we couldn't find an interaction - maybe this is a custom slash command.
-  // Since they're custom, we have no idea what they're named!
-  if (!interaction) {
-    interaction = interactions.get('specialmovev2');
-    const commandNameAsOption = { name: 'key', value: request.data.name };
-    options = request.data.options ? 
-      [...request.data.options, commandNameAsOption] :
-      [commandNameAsOption];
+    componentInteraction.execute(customId, messenger, user);
+  } else {
+    let interaction = interactions.get(request.data.name);
+    let options = request.data.options;
+  
+    //TODO: Deprecate this move. Dont need it with slash commands.
+    // If we couldn't find an interaction - maybe this is a custom slash command.
+    // Since they're custom, we have no idea what they're named!
+    if (!interaction) {
+      interaction = interactions.get('specialmovev2');
+      const commandNameAsOption = { name: 'key', value: request.data.name };
+      options = request.data.options ? 
+        [...request.data.options, commandNameAsOption] :
+        [commandNameAsOption];
+    }
+  
+    interaction.execute(messenger, user, request.guild_id, options);
   }
-
-  interaction.execute(messenger, user, request.guild_id, options);
 })
 
 client.on('message', message => {

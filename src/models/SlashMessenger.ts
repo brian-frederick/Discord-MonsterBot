@@ -20,16 +20,16 @@ export class SlashCommandMessenger extends CommandMessenger {
     return confirmInteraction(this.#interactionId, this.#interactionToken, msg);
   }
 
-  followup(msg: string) {
-    return followupInteraction(this.#interactionToken, msg);
+  followup(msg: string, components?: any[]) {
+    return followupInteraction(this.#interactionToken, msg, components);
   }
 
-  respondWithEmbed(embed: any) {
-    return confirmInteractionEmbed(this.#interactionId, this.#interactionToken, [embed]);
+  respondWithEmbed(embed: any, components?: any[]) {
+    return confirmInteractionEmbed(this.#interactionId, this.#interactionToken, [embed], components);
   }
 
-  async respondWithEmbeds(embeds: any[]) {
-    confirmInteractionEmbed(this.#interactionId, this.#interactionToken, embeds);
+  async respondWithEmbeds(embeds: any[], components?: any[]) {
+    confirmInteractionEmbed(this.#interactionId, this.#interactionToken, embeds, components);
     return;
   }
 

@@ -2,6 +2,7 @@ import ddb from '../utils/dynamodb';
 import { yesNoQuestions } from '../utils/recap';
 import { yesNoFilter, hasYesMsg } from '../utils/messageManager';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
+import { createActionRow, createButton } from '../utils/components';
 
 export default {
   validate(guildId) {
@@ -84,17 +85,23 @@ export default {
     messenger.followup(`Grrr Bleep Blorp. Your session has ended and your answers are saved.`);
 
     let experienceMsg: string;
+    let markXpButton;
 
     // Assess XP gained
     if (yesCount > 2) {
       experienceMsg = 'Mark 2 Experience!';
+      markXpButton =createButton("Mark 2 XP", 1, "mark-2-experience");
     } else if (yesCount > 0) {
       experienceMsg = 'Mark 1 Experience.'
+      markXpButton = createButton("Mark 1 XP", 1, "mark-1-experience");
     } else {
       experienceMsg = 'No experience this time. :disappointed_relieved:'
     }
 
-    messenger.followup(experienceMsg);
+    const maybeComponents = markXpButton ?
+      [createActionRow([markXpButton])] : null;
+
+    messenger.followup(experienceMsg, maybeComponents);
 
     return;
   }

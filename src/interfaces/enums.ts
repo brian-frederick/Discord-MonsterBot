@@ -38,3 +38,11 @@ export enum Stat {
   Harm = 'harm',
   Luck = 'luck'
 }
+
+export enum DiscordInteractionType {
+  ping = 1,
+  applicationCommand = 2,
+  messageComponent = 3,
+  applicationCommandAutocomplete = 4,
+  modalSubmit = 5
+}

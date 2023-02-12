@@ -8,17 +8,19 @@ export async function confirmInteraction(interactionId: string, interactionToken
   return await postInteraction(interactionId, interactionToken, data);
 }
 
-export async function followupInteraction(interactionToken: string, msg: string) {
+export async function followupInteraction(interactionToken: string, msg: string, components?: any[]) {
   const data = {
-    content: msg
+    content: msg,
+    components
   };
 
   return await followup(interactionToken, data);
 }
 
-export async function confirmInteractionEmbed(interactionId: string, interactionToken: string, embeds: any[]) {
+export async function confirmInteractionEmbed(interactionId: string, interactionToken: string, embeds: any[], components?: any[]) {
   const data = {
-    embeds
+    embeds,
+    components
   };
 
   return await postInteraction(interactionId, interactionToken, data);

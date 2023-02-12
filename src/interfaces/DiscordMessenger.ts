@@ -11,17 +11,17 @@ export interface DiscordMessenger {
   /**
   * Subsequent messages after initial ack. Can be invoked multiple times per command.
   */
-  followup: (msg: string) => Promise<Discord.Message>,
+  followup: (msg: string, components?: any[]) => Promise<Discord.Message>,
 
   /**
   * Initial response to request in the form of an embed. Can only be used once per command invocation for slash commands.
   */
-  respondWithEmbed: (embed: any) => Promise<Discord.Message>,
+  respondWithEmbed: (embed: any, components?: any) => Promise<Discord.Message>,
 
   /**
   * Initial response to request in the form of multiple embeds. Can only be used once per command invocation for slash commands.
   */
-  respondWithEmbeds: (embeds: any[]) => Promise<void>,
+  respondWithEmbeds: (embeds: any[], components?: any) => Promise<void>,
 
   /**
   * Subsequent messages in the form of an embed after initial ack. Can be invoked multiple times per command.
