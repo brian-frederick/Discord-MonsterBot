@@ -1,4 +1,3 @@
-import { int } from "aws-sdk/clients/datapipeline"
 
 export const createActionRow = (innerComponents) => {
 
@@ -8,7 +7,7 @@ export const createActionRow = (innerComponents) => {
     }
 }
 
-export const createButton = (label: string, style: int, customId: string) => {
+export const createButton = (label: string, style: number, customId: string) => {
     return {
         type: 2,
         label,
@@ -17,3 +16,12 @@ export const createButton = (label: string, style: int, customId: string) => {
     }
 }
 
+export const createSelect = (customId: string, options: any[], minValues?: number, maxValues?: number) => {
+    return {
+        type: 3,
+        custom_id: customId,
+        options,
+        min_values: minValues,
+        max_values: maxValues
+    }
+}

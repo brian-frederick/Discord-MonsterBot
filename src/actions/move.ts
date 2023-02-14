@@ -8,8 +8,10 @@ import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 import { createActionRow, createButton } from '../utils/components';
 
 export default {
-  validate(): string {
-    return;
+  validate(moveKey: string, moveContext): string {
+    if (!moveContext) {
+      return `Blrrrgh. Could not find a basic move called ${moveKey}!`;
+    };
   },
 
   async execute(
@@ -26,6 +28,12 @@ export default {
     }
 
     const moveContext = moves[moveKey];
+
+    const errorMessage = this.validate(moveKey, moveContext);
+    if (errorMessage){
+      messenger.respond(errorMessage);
+      return;
+    }
 
     const modifiers = [];
 

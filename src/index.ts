@@ -45,8 +45,6 @@ for (const file of componentInteractionFiles) {
 	componentInteractions.set(componentInteraction.default.name, componentInteraction.default);
 }
 
-console.log('component-interactions...', componentInteractions);
-
 client.once('ready', () => {
   console.log('starting up! beep boop raaaarrr!');
   console.log('Sending out love to the following guilds:');
@@ -115,7 +113,7 @@ client.ws.on('INTERACTION_CREATE', async request => {
       console.log('Blurgh we could not find a component interaction using custom id:', customId);
     }
 
-    componentInteraction.execute(customId, messenger, user);
+    componentInteraction.execute(customId, messenger, user, request.data.values);
   } else {
     let interaction = interactions.get(request.data.name);
     let options = request.data.options;

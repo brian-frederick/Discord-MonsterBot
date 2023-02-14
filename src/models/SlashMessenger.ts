@@ -25,7 +25,8 @@ export class SlashCommandMessenger extends CommandMessenger {
   }
 
   respondWithEmbed(embed: any, components?: any[]) {
-    return confirmInteractionEmbed(this.#interactionId, this.#interactionToken, [embed], components);
+    const embeds = embed ? [embed] : null;
+    return confirmInteractionEmbed(this.#interactionId, this.#interactionToken, embeds, components);
   }
 
   async respondWithEmbeds(embeds: any[], components?: any[]) {
