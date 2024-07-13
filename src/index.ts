@@ -1,3 +1,4 @@
+require("./instrument");
 import fs from 'fs';
 import Discord from 'discord.js';
 import { prefix, token } from  './config.json';
@@ -7,6 +8,7 @@ import { SlashCommandMessenger } from './models/SlashMessenger';
 import { CommandMessenger } from './models/CommandMessenger';
 import { DiscordInteractionType } from './interfaces/enums';
 import { parseCustomIdComponentInteraction } from './utils/componentInteractionParams';
+import * as Sentry from '@sentry/node';
 
 const client = new Discord.Client();
 
@@ -35,7 +37,6 @@ for (const file of interactionFiles) {
   const interaction = require (`./interactions/${file}`);
 	interactions.set(interaction.default.name, interaction.default);
 }
-
 
 let componentInteractions = new Map();
 const componentInteractionFiles = fs.readdirSync('./component-interactions').filter(file => file.endsWith('.js'));
@@ -87,6 +88,12 @@ client.on('guildDelete', guild => {
 
 // @ts-ignore
 client.ws.on('INTERACTION_CREATE', async request => {
+  Sentry.setTags({
+    'event_type': 'command',
+    'server_id': request.guild_id,
+    'is_zoo_crew': request.guild_id === '737491286604644362'
+  });
+
   console.log('interaction ahoy: ');
   console.log(request);
   
@@ -104,6 +111,7 @@ client.ws.on('INTERACTION_CREATE', async request => {
 
   // if this is a dm, the user object is one level higher.
   const user = request.member ? request.member.user : request.user;
+  Sentry.setUser({ username: user?.username, id: user?.id });
 
   if ((request.type === DiscordInteractionType.messageComponent)) {
     const customId = request.data.custom_id;
@@ -113,8 +121,12 @@ client.ws.on('INTERACTION_CREATE', async request => {
       console.log('Blurgh we could not find a component interaction using custom id:', customId);
     }
 
+    Sentry.setTag('command', customId);
+    Sentry.captureMessage(`Attempting custom command: ${customId}`, 'info');
     componentInteraction.execute(customId, messenger, user, request.data.values);
   } else {
+    Sentry.setTag('command', request.data.name);
+    Sentry.captureMessage(`Attempting command: ${request.data.name}`, 'info');
     let interaction = interactions.get(request.data.name);
     let options = request.data.options;
   
@@ -122,6 +134,7 @@ client.ws.on('INTERACTION_CREATE', async request => {
     // If we couldn't find an interaction - maybe this is a custom slash command.
     // Since they're custom, we have no idea what they're named!
     if (!interaction) {
+      Sentry.captureMessage(`This custom slash command functionality is supposed to be deprecated. ${request.data.move}`, 'warning');
       interaction = interactions.get('specialmovev2');
       const commandNameAsOption = { name: 'key', value: request.data.name };
       options = request.data.options ? 
@@ -129,7 +142,17 @@ client.ws.on('INTERACTION_CREATE', async request => {
         [commandNameAsOption];
     }
   
-    interaction.execute(messenger, user, request.guild_id, options);
+    await interaction.execute(messenger, user, request.guild_id, options);
+    
+    Sentry.setTags({
+      'command': null,
+      'event_type': null,
+      'is_zoo_crew': null,
+      'server_id': null,
+      'server_name': null
+    });
+  
+    Sentry.setUser(null);
   }
 })
 
@@ -141,6 +164,17 @@ client.on('message', message => {
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
   const commandName = args.shift().toLowerCase();
+  
+  Sentry.setTags({
+    'command': commandName,
+    'event_type': 'message',
+    'is_zoo_crew': message.guild?.id === '737491286604644362',
+    'server_id': message?.guild?.id
+  });
+
+  Sentry.setUser({ username: message.member.user.username, id: message.member.user.id });
+
+  Sentry.captureMessage(`Someone is still using messages for move: ${commandName}`, 'warning');
 
   command = commands.get(commandName);
 
@@ -148,7 +182,10 @@ client.on('message', message => {
     aliasCommand = aliasedCommands.get(commandName);
   }
 
-  if (!command && !aliasCommand) return;
+  if (!command && !aliasCommand) {
+    Sentry.captureMessage(`Someone attempted to use a command name that doesn't exist: ${commandName}.`, 'error');
+    return;
+  }
 
 	try {
     const messenger = new CommandMessenger(message.channel as Discord.TextChannel);
@@ -160,8 +197,19 @@ client.on('message', message => {
     }
 	} catch (error) {
 		console.error(error);
+    Sentry.captureException(error);
 		message.reply('there was an error trying to execute that command!');
 	}
+
+  Sentry.setTags({
+    'command': null,
+    'event_type': null,
+    'is_zoo_crew': null,
+    'server_id': null,
+    'server_name': null
+  });
+
+  Sentry.setUser(null);
 });
 
 try {
