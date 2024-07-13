@@ -14,7 +14,7 @@ export async function get(guildId: string, key: string) {
 
   try {
     const data = await client.getItem(params).promise();
-    console.log('move data', data);
+    console.log('test move data', data);
     const move = data.Item ? AWS.DynamoDB.Converter.unmarshall(data.Item) : null;
     return move;
   } catch (error) {
