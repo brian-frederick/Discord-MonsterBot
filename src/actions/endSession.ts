@@ -2,7 +2,8 @@ import ddb from '../utils/dynamodb';
 import { yesNoQuestions } from '../utils/recap';
 import { yesNoFilter, hasYesMsg } from '../utils/messageManager';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
-import { createActionRow, createButton } from '../utils/components';
+import { createActionRow, createBeerButton, createButton } from '../utils/components';
+import { captureMessage } from '@sentry/node';
 
 export default {
   validate(guildId) {
@@ -55,17 +56,18 @@ export default {
       sessionSummary[q.response] = collection.first().content;
     }
 
-    // Create a recap of the session
-    let recap = '';
+
 
     await messenger.followup(`Everyone should answer this one. What happened in this session? You have 1 minute starting NOW!`);
     
     setTimeout(() => messenger.followup('20 more seconds to provide a recap...'), 40000);
     setTimeout(() => messenger.followup('Grrrr Beeeep CANNOT HOLD IT MUCH LONGER SEND IT NOW!'), 55000);
     
+    // Create a recap of the session
+    let recap = '';
     let recapCollection = await messenger.channel.awaitMessages(msg => !msg.author.bot, { time: 65000 });
     recapCollection.forEach(msg => recap += `${msg.content} - ${msg.author}\n`);
-
+    captureMessage(`recap: ${recap}`, 'info');
 
     sessionSummary.recap = recap;
 
@@ -98,8 +100,10 @@ export default {
       experienceMsg = 'No experience this time. :disappointed_relieved:'
     }
 
+    const beerButton = createBeerButton();
+
     const maybeComponents = markXpButton ?
-      [createActionRow([markXpButton])] : null;
+      [createActionRow([markXpButton, beerButton])] : [createActionRow([beerButton])];
 
     messenger.followup(experienceMsg, maybeComponents);
 

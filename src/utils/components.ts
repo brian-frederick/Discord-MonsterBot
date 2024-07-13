@@ -16,6 +16,19 @@ export const createButton = (label: string, style: number, customId: string) => 
     }
 }
 
+export const createBeerButton = () => {
+    return {
+        emoji: {
+            "id": null,
+            "name": "🍺"
+        },
+        label: `Buy Monsterbot a beer`,
+        style: 5,
+        type: 2,
+        url: 'https://www.buymeacoffee.com/brianfrederick'
+    }
+};
+
 export const createSelect = (customId: string, options: any[], minValues?: number, maxValues?: number) => {
     return {
         type: 3,
