@@ -25,7 +25,7 @@
     "@sentry/profiling-node": "^8.17.0",
     "aws-sdk": "^2.729.0",
     "axios": "^0.21.1",
-    "discord.js": "^12.2.0",
+    "discord.js": "^12.5.3",
     "lodash": "^4.17.20",
     "moment": "^2.29.1"
   },
