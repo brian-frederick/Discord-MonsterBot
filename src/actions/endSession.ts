@@ -84,28 +84,29 @@ export default {
       return;
     }
 
-    messenger.followup(`Grrr Bleep Blorp. Your session has ended and your answers are saved.`);
-
     let experienceMsg: string;
     let markXpButton;
 
     // Assess XP gained
     if (yesCount > 2) {
       experienceMsg = 'Mark 2 Experience!';
-      markXpButton =createButton("Mark 2 XP", 1, "mark-2-experience");
+      markXpButton = createButton("You've earned 2 XP", 1, "mark-2-experience");
     } else if (yesCount > 0) {
       experienceMsg = 'Mark 1 Experience.'
-      markXpButton = createButton("Mark 1 XP", 1, "mark-1-experience");
+      markXpButton = createButton("You've earned 1 XP", 1, "mark-1-experience");
     } else {
       experienceMsg = 'No experience this time. :disappointed_relieved:'
     }
 
     const beerButton = createBeerButton();
 
-    const maybeComponents = markXpButton ?
+    const components = markXpButton ?
       [createActionRow([markXpButton, beerButton])] : [createActionRow([beerButton])];
 
-    messenger.followup(experienceMsg, maybeComponents);
+    const finalMsg = 'Grrr Bleep Blorp. Your session has ended and your answers are saved. '
+      + experienceMsg;
+
+    messenger.followup(finalMsg, components);
 
     return;
   }
