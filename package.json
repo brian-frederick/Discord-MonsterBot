@@ -23,7 +23,7 @@
     "@sentry/cli": "^2.32.1",
     "@sentry/node": "^8.17.0",
     "@sentry/profiling-node": "^8.17.0",
-    "aws-sdk": "^2.729.0",
+    "aws-sdk": "^2.1659.0",
     "axios": "^1.7.2",
     "discord.js": "^12.5.3",
     "lodash": "^4.17.21",
