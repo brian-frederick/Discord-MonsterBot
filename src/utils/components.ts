@@ -25,7 +25,7 @@ export const createBeerButton = () => {
         label: `Buy Monsterbot a beer`,
         style: 5,
         type: 2,
-        url: 'https://www.buymeacoffee.com/brianfrederick'
+        url: 'https://www.buymeacoffee.com/monsterbot'
     }
 };
 
