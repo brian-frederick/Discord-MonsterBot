@@ -1,7 +1,7 @@
 function printInventory(firstName, inventory) {
   if (inventory.length > 0) {
     let inventoryString = '';
-    inventory.forEach(item => inventoryString += ` - ${item} \n`);
+    inventory.forEach(item => inventoryString += `- ${item} \n`);
     return { 
       title: `${firstName}'s Inventory:`,
       description: inventoryString

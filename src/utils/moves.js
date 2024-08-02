@@ -1,43 +1,43 @@
 
-const iamQuestions = ` - What happened here?\n`
-+ ` - What sort of creature is it?\n`
-+ ` - What can it do?\n`
-+ ` - What can hurt it\n`
-+ ` - Where did it go?\n`
-+ ` - What was it going to do?\n`
-+ ` - What is being concealed here?`;
+const iamQuestions = `- What happened here?\n`
++ `- What sort of creature is it?\n`
++ `- What can it do?\n`
++ `- What can hurt it\n`
++ `- Where did it go?\n`
++ `- What was it going to do?\n`
++ `- What is being concealed here?`;
 
-const rabsQuestions = ` - What's my best way in?\n`
-+ ` - What's my best way out?\n`
-+ ` - Are there any dangers we haven't noticed?\n`
-+ ` - What's the biggest threat?\n`
-+ ` - What's most vulnerable to me?\n`
-+ ` - What's the best way to protect the victims\n`
+const rabsQuestions = `- What's my best way in?\n`
++ `- What's my best way out?\n`
++ `- Are there any dangers we haven't noticed?\n`
++ `- What's the biggest threat?\n`
++ `- What's most vulnerable to me?\n`
++ `- What's the best way to protect the victims\n`
 + `If you act on the answers, you get +1 ongoing while the information is relevant.`;
 
-const umEffects = ` - Inflict harm (1-harm ignore- armour magic obvious).\n`
-  + ` - Enchant a weapon. It gets +1 harm and +magic.\n`
-  + ` - Do one thing that is beyond human limitations.\n`
-  + ` - Bar a place or portal to a specific person or a type of creature.\n`
-  + ` - Trap a specific person, minion, or monster.\n`
-  + ` - Banish a spirit or curse from the person, object, or place it inhabits.\n`
-  + ` - Summon a monster into the world.\n`
-  + ` - Communicate with something that you do not share a language with.\n`
-  + ` - Observe another place or time.\n`
-  + ` - Heal 1-harm from an injury, or cure a disease, or neutralize a poison.\n`;
+const umEffects = `- Inflict harm (1-harm ignore- armour magic obvious).\n`
+  + `- Enchant a weapon. It gets +1 harm and +magic.\n`
+  + `- Do one thing that is beyond human limitations.\n`
+  + `- Bar a place or portal to a specific person or a type of creature.\n`
+  + `- Trap a specific person, minion, or monster.\n`
+  + `- Banish a spirit or curse from the person, object, or place it inhabits.\n`
+  + `- Summon a monster into the world.\n`
+  + `- Communicate with something that you do not share a language with.\n`
+  + `- Observe another place or time.\n`
+  + `- Heal 1-harm from an injury, or cure a disease, or neutralize a poison.\n`;
 
-const umGlitches =  ` - The effect is weakened.\n`
-  + ` - The effect is of short duration.\n`
-  + ` - You take 1-harm ignore-armour.\n`
-  + ` - The magic draws immediate, unwelcome attention.\n`
-  + ` - It has a problematic side effect.\n`;
+const umGlitches =  `- The effect is weakened.\n`
+  + `- The effect is of short duration.\n`
+  + `- You take 1-harm ignore-armour.\n`
+  + `- The magic draws immediate, unwelcome attention.\n`
+  + `- It has a problematic side effect.\n`;
 
-const umKeeperMaySay = ` - The spell requires weird materials.\n`
-  + ` - The spell will take 10 seconds, 30 seconds, or 1 minute to cast.\n`
-  + ` - The spell requires ritual chanting and gestures.\n`
-  + ` - The spell requires you to draw arcane symbols.\n`
-  + ` - You need one or two people to help cast the spell.\n`
-  + ` - You need to refer to a tome of magic for the details.\n`;
+const umKeeperMaySay = `- The spell requires weird materials.\n`
+  + `- The spell will take 10 seconds, 30 seconds, or 1 minute to cast.\n`
+  + `- The spell requires ritual chanting and gestures.\n`
+  + `- The spell requires you to draw arcane symbols.\n`
+  + `- You need one or two people to help cast the spell.\n`
+  + `- You need to refer to a tome of magic for the details.\n`;
 
 
 const ksa =  {
@@ -60,16 +60,16 @@ const ksa =  {
     high: {
       title: 'On a 10+ Kick Some Ass, choose one extra effect:',
       description: `- You gain the advantage: take +1 forward, or give +1 forward to another hunter.\n`
-      + ` - You inflict terrible harm (+1 harm).\n`
-      + ` - You suffer less harm (-1 harm).\n`
-      + ` - You force them where you want them.`,
+      + `- You inflict terrible harm (+1 harm).\n`
+      + `- You suffer less harm (-1 harm).\n`
+      + `- You force them where you want them.`,
     },
     advanced: {
       title: 'On a 12+ Kick Some Ass, pick an enhanced effect:',
-      description: ` - You completely hold the advantage. All hunters involved in the fight get +1 forward.\n`
-      + ` - You suffer no harm at all.\n`
-      + ` - Your attack inflicts double the normal harm.\n`
-      + ` - Your attack drives the enemy away in a rout.`
+      description: `- You completely hold the advantage. All hunters involved in the fight get +1 forward.\n`
+      + `- You suffer no harm at all.\n`
+      + `- Your attack inflicts double the normal harm.\n`
+      + `- Your attack drives the enemy away in a rout.`
     }
   }
 };
@@ -218,10 +218,10 @@ const ps = {
     high: {
       title: 'On a 10+ Protect Someone...',
       description: `Choose an extra:\n`
-        + ` - You suffer little harm (-1 harm).\n`
-        + ` - All impending danger is now focused on you.\n`
-        + ` - You inflict harm on the enemy.\n`
-        + ` - You hold the enemy back.`
+        + `- You suffer little harm (-1 harm).\n`
+        + `- All impending danger is now focused on you.\n`
+        + `- You inflict harm on the enemy.\n`
+        + `- You hold the enemy back.`
     },
     advanced: {
       title: 'On a 12+ Protect Someone...',

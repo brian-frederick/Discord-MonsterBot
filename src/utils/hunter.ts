@@ -41,7 +41,7 @@ export function statsEmbed(hunter) {
   // handle advanced moves
   if (hunter.advancedMoves && hunter.advancedMoves.length > 0) {
     let moveString = '';
-    hunter.advancedMoves.forEach(move => moveString += ` - ${move.value} (${move.key})\n`);
+    hunter.advancedMoves.forEach(move => moveString += `- ${move.value} (${move.key})\n`);
     fields.push({name: 'Advanced Moves', inline: false, value: moveString});
   }
 
