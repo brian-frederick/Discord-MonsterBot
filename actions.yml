@@ -1,0 +1,30 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  Deploy:
+    name: Deploy to EC2
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2 
+      - name: Build & Deploy
+        env:
+            PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ec2-user@ec2-52-207-217-16.compute-1.amazonaws.com '
+
+              cd Discord_Monsterbot &&
+              git checkout master &&
+              git pull &&
+              npm i &&
+              export NODE_OPTIONS="--max-old-space-size=8192 --experimental-modules" &&
+              npm run build &&
+              pm2 stop ./dist/index.js &&
+              pm2 start ./dist/index.js
+              '
