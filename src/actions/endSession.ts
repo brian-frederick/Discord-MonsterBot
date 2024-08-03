@@ -56,12 +56,15 @@ export default {
       sessionSummary[q.response] = collection.first().content;
     }
 
+    const unixTimePlusOneMinute = Math.floor(new Date().getTime() / 1000) + 60;
 
+    // Appears as "in 59 seconds", "in 58 seconds", etc. in Discord.
+    const countdown = `<t:${unixTimePlusOneMinute}:R>`;
 
-    await messenger.followup(`Everyone should answer this one. What happened in this session? You have 1 minute starting NOW!`);
+    await messenger.followup(`Everyone should answer this one. What happened in this session? Submit your answer ${countdown}.`);
     
-    setTimeout(() => messenger.followup('20 more seconds to provide a recap...'), 40000);
-    setTimeout(() => messenger.followup('Grrrr Beeeep CANNOT HOLD IT MUCH LONGER SEND IT NOW!'), 55000);
+    setTimeout(() => messenger.followup(`Provide a recap ${countdown}`), 40000);
+    setTimeout(() => messenger.followup(`Grrrr Beeeeep Session ends ${countdown}. CANNOT HOLD IT MUCH LONGER SEND IT NOW!`), 55000);
     
     // Create a recap of the session
     let recap = '';
@@ -89,11 +92,11 @@ export default {
 
     // Assess XP gained
     if (yesCount > 2) {
-      experienceMsg = 'Mark 2 Experience!';
-      markXpButton = createButton("You've earned 2 XP", 1, "mark-2-experience");
+      experienceMsg = "You've earned 2 XP!";
+      markXpButton = createButton("Mark 2 Experience", 1, "mark-2-experience");
     } else if (yesCount > 0) {
-      experienceMsg = 'Mark 1 Experience.'
-      markXpButton = createButton("You've earned 1 XP", 1, "mark-1-experience");
+      experienceMsg = "You've earned 1 XP!";
+      markXpButton = createButton("Mark 1 Experience", 1, "mark-1-experience");
     } else {
       experienceMsg = 'No experience this time. :disappointed_relieved:'
     }
@@ -103,7 +106,7 @@ export default {
     const components = markXpButton ?
       [createActionRow([markXpButton, beerButton])] : [createActionRow([beerButton])];
 
-    const finalMsg = 'Grrr Bleep Blorp. Your session has ended and your answers are saved. '
+    const finalMsg = 'Grrr Bleep Blorp. Your session has ended and your answers are saved. You can use the /recap command to review them at your next session. '
       + experienceMsg;
 
     messenger.followup(finalMsg, components);
