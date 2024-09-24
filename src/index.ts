@@ -214,6 +214,7 @@ client.on('message', message => {
 
 try {
   console.log('attempting to login with ', token);
+  console.log('newly revised version for reboot');
   Sentry.captureMessage('Logging in.', 'info');
   client.login(token);
 } catch (error) {
