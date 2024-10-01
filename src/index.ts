@@ -134,7 +134,7 @@ client.ws.on('INTERACTION_CREATE', async request => {
     // If we couldn't find an interaction - maybe this is a custom slash command.
     // Since they're custom, we have no idea what they're named!
     if (!interaction) {
-      Sentry.captureMessage(`This custom slash command functionality is supposed to be deprecated. ${request.data.move}`, 'warning');
+      Sentry.captureMessage(`This custom slash command functionality is supposed to be deprecated. ${request.data.name}`, 'warning');
       interaction = interactions.get('specialmovev2');
       const commandNameAsOption = { name: 'key', value: request.data.name };
       options = request.data.options ? 
