@@ -29,17 +29,18 @@ export default {
 
     // Subcommands have nested options.
     const nestedOptions = options.length ? options[0].options : [];
+    
     //Remove and Activate both require a hunterId;
-    const hunterId = getParam('id', nestedOptions);
+    const hunterId = getParam('id', nestedOptions!);
 
     if (subcommand.name === 'remove') {
-      await remove.execute(messenger, user.id, hunterId);
+      await remove.execute(messenger, user.id, hunterId!);
       return;
     }
 
     if (subcommand.name === 'activate') {
 
-      await activate.execute(messenger, user.id, hunterId);
+      await activate.execute(messenger, user.id, hunterId!);
       return;
     }
 

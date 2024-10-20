@@ -17,7 +17,7 @@ export async function followupInteraction(interactionToken: string, msg: string,
   return await followup(interactionToken, data);
 }
 
-export async function confirmInteractionEmbed(interactionId: string, interactionToken: string, embeds: any[], components?: any[]) {
+export async function confirmInteractionEmbed(interactionId: string, interactionToken: string, embeds?: any[], components?: any[]) {
   const data = {
     embeds,
     components

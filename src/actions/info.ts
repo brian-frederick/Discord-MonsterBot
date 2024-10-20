@@ -7,7 +7,7 @@ export default {
   validate(
     maybeBasicMoveKey: string | undefined,
     maybeSpecialMoveKey: string | undefined
-  ): string {
+  ): string | undefined {
     if (!maybeBasicMoveKey && !maybeSpecialMoveKey) {
       return 'Blrrgh. Cannot find a move to advance!';
     }

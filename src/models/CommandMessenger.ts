@@ -16,11 +16,11 @@ export class CommandMessenger implements DiscordMessenger {
   }
 
   respondWithEmbed(embed: any) {
-    return this.channel.send({ embed: embed });
+    return this.channel.send({ embeds:embed });
   }
 
   async respondWithEmbeds(embeds: any[]) {
-    await embeds.forEach(e => this.channel.send({ embed: e }));
+    await embeds.forEach(e => this.channel.send({ embeds: e }));
     return;
   }
 

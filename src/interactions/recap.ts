@@ -10,7 +10,9 @@ export default {
     let maybeRecordLimit;
 
     if (options.length > 0) {
-      maybeRecordLimit = parseInt(getParam('number', options));
+      const maybeRecordLimitParam = getParam('limit', options);
+
+      maybeRecordLimit = maybeRecordLimitParam ? parseInt(maybeRecordLimitParam) : undefined;
     }
 
     await recapAction.execute(messenger, maybeRecordLimit);

@@ -8,14 +8,15 @@ import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 export default {
   name: 'mark',
   async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
-    let vital: Vital;
+    let vital: Vital | undefined = undefined;
     let hunterId: string;
-    let value: number;
+    let value: number | undefined = undefined;
 
     hunterId = chooseHunterId(user.id, options);
     if (options.length > 0) {
       vital = getParam('vital', options) as Vital;
-      value = parseInt(getParam('value', options));
+      const valueParam = getParam('value', options);
+      value = valueParam ? parseInt(valueParam) : undefined;
     }
 
     await markAction.execute(messenger, hunterId, vital, value);

@@ -10,7 +10,13 @@ import { DiscordInteractionType } from './interfaces/enums';
 import { parseCustomIdComponentInteraction } from './utils/componentInteractionParams';
 import * as Sentry from '@sentry/node';
 
-const client = new Discord.Client();
+const client = new Discord.Client({intents: [
+  Discord.Intents.FLAGS.GUILDS,
+  Discord.Intents.FLAGS.GUILD_MESSAGES,
+  Discord.Intents.FLAGS.MESSAGE_CONTENT,
+  Discord.Intents.FLAGS.GUILD_MEMBERS,
+  Discord.Intents.FLAGS.DIRECT_MESSAGES
+],});
 
 // dynamically create commands
 let commands: Map<string, Command> = new Map();
@@ -63,6 +69,10 @@ client.once('ready', () => {
 });
 
 client.on('guildCreate', guild => {
+  Sentry.setTags({
+    'event_type': 'guildCreate',
+    'server_id': guild.id
+  });
   console.log('guild created.');
   console.log('id: ', guild.id);
   console.log('name: ', guild.name);
@@ -75,6 +85,10 @@ client.on('guildCreate', guild => {
 });
 
 client.on('guildDelete', guild => {
+  Sentry.setTags({
+    'event_type': 'guildDelete',
+    'server_id': guild.id
+  });
   console.log('guild deleted.');
   console.log('id: ', guild.id);
   console.log('name: ', guild.name);
@@ -97,10 +111,11 @@ client.ws.on('INTERACTION_CREATE', async request => {
   console.log('interaction ahoy: ');
   console.log(request);
   
-  let channel = client.channels.cache.get(request.channel_id);
+  let channel = client.channels?.cache?.get(request.channel_id);
   if (!channel) {
-    console.log('trying a fetch');
-    channel = await client.channels.fetch(request.channel_id);
+    console.log('Could not get channel from cache. Attempting to fetch.');
+    const maybeFetchedChannel = await client.channels.fetch(request.channel_id);
+    channel = maybeFetchedChannel ?? undefined;
   }
 
   const messenger = new SlashCommandMessenger(
@@ -130,11 +145,9 @@ client.ws.on('INTERACTION_CREATE', async request => {
     let interaction = interactions.get(request.data.name);
     let options = request.data.options;
   
-    //TODO: Deprecate this move. Dont need it with slash commands.
     // If we couldn't find an interaction - maybe this is a custom slash command.
     // Since they're custom, we have no idea what they're named!
     if (!interaction) {
-      Sentry.captureMessage(`This custom slash command functionality is supposed to be deprecated. ${request.data.name}`, 'warning');
       interaction = interactions.get('specialmovev2');
       const commandNameAsOption = { name: 'key', value: request.data.name };
       options = request.data.options ? 
@@ -156,27 +169,32 @@ client.ws.on('INTERACTION_CREATE', async request => {
   }
 })
 
-client.on('message', message => {
-  let command: Command;
-  let aliasCommand: Command;
+client.on('messageCreate', message => {
+  let command: Command | undefined = undefined;
+  let aliasCommand: Command | undefined = undefined;
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
 	const args = message.content.slice(prefix.length).trim().split(/ +/);
-  const commandName = args.shift().toLowerCase();
+  const commandName = args?.shift()?.toLowerCase();
   
   Sentry.setTags({
     'command': commandName,
-    'event_type': 'message',
+    'event_type': 'messageCreate',
     'is_zoo_crew': message.guild?.id === '737491286604644362',
     'server_id': message?.guild?.id
   });
 
-  Sentry.setUser({ username: message.member.user.username, id: message.member.user.id });
+  if (!commandName) {
+    Sentry.captureMessage('Command name is undefined');
+    return;
+  }
+
+  Sentry.setUser({ username: message?.member?.user.username, id: message?.member?.user.id });
 
   Sentry.captureMessage(`Someone is still using messages for move: ${commandName}`, 'warning');
 
-  command = commands.get(commandName);
+  command = commands.get(commandName!);
 
   if (!command) {
     aliasCommand = aliasedCommands.get(commandName);
@@ -193,7 +211,7 @@ client.on('message', message => {
       command.execute(messenger, message, args);
     }
     else {
-      aliasCommand.execute(messenger, message, args, commandName);
+      aliasCommand!.execute(messenger, message, args, commandName);
     }
 	} catch (error) {
 		console.error(error);

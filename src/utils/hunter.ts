@@ -1,6 +1,7 @@
 import { Hunter, CustomProp } from '../interfaces/Hunter';
 
 export const someHunter = {
+  "hunterId": "sh",
   "charm": 0,
   "cool": 0,
   "experience": 0,

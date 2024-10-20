@@ -64,14 +64,14 @@ export default {
     // If no existing hunter or they're okay with overwriting, proceed with questions.
     for (var q of hunterQuestions) {
       await messenger.followup(q.prompt);
-      const collection = await messenger.channel.awaitMessages(q.filter, { max: 1, time: 120000 });
+      const collection = await messenger.channel.awaitMessages({ filter: q.filter, max: 1, time: 120000 });
       
       if (collection.size < 1) {
         messenger.followup(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
         return;
       }
       
-      const answer = q.filter === isRequesterNumFilter ? parseInt(collection.first().content) : collection.first().content;
+      const answer = q.filter === isRequesterNumFilter ? parseInt(collection!.first()!.content) : collection!.first()!.content;
 
       hunterForm[q.property] = answer;
     }

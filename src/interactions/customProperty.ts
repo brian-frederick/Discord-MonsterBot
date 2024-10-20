@@ -8,14 +8,15 @@ export default {
   name: 'customproperty',
   async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
     let hunterId: string;
-    let transaction: string;
-    let name: string;
+    let transaction: string | undefined = undefined;
+    let name: string | undefined = undefined;
     let maybeValue: number | undefined;
 
     hunterId = chooseHunterId(user.id, options);
     if (options.length > 0) {
       name = getParam('name', options);
-      maybeValue = parseInt(getParam('value', options));
+      const maybeValueParam = getParam('value', options);
+      maybeValue = maybeValueParam ? parseInt(maybeValueParam) : undefined;
       transaction = getParam('transaction', options);
     }
 

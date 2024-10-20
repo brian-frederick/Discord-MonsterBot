@@ -7,7 +7,7 @@ import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 export default {
   name: 'info',
   async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
-    let maybeBasicMoveKey: string;
+    let maybeBasicMoveKey: string | undefined = undefined;
     let maybeSpecialMoveKey: string | undefined;
 
     if (options.length > 0) {

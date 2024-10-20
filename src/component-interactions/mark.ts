@@ -8,16 +8,14 @@ import { parseAllForNumber, parseAllForVital } from '../utils/params';
 export default {
   name: 'mark',
   async execute(customId: string, messenger: DiscordMessenger,  user: Discord.User) {
-    let vital: Vital;
-    let value: number; 
+    let vital: Vital | undefined;
+    let value: number | undefined; 
 
     const hunterId = user.id;
 
     const params = parseCustomIdParams(customId);
-    if (params) {
-        vital = parseAllForVital(params);
-        value = parseAllForNumber(params);
-    }
+    vital = params ? parseAllForVital(params) : undefined;
+    value = params ?parseAllForNumber(params) : undefined;
 
     await markAction.execute(messenger, hunterId, vital, value);
 

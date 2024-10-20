@@ -9,7 +9,7 @@ import specialMovesHelper from '../utils/specialMovesHelper';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
-  validate(hunterId: string | undefined, key: string | undefined ): string {
+  validate(hunterId: string | undefined, key: string | undefined ): string | undefined {
 
     if (!hunterId) {
       return "Blrrrp we cannot determine who you are! WHO ARE YOU!";
@@ -35,11 +35,13 @@ export default {
       return;
     }
 
-    let hunter = await getActiveHunter(userId);
-    if (_.isEmpty(hunter)) {
+    let maybeHunter = await getActiveHunter(userId);
+    if (_.isEmpty(maybeHunter)) {
       messenger.channel.send('Could not find your hunter. Rolling with some hunter.')
-      hunter = someHunter;
+      maybeHunter = someHunter;
     }
+
+    const hunter = maybeHunter!;
 
     const moveContext = await specialMovesService.getSpecialMove(key, messenger.channel.guild?.id);
     if (!moveContext || _.isEmpty(moveContext)) {
@@ -53,7 +55,7 @@ export default {
       return;
     }
 
-    const modifiers = []
+    const modifiers: {key: string, value: number}[] = []
 
     moveContext.modifiers.forEach(mod => {
       let modifierToAdd;

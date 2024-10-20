@@ -8,8 +8,8 @@ export default {
   name: 'advancemove',
   async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
     let hunterId: string | undefined;
-    let maybeBasicMoveKey: string;
-    let isRemove: boolean;
+    let maybeBasicMoveKey: string | undefined = undefined;
+    let isRemove: boolean = false;
     let maybeSpecialMoveKey: string | undefined;
 
     hunterId = chooseHunterId(user.id, options);

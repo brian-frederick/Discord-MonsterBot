@@ -20,7 +20,7 @@ module.exports = {
   ],
 	async execute(messenger: CommandMessenger, message, args) {
     let hunterId: string | undefined;
-    let maybeBasicMoveKey: string;
+    let maybeBasicMoveKey: string | undefined;
     let isRemove: boolean;
     let maybeSpecialMoveKey: string | undefined;
 

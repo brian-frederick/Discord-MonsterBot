@@ -35,7 +35,7 @@ export async function update(userId: string, hunterId: string, updateExpression:
 
   try {
     const data = await client.updateItem(params).promise();
-    const updatedHunter = AWS.DynamoDB.Converter.unmarshall(data["Attributes"]);
+    const updatedHunter = AWS.DynamoDB.Converter.unmarshall(data!["Attributes"]!);
     return updatedHunter;
   } catch (error) {
     console.log('error updating hunter: ', error);
@@ -47,7 +47,7 @@ export async function getAll(userId: string, activeOnly: boolean = false): Promi
   let params: AWS.DynamoDB.QueryInput = {
     TableName: TABLE,
     KeyConditionExpression: "userId = :userId",
-    FilterExpression: activeOnly ? "active = :active" : null,
+    FilterExpression: activeOnly ? "active = :active" : undefined,
     ExpressionAttributeValues: activeOnly ?
       { ":userId": {"S": userId}, ":active": {"BOOL": true} } :
       { ":userId": {"S": userId} },
@@ -55,7 +55,7 @@ export async function getAll(userId: string, activeOnly: boolean = false): Promi
 
   try {
     var data = await client.query(params).promise();
-    const hunters = data.Items.map(item => AWS.DynamoDB.Converter.unmarshall(item)) as Hunter[];
+    const hunters = data!.Items!.map(item => AWS.DynamoDB.Converter.unmarshall(item)) as Hunter[];
     console.log('hunters', hunters);
     return hunters;
   }
