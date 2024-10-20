@@ -10,7 +10,7 @@ export default {
     hunterId: string, 
     maybeBasicMoveKey: string | undefined,
     maybeSpecialMoveKey: string | undefined
-  ): string {
+  ): string | undefined {
     if (!hunterId) {
       return 'Yrrrgh! I do not know which hunter to use!'
     }
@@ -29,7 +29,7 @@ export default {
   async execute(
     messenger: DiscordMessenger,
     userId: string | undefined, 
-    maybeBasicMoveKey:string | undefined,
+    maybeBasicMoveKey: string | undefined,
     maybeSpecialMoveKey: string | undefined,
     isRemove: boolean,
   ): Promise<void> {
@@ -43,12 +43,13 @@ export default {
       return;
     }
 
-    const hunter = await getActiveHunter(userId);
-    if (_.isEmpty(hunter)) {
+    const maybeHunter = await getActiveHunter(userId);
+    if (_.isEmpty(maybeHunter)) {
       messenger.respond("Could not find your hunter!");
       return;
     }
 
+    const hunter = maybeHunter!;
     const advancedMoves = hunter.advancedMoves ? hunter.advancedMoves : [];
     
     // Do we just need to remove something here?
@@ -89,7 +90,7 @@ export default {
       advancedMoves.push(moveToAdvance);
     }
 
-    const updatedHunter = await updateHunterProperty(userId, hunter.hunterId, "advancedMoves", advancedMoves);
+    const updatedHunter = await updateHunterProperty(userId!, hunter!.hunterId!, "advancedMoves", advancedMoves);
     if (!updatedHunter) {
       messenger.respond('Something has gone wrong! Help!');
       return;

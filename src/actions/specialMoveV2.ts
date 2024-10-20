@@ -24,11 +24,13 @@ export default {
       return;
     }
 
-    let hunter = await getActiveHunter(userId);
-    if (_.isEmpty(hunter)) {
+    let maybeHunter = await getActiveHunter(userId);
+    if (_.isEmpty(maybeHunter)) {
       messenger.channel.send('Could not find your hunter. Rolling with some hunter.')
-      hunter = someHunter;
+      maybeHunter = someHunter;
     }
+
+    const hunter = maybeHunter!;
 
     if (info) {
       const infoEmbed = movesHelper.createInfoEmbed(moveContext);
@@ -42,7 +44,7 @@ export default {
       return;
     }
 
-    const modifiers = []
+    const modifiers:{key: string, value: number}[] = []
 
     moveContext.modifiers.forEach(mod => {
       let modifierToAdd;

@@ -13,7 +13,7 @@ export default {
     fwd?: number,
     hunterProperty?: Stat,
   ): Promise<void> {
-    let modifiers = [];
+    let modifiers: {key: string, value: number }[] = [];
     // will be overwritten if there's hunter stats involved
     let rollersName = username;
 
@@ -22,11 +22,13 @@ export default {
     }
     
     if (hunterProperty) {
-      let hunter = await getActiveHunter(hunterId);
-      if (_.isEmpty(hunter)) {
+      let maybeHunter = await getActiveHunter(hunterId);
+      if (_.isEmpty(maybeHunter)) {
         messenger.channel.send('Could not find your hunter. Rolling with some hunter.')
-        hunter = someHunter;
+        maybeHunter = someHunter;
       }
+
+      const hunter = maybeHunter!;
       rollersName = hunter.firstName;
       modifiers.push({ key: hunterProperty, value: hunter[hunterProperty]})
     }

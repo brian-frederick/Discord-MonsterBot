@@ -10,15 +10,16 @@ export default {
   async execute(messenger: DiscordMessenger, user: Discord.User, guildId, options: Option[] = []) {
     let key: string;
     let hunterId: string;
-    let forward: number;
+    let forward: number | undefined;
     let info: boolean;
 
     hunterId = chooseHunterId(user.id, options);
-    if (options.length > 0) {
-      key = getParam('key', options);
-      forward = parseInt(getParam('fwd', options));
-      info = getBooleanParam('info', options);
-    }
+    
+    // key is a required field so no need to check for options
+    key = getParam('key', options)!;
+    const maybeForward = getParam('fwd', options);
+    forward = maybeForward ? parseInt(maybeForward) : undefined;
+    info = getBooleanParam('info', options);
 
     await specialMoveV2Action.execute(messenger, hunterId, key, info, forward);
 

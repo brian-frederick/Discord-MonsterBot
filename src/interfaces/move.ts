@@ -12,13 +12,13 @@ export class BasicMove {
   }
 
   async execute(messenger: DiscordMessenger, user: Discord.User, guildId, options: Option[] = []) {
-    let forward: number;
+    let forward: number | undefined = undefined;
     let hunterId: string;
 
     hunterId = chooseHunterId(user.id, options);
     if (options.length > 0) {
       const forwardParam = getParam('forward', options);
-      forward = parseInt(forwardParam);
+      forward = forwardParam ? parseInt(forwardParam) : undefined;
     }
 
     await moveAction.execute(messenger, hunterId, this.moveKey, forward);

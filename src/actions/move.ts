@@ -8,7 +8,7 @@ import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 import { createActionRow, createButton } from '../utils/components';
 
 export default {
-  validate(moveKey: string, moveContext): string {
+  validate(moveKey: string, moveContext): string | undefined {
     if (!moveContext) {
       return `Blrrrgh. Could not find a basic move called ${moveKey}!`;
     };
@@ -17,17 +17,18 @@ export default {
   async execute(
     messenger: DiscordMessenger,
     hunterId: string,
-    moveKey: string,
+    moveKey?: string,
     forward?: number
   ): Promise<void> {
 
-    let hunter = await getActiveHunter(hunterId);
-    if (_.isEmpty(hunter)) {
+    let maybeHunter = await getActiveHunter(hunterId);
+    if (_.isEmpty(maybeHunter)) {
       messenger.channel.send('Could not find your hunter. Rolling with some hunter.')
-      hunter = someHunter;
+      maybeHunter = someHunter;
     }
 
-    const moveContext = moves[moveKey];
+    const hunter = maybeHunter!;
+    const moveContext = moveKey ? moves[moveKey] : undefined;
 
     const errorMessage = this.validate(moveKey, moveContext);
     if (errorMessage){
@@ -35,7 +36,7 @@ export default {
       return;
     }
 
-    const modifiers = [];
+    const modifiers: {key: string, value: number}[] = [];
 
     moveContext.modifiers.forEach(mod => {
       modifiers.push({ key: mod.property, value: hunter[mod.property] })

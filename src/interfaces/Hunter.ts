@@ -1,7 +1,7 @@
 export interface Hunter {
   // db identifiers
   userId: string;
-  hunterId?: string;
+  hunterId: string;
   active?: boolean;
 
   // basic info

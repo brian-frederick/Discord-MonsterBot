@@ -7,8 +7,8 @@ import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 export default {
   name: 'move',
   async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
-    let moveKey: string;
-    let forward: number;
+    let moveKey: string | undefined = undefined;
+    let forward: number | undefined = undefined;
     let hunterId: string;
     
     console.log('user', user);
@@ -18,7 +18,7 @@ export default {
     if (options.length > 0) {
       moveKey = getParam('move', options);
       const forwardParam = getParam('forward', options);
-      forward = parseInt(forwardParam);
+      forward = forwardParam ? parseInt(forwardParam) : undefined;
     }
 
     console.log(`move params - moveKey: ${moveKey}, forward: ${forward}, hunterId: ${hunterId} `);

@@ -5,7 +5,7 @@ import { getActiveHunter, updateHunterProperty } from '../services/hunterService
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
-  validate(userId: string, stat: Stat, value: number): string {
+  validate(userId: string, stat: Stat, value: number): string | undefined{
     if (!stat) {
       return 'You must include a stat like cool, charm, tough, sharp, or weird to update.';
     }
@@ -36,13 +36,15 @@ export default {
       return;
     }
 
-    const hunter = await getActiveHunter(userId);
-    if (_.isEmpty(hunter)) {
+    const maybeHunter = await getActiveHunter(userId);
+    if (_.isEmpty(maybeHunter)) {
       messenger.respond("Could not find your hunter!");
       return;
-    } 
+    }
+
+    const hunter = maybeHunter!;
     
-    const updatedHunter = await updateHunterProperty(userId, hunter.hunterId, stat, value);
+    const updatedHunter = await updateHunterProperty(userId, hunter!.hunterId!, stat, value);
     if (!updatedHunter) {
       messenger.respond('Something has gone wrong! Help!');
       return;

@@ -5,7 +5,11 @@ import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 import { getActiveHunter, updateHunterProperty } from '../services/hunterServiceV2';
 
 export default {
-  validate(transaction: string, maybeValue: number | undefined): string | void {
+  validate(transaction: string, maybeValue: number | undefined, name?: string): string | void {
+    if (!name) {
+      return 'You must include a name for the property.'
+    }
+    
     if (transaction === 'update' && !maybeValue) {
       return 'BLEEERGH! You must tell us a value to update the property!'
     }
@@ -15,24 +19,25 @@ export default {
   async execute(
     messenger: DiscordMessenger,
     userId: string,
-    transaction: string,
-    name: string,
+    transaction: string | undefined,
+    name: string | undefined,
     maybeValue: number | undefined,
   ): Promise<void> {
     
 
-    const errorMessage = this.validate(transaction, maybeValue);
+    const errorMessage = this.validate(transaction, maybeValue, name);
     if (errorMessage){
       messenger.respond(errorMessage);
       return;
     }
 
-    const hunter = await getActiveHunter(userId);
-    if (_.isEmpty(hunter)) {
+    const maybeHunter = await getActiveHunter(userId);
+    if (_.isEmpty(maybeHunter)) {
       messenger.respond("Could not find your hunter!");
       return;
     }
 
+    const hunter = maybeHunter!;
     let customProps: CustomProp[] = hunter.customProps ? hunter.customProps : [];
     let propIndex = customProps.findIndex(p => p.key === name);
     
@@ -48,13 +53,12 @@ export default {
       customProps.splice(propIndex, 1);
     } 
     
-    if (transaction === 'update') {
-       customProps[propIndex].value = maybeValue; 
+    if (transaction === 'update' && maybeValue) {
+       customProps[propIndex!].value = maybeValue; 
     } 
     
     if (transaction === 'create') {
-      console.log('maybeValue', maybeValue);
-      const newProp = { key: name, value: maybeValue ? maybeValue : 0 };
+      const newProp = { key: name!, value: maybeValue ? maybeValue : 0 };
       customProps.push(newProp);
     }
     

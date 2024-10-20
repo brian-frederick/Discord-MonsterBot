@@ -27,8 +27,18 @@ export default {
 
     let yesCount = 0;
 
-    let sessionSummary = {
-      guildId: null,
+    interface ISessionSummary {
+      guildId: string | null;
+      timestamp: number | null;
+      didConclude: boolean | null;
+      didSave: boolean | null;
+      didLearnAboutWorld: boolean | null;
+      didLearnAboutHunter: boolean | null;
+      recap: string | null;
+    }
+
+    let sessionSummary: ISessionSummary = {
+      guildId,
       timestamp: null,
       didConclude: null,
       didSave: null,
@@ -42,7 +52,7 @@ export default {
     // cycle through end session questions
     for (var q of yesNoQuestions) {
       await messenger.followup(q.prompt);
-      const collection = await messenger.channel.awaitMessages(yesNoFilter, { max: 1, time: 120000 });
+      const collection = await messenger.channel.awaitMessages({ filter: yesNoFilter,max: 1, time: 120000 });
       
       if (collection.size < 1) {
         messenger.followup(`Grrr Snarlll bleep blorp. Monster not have patience. Try again.`);
@@ -53,7 +63,7 @@ export default {
         yesCount++;
       }
 
-      sessionSummary[q.response] = collection.first().content;
+      sessionSummary[q.response] = collection!.first()!.content;
     }
 
     const unixTimePlusOneMinute = Math.floor(new Date().getTime() / 1000) + 60;
@@ -68,7 +78,7 @@ export default {
     
     // Create a recap of the session
     let recap = '';
-    let recapCollection = await messenger.channel.awaitMessages(msg => !msg.author.bot, { time: 65000 });
+    let recapCollection = await messenger.channel.awaitMessages({filter: msg => !msg.author.bot, time: 65000 });
     recapCollection.forEach(msg => recap += `${msg.content} - ${msg.author}\n`);
     captureMessage(`recap: ${recap}`, 'info');
 
@@ -77,7 +87,6 @@ export default {
     // Add admin fields to summary
     const d = new Date();
     sessionSummary.timestamp = d.getTime();
-    sessionSummary.guildId = guildId;
 
     // Save to dynamo
     const response = await ddb.createRecap(sessionSummary);

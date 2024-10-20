@@ -9,7 +9,7 @@ import { getActiveHunter, updateHunterProperty } from '../services/hunterService
 const confirmPossibleMatch = async (messenger: DiscordMessenger, possibleMatch: string): Promise<boolean> => {
 
   await messenger.followup(`Hrrmmm. Do you want me to remove the ${possibleMatch}? (yes/no)`);
-  const collection: Discord.Collection<string, Discord.Message> = await messenger.channel.awaitMessages(yesNoFilter, { max: 1, time: 30000 });
+  const collection: Discord.Collection<string, Discord.Message> = await messenger.channel.awaitMessages({ filter: yesNoFilter, max: 1, time: 30000 });
   if (collection.size < 1) {
     messenger.followup(`Grrr blorp. Monster not have patience. Try again.`);
     return false;
@@ -23,7 +23,7 @@ export default {
     userId: string, 
     transaction: InventoryTransaction,
     item: string
-  ): string {
+  ): string | undefined {
     if (!userId) {
       return 'Yrrrgh! I do not know which hunter to use!'
     }
@@ -56,12 +56,13 @@ export default {
       return;
     }
 
-    const hunter = await getActiveHunter(userId);
-    if (_.isEmpty(hunter)) {
+    const maybeHunter = await getActiveHunter(userId);
+    if (_.isEmpty(maybeHunter)) {
       messenger.respond("Could not find your hunter!");
       return;
     }
 
+    const hunter = maybeHunter!;
     let inventory: string[] = hunter.inventory ? hunter.inventory : [];
 
     // if no transaction type, just show existing inventory
