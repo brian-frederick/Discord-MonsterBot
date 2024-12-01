@@ -15,7 +15,7 @@ export default {
 
     const params = parseCustomIdParams(customId);
     vital = params ? parseAllForVital(params) : undefined;
-    value = params ?parseAllForNumber(params) : undefined;
+    value = params ? parseAllForNumber(params) : undefined;
 
     await markAction.execute(messenger, hunterId, vital, value);
 

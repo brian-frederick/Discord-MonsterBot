@@ -8,6 +8,9 @@ export interface DiscordMessenger {
   */
   respond: (msg: string) => Promise<Discord.Message>,
 
+
+  respondWithModal: (components: any) => Promise<Discord.Message>,
+  
   /**
   * Subsequent messages after initial ack. Can be invoked multiple times per command.
   */

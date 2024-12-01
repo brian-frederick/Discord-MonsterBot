@@ -4,7 +4,8 @@ import {
   confirmInteraction,
   followupInteraction,
   confirmInteractionEmbed,
-  followupInteractionEmbed
+  followupInteractionEmbed,
+  confirmInteractionWithModal
 } from '../services/interactionService'; 
 
 export class SlashCommandMessenger extends CommandMessenger {
@@ -18,6 +19,10 @@ export class SlashCommandMessenger extends CommandMessenger {
 
   respond(msg: string) {
     return confirmInteraction(this.#interactionId, this.#interactionToken, msg);
+  }
+
+  respondWithModal(components: any) {
+    return confirmInteractionWithModal(this.#interactionId, this.#interactionToken, components);
   }
 
   followup(msg: string, components?: any[]) {

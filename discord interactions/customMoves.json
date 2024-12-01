@@ -1,0 +1,122 @@
+{
+  "name": "custommoves",
+  "description": "Special moves for your hunter added to the server as slash commands.",
+  "options": [
+
+    {
+      "name": "create-roll-outcome-move",
+      "description": "Add a move to your server that requires a roll",
+      "type": 1,
+      "options": [
+        {
+          "name": "name",
+          "description": "The name of the move.",
+          "type": 3,
+          "required": true,
+          "max_length": 27
+        },
+        {
+          "name": "description",
+          "description": "A short description of this slash command.",
+          "type": 3,
+          "required": true,
+          "max_length": 100
+        },
+        {
+          "name": "plus",
+          "description": "The hunter property to add to the roll.",
+          "type": 3,
+          "required": true,
+          "choices": [
+            { "name": "charm", "value": "charm" },
+            { "name": "cool", "value": "cool" },
+            { "name": "sharp", "value": "sharp" },
+            { "name": "tough", "value": "tough" },
+            { "name": "weird", "value": "weird" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "create-simple-move",
+      "description": "Add a simple move to your server that doesn't require a roll.",
+      "type": 1,
+      "options": [
+        {
+          "name": "name",
+          "description": "The name of the move.",
+          "type": 3,
+          "required": true,
+          "max_length": 27
+        },
+        {
+          "name": "description",
+          "description": "A short description of this slash command.",
+          "type": 3,
+          "required": true,
+          "max_length": 100
+        }
+      ]
+    },
+    {
+      "name": "create-modified-move",
+      "description": "Add a move that modifies a basic move.",
+      "type": 1,
+      "options": [
+        {
+          "name": "name",
+          "description": "The name of the move.",
+          "type": 3,
+          "required": true,
+          "max_length": 27
+        },
+        {
+          "name": "description",
+          "description": "A short description of this slash command.",
+          "type": 3,
+          "required": true,
+          "max_length": 100
+        },
+        {
+        "name": "basic-move",
+        "description": "The basic move to modify.",
+        "required": true,
+        "type": 3,
+        "choices": [
+            { "name": "act under pressure", "value": "aup" },
+            { "name": "help out", "value": "ho" },
+            { "name": "investigate a mystery", "value": "iam" },
+            { "name": "kick some ass", "value": "ksa" },
+            { "name": "manipulate someone", "value": "ms" },
+            { "name": "protect someone", "value": "ps" },
+            { "name": "read a bad situation", "value": "rabs" },
+            { "name": "use magic", "value": "um" }
+        ]
+        },
+        {
+          "name": "use-instead",
+          "description": "The hunter modifier to use instead of the basic move.",
+          "type": 3,
+          "required": true,
+          "choices": [
+            { "name": "charm", "value": "charm" },
+            { "name": "cool", "value": "cool" },
+            { "name": "sharp", "value": "sharp" },
+            { "name": "tough", "value": "tough" },
+            { "name": "weird", "value": "weird" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "view",
+      "description": "See and manage the custom moves on your server.",
+      "type": 1
+    },
+        {
+      "name": "library",
+      "description": "See and manage shared custom moves available to all servers.",
+      "type": 1
+    }
+  ]
+}

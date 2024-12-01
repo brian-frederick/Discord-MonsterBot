@@ -1,4 +1,4 @@
-import { Option } from '../interfaces/DiscordInteractions';
+import { Option, IModalSubmissionData } from '../interfaces/DiscordInteractions';
 
 export const getParam = (name: string, options: Option[]) => 
   options.find( option => 

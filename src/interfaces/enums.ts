@@ -46,3 +46,18 @@ export enum DiscordInteractionType {
   applicationCommandAutocomplete = 4,
   modalSubmit = 5
 }
+
+export enum CustomMoveModalInputFields {
+  description = 'description',
+  low_outcome = 'low_outcome',
+  middle_outcome = 'middle_outcome',
+  high_outcome = 'high_outcome',
+  advanced_outcome = 'advanced_outcome'
+}
+
+
+export enum ModalCustomIdNames {
+  update_modified_move = 'mm',
+  update_roll_outcome_move = 'rm',
+  update_simple_move = 'sm'
+}

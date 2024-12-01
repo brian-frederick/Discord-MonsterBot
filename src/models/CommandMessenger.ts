@@ -11,6 +11,10 @@ export class CommandMessenger implements DiscordMessenger {
     return this.channel.send(msg);
   }
 
+  respondWithModal(components: any) {
+    return this.channel.send('This functionality is not supported for commands. Use slash commands.')
+  }
+
   followup(msg: string) {
     return this.respond(msg);
   }

@@ -1,4 +1,4 @@
-import { postInteraction, followup } from '../api/interactions'
+import { postInteraction, followup, postInteractionModal } from '../api/interactions'
 
 export async function confirmInteraction(interactionId: string, interactionToken: string, msg: string) {
   const data = {
@@ -6,6 +6,11 @@ export async function confirmInteraction(interactionId: string, interactionToken
   };
 
   return await postInteraction(interactionId, interactionToken, data);
+}
+
+export async function confirmInteractionWithModal(interactionId: string, interactionToken: string, data: any) {
+
+  return await postInteractionModal(interactionId, interactionToken, data);
 }
 
 export async function followupInteraction(interactionToken: string, msg: string, components?: any[]) {

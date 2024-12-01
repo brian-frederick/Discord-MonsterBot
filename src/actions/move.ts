@@ -51,7 +51,7 @@ export default {
     const outcome = dice.roll(modifiers);    
     const outcomeEmbed = movesHelper.createOutcomeEmbed(hunter.firstName, outcome.total, outcome.equation, moveContext, isAdvanced);
     const markXpButton = outcome.total <= 6 ?
-      createButton("Mark XP", 1, "mark-experience") : null;
+      createButton("Mark XP", 1, "mark_experience") : null;
 
     const maybeComponents = markXpButton ?
       [createActionRow([markXpButton])] : null;

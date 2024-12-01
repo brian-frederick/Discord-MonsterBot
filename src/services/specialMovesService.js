@@ -1,6 +1,6 @@
 const { takePriority, PUBLIC_GUILD_ID } = require('../utils/specialMovesHelper');
 const { getSpecialMoves } = require('../utils/dynamodb');
-const { get } = require('../db/moves');
+const { get, create } = require('../db/moves');
 
 // Checks both the public and specified guild.
 async function getSpecialMove(key, guildId) {
@@ -25,4 +25,9 @@ async function getSpecialMoveV2(key, guildId) {
   return await get(guildId, key);
 }
 
-module.exports = { getSpecialMove, getSpecialMoveV2 };
+async function createSpecialMove(key, guildId, move) {
+
+  return await create(key, guildId, move);
+}
+
+module.exports = { createSpecialMove, getSpecialMove, getSpecialMoveV2 };

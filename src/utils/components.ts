@@ -1,3 +1,4 @@
+import { textInput } from "../interfaces/DiscordInteractions"
 
 export const createActionRow = (innerComponents) => {
 
@@ -5,6 +6,24 @@ export const createActionRow = (innerComponents) => {
         type: 1,
         components: innerComponents
     }
+}
+
+export const createActionRowTextInput = (textInput: textInput) => {
+
+    return {
+        type: 1,
+        components: [textInput]
+    }
+}
+export const createModal = (customId: string, title: string,innerComponents) => {
+    return {
+        type: 9,
+        data: {
+            custom_id: customId,
+            title,
+            components: innerComponents
+        }
+    };
 }
 
 export const createButton = (label: string, style: number, customId: string) => {

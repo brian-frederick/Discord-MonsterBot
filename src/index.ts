@@ -7,7 +7,7 @@ import { Command } from './interfaces/Command';
 import { SlashCommandMessenger } from './models/SlashMessenger';
 import { CommandMessenger } from './models/CommandMessenger';
 import { DiscordInteractionType } from './interfaces/enums';
-import { parseCustomIdComponentInteraction } from './utils/componentInteractionParams';
+import { parseCustomIdName } from './utils/componentInteractionParams';
 import * as Sentry from '@sentry/node';
 
 const client = new Discord.Client({intents: [
@@ -50,6 +50,14 @@ const componentInteractionFiles = fs.readdirSync('./component-interactions').fil
 for (const file of componentInteractionFiles) {
   const componentInteraction = require (`./component-interactions/${file}`);
 	componentInteractions.set(componentInteraction.default.name, componentInteraction.default);
+}
+
+let modalSubmissions = new Map();
+const modalSubmissionFiles = fs.readdirSync('./modal-submissions').filter(file => file.endsWith('.js'));
+
+for (const file of modalSubmissionFiles) {
+  const modalSubmission = require (`./modal-submissions/${file}`);
+  modalSubmissions.set(modalSubmission.default.name, modalSubmission.default);
 }
 
 client.once('ready', () => {
@@ -128,9 +136,23 @@ client.ws.on('INTERACTION_CREATE', async request => {
   const user = request.member ? request.member.user : request.user;
   Sentry.setUser({ username: user?.username, id: user?.id });
 
-  if ((request.type === DiscordInteractionType.messageComponent)) {
+  if (request.type === DiscordInteractionType.modalSubmit) {
     const customId = request.data.custom_id;
-    const componentInteractionName = parseCustomIdComponentInteraction(customId);
+    const modalName = parseCustomIdName(customId);
+    const componentInteraction = modalSubmissions.get(modalName);
+    if (!componentInteraction) {
+      console.log('Blurgh we could not find a modal submission using custom id:', customId);
+    }
+
+    Sentry.setTag('command', customId);
+    Sentry.captureMessage(`Attempting modal submission: ${customId}`, 'info');
+    componentInteraction.execute(request.data, messenger, user);
+    return;
+  }
+  
+  if (request.type === DiscordInteractionType.messageComponent) {
+    const customId = request.data.custom_id;
+    const componentInteractionName = parseCustomIdName(customId);
     const componentInteraction = componentInteractions.get(componentInteractionName);
     if (!componentInteraction) {
       console.log('Blurgh we could not find a component interaction using custom id:', customId);
@@ -139,34 +161,36 @@ client.ws.on('INTERACTION_CREATE', async request => {
     Sentry.setTag('command', customId);
     Sentry.captureMessage(`Attempting custom command: ${customId}`, 'info');
     componentInteraction.execute(customId, messenger, user, request.data.values);
-  } else {
-    Sentry.setTag('command', request.data.name);
-    Sentry.captureMessage(`Attempting command: ${request.data.name}`, 'info');
-    let interaction = interactions.get(request.data.name);
-    let options = request.data.options;
-  
-    // If we couldn't find an interaction - maybe this is a custom slash command.
-    // Since they're custom, we have no idea what they're named!
-    if (!interaction) {
-      interaction = interactions.get('specialmovev2');
-      const commandNameAsOption = { name: 'key', value: request.data.name };
-      options = request.data.options ? 
-        [...request.data.options, commandNameAsOption] :
-        [commandNameAsOption];
-    }
-  
-    await interaction.execute(messenger, user, request.guild_id, options);
-    
-    Sentry.setTags({
-      'command': null,
-      'event_type': null,
-      'is_zoo_crew': null,
-      'server_id': null,
-      'server_name': null
-    });
-  
-    Sentry.setUser(null);
+
+    return;
   }
+
+  Sentry.setTag('command', request.data.name);
+  Sentry.captureMessage(`Attempting command: ${request.data.name}`, 'info');
+  let interaction = interactions.get(request.data.name);
+  let options = request.data.options;
+
+  // If we couldn't find an interaction - maybe this is a custom slash command.
+  // Since they're custom, we have no idea what they're named!
+  if (!interaction) {
+    interaction = interactions.get('specialmovev2');
+    const commandNameAsOption = { name: 'key', value: request.data.name };
+    options = request.data.options ? 
+      [...request.data.options, commandNameAsOption] :
+      [commandNameAsOption];
+  }
+
+  await interaction.execute(messenger, user, request.guild_id, options);
+  
+  Sentry.setTags({
+    'command': null,
+    'event_type': null,
+    'is_zoo_crew': null,
+    'server_id': null,
+    'server_name': null
+  });
+
+  Sentry.setUser(null);
 })
 
 client.on('messageCreate', message => {

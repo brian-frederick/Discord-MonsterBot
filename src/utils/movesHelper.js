@@ -89,6 +89,7 @@ const createInfoEmbed = (moveContext) => {
     infoOutcomeFields(moveContext.outcome) :
     null;
 
+  // TODO: Remove the url once we takedown monsterbot.io
   if (moveContext.guildId) {
     moveEmbed.url = `https://www.monsterbot.io/moves/show/${moveContext.key}/guild/${moveContext.guildId}`;
   }

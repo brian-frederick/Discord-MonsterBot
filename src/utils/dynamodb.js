@@ -97,4 +97,3 @@ async function getRecap(guildId, recordLimit=1) {
 }
 
 module.exports = { getSpecialMoves, createRecap, getRecap, createHunter };
-
