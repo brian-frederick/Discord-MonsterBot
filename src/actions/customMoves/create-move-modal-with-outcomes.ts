@@ -69,7 +69,7 @@ export default {
       createActionRowTextInput(advancedOutcomeInput)
     ];
 
-    const modalCustomId = `${ModalCustomIdNames.update_roll_outcome_move}_${key}`;
+    const modalCustomId = `${ModalCustomIdNames.update_move}_${key}`;
 
     messenger.respondWithModal(createModal(modalCustomId, key, formInputs));
 

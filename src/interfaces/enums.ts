@@ -57,7 +57,5 @@ export enum CustomMoveModalInputFields {
 
 
 export enum ModalCustomIdNames {
-  update_modified_move = 'mm',
-  update_roll_outcome_move = 'rm',
-  update_simple_move = 'sm'
+  update_move = 'um',
 }

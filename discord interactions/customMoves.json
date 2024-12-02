@@ -94,7 +94,7 @@
         ]
         },
         {
-          "name": "use-instead",
+          "name": "plus",
           "description": "The hunter modifier to use instead of the basic move.",
           "type": 3,
           "required": true,

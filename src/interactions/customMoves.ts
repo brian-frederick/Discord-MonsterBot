@@ -1,7 +1,8 @@
 import Discord from 'discord.js';
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
 import { Option } from '../interfaces/DiscordInteractions';
-import createRollOutComeModal from '../actions/customMoves/create-roll-outcome-move';
+import createMoveModalWithOutcomes from '../actions/customMoves/create-move-modal-with-outcomes';
+import createMoveModal from '../actions/customMoves/create-move-modal';
 import { getParam } from '../utils/interactionParams';
 import { createSpecialMove } from '../services/specialMovesService';
 
@@ -42,7 +43,7 @@ export default {
       'create-modified-move': 'modification'
     };
 
-    const type = typeMap[subcommand.name];
+    const type: 'roll' | 'simple' | 'modification' = typeMap[subcommand.name];
     const moveName = getParam('name', moveOptions);
 
     if (!type || !moveName) {
@@ -65,18 +66,22 @@ export default {
 
     const commandDescription = getParam('description', moveOptions);
     const plus = getParam('plus', moveOptions);
+    const moveToModify = type == 'modification' ?
+      getParam('basic-move', moveOptions) :
+      undefined;
 
     const move = {
-      guildId: guildId,
+      guildId,
       key,
       createdOn: new Date().getTime(),
-      description: commandDescription,
+      commandDescription,
       guildName: messenger.channel.guild?.name,
-      modifiers: type !== 'roll' ? undefined : [{
+      modifiers: type == 'simple' ? undefined : [{
         plus: true,
         property: plus,
         type: 'property'
       }],
+      moveToModify,
       name: moveName,
       type,
       userDiscriminator: user.discriminator,
@@ -88,23 +93,12 @@ export default {
 
     await createSpecialMove(key, guildId, move);
 
-
     if (subcommand?.name === 'create-roll-outcome-move') {
-      await createRollOutComeModal.execute(messenger, user.id, key);
-      console.log('bftest this is where we would save this move', move);
-      return;
+      await createMoveModalWithOutcomes.execute(messenger, user.id, key);
+    } else {
+      await createMoveModal.execute(messenger, user.id, key);
     }
-
-    if (subcommand?.name === 'create-simple-move') {
-      // TODO
-      return;
-    }
-
-    if (subcommand?.name === 'create-modified-move') {
-      // TODO
-      return;
-    }
-
-    console.log(`Could not find a corresponding action for the subcommand: ${subcommand.name}.`);
+    
+    return;
   }
 }
