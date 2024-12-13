@@ -33,11 +33,11 @@ export default {
     }
 
     const hunter = maybeHunter!;
-
     if (info) {
       const infoEmbed = movesHelper.createInfoEmbed(moveContext);
       const editButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${key}`)
-      messenger.respondWithEmbed(infoEmbed, [createActionRow([editButton])]);
+      const deleteButton = createButton("Delete", 4, `${ButtonCustomIdNames.delete_move}_${key}`);
+      messenger.respondWithEmbed(infoEmbed, [createActionRow([editButton, deleteButton])]);
       return;
     }
 

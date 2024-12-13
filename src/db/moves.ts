@@ -25,6 +25,27 @@ export async function get(guildId: string, key: string) {
     return;
   }
 }
+
+export async function deleteAMove(guildId: string, key: string) {
+  const params = {
+    TableName: TABLE,
+    Key: {
+      'guildId': { S: guildId },
+      'key': {S: key }
+    },
+    ReturnValues: 'ALL_OLD'
+  };
+
+  try {
+    const data = await client.deleteItem(params).promise();
+    const move = data.Attributes ? AWS.DynamoDB.Converter.unmarshall(data.Attributes) : null;
+    return move;
+  } catch (error) {
+    console.log(`error getting move for guildId: ${guildId} and key: ${key}`, error);
+    return;
+  }
+}
+
 // TODO: delete or use. This may come in handy when we're fuzzy searching the library.
 export async function getAll(guildId: string) {
   const params: QueryInput = {
