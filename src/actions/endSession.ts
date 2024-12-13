@@ -4,6 +4,7 @@ import { yesNoFilter, hasYesMsg } from '../utils/messageManager';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 import { createActionRow, createBeerButton, createButton } from '../utils/components';
 import { captureMessage } from '@sentry/node';
+import { ButtonCustomIdNames } from '../interfaces/enums';
 
 export default {
   validate(guildId) {
@@ -102,10 +103,10 @@ export default {
     // Assess XP gained
     if (yesCount > 2) {
       experienceMsg = "You've earned 2 XP!";
-      markXpButton = createButton("Mark 2 Experience", 1, "mark_2_experience");
+      markXpButton = createButton("Mark 2 Experience", 3, `${ButtonCustomIdNames.mark}_2_experience`);
     } else if (yesCount > 0) {
       experienceMsg = "You've earned 1 XP!";
-      markXpButton = createButton("Mark 1 Experience", 1, "mark_1_experience");
+      markXpButton = createButton("Mark 1 Experience", 3, `${ButtonCustomIdNames.mark}_1_experience`);
     } else {
       experienceMsg = 'No experience this time. :disappointed_relieved:'
     }

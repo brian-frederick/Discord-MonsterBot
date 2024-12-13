@@ -4,9 +4,11 @@ const moves =  require('../utils/moves');
 const dice = require('../utils/dice');
 const movesHelper = require('../utils/movesHelper');
 import { getActiveHunter } from '../services/hunterServiceV2';
-import specialMovesService from '../services/specialMovesService';
+import specialMovesService from '../services/specialMovesService';``
 import specialMovesHelper from '../utils/specialMovesHelper';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
+import { createActionRow, createButton } from '../utils/components';
+import { ButtonCustomIdNames } from '../interfaces/enums';
 
 export default {
 
@@ -34,7 +36,8 @@ export default {
 
     if (info) {
       const infoEmbed = movesHelper.createInfoEmbed(moveContext);
-      messenger.respondWithEmbed(infoEmbed);
+      const editButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${key}`)
+      messenger.respondWithEmbed(infoEmbed, [createActionRow([editButton])]);
       return;
     }
 
@@ -72,6 +75,11 @@ export default {
     const outcome = dice.roll(modifiers);
 
     let outcomeEmbed;
+    const markXpButton = outcome.total <= 6 ?
+      createButton("Mark XP", 3,`${ButtonCustomIdNames.mark}_experience`) : null;
+    const maybeComponents = markXpButton ?
+    [ createActionRow([markXpButton])] : null;
+
 
     if (moveContext.type === 'modification') {
       const secondaryContext = moves[moveContext.moveToModify];
@@ -80,7 +88,7 @@ export default {
       outcomeEmbed = movesHelper.createOutcomeEmbed(hunter.firstName, outcome.total, outcome.equation, moveContext, isAdvanced);
     }
     
-    messenger.respondWithEmbed(outcomeEmbed);
+    messenger.respondWithEmbed(outcomeEmbed, maybeComponents);
 
     return;
   }

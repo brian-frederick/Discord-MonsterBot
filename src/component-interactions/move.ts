@@ -3,6 +3,7 @@ import moveAction from '../actions/move';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 import { MoveType } from '../interfaces/enums';
 
+// Fired by actions/menu.ts select box
 export default {
   name: 'move',
   async execute(customId: string, messenger: DiscordMessenger,  user: Discord.User, values: string[]) {

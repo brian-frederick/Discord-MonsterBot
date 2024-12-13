@@ -15,7 +15,7 @@ export default {
     console.log('bftest options: ', JSON.stringify(options, null, 2));
     
     if (!subcommand || subcommand.name === 'view') {
-      // TODO
+      // TODO: Delete this as an option from here and the slash command.
       return; 
     }
 

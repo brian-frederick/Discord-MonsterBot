@@ -2,7 +2,7 @@ import AWS, { DynamoDB } from 'aws-sdk';
 import { CLIENT as client } from '../utils/dynamoDbClient';
 import { IOutcome } from '../interfaces/iOutcome';
 import { toExpressionAttributeValueOutcome } from '../utils/expressionAttributeValues';
-import { AttributeValue } from 'aws-sdk/clients/dynamodb';
+import { AttributeValue, QueryInput } from 'aws-sdk/clients/dynamodb';
 
 const TABLE = 'moves';
 
@@ -22,6 +22,32 @@ export async function get(guildId: string, key: string) {
     return move;
   } catch (error) {
     console.log(`error getting move for guildId: ${guildId} and key: ${key}`, error);
+    return;
+  }
+}
+// TODO: delete or use. This may come in handy when we're fuzzy searching the library.
+export async function getAll(guildId: string) {
+  const params: QueryInput = {
+    TableName: TABLE,
+    KeyConditionExpression: "#guildId = :guildId",
+    ExpressionAttributeNames: { 
+        '#guildId' : 'guildId'
+     },
+    ExpressionAttributeValues: {
+      ':guildId': { S: guildId },
+    }
+  };
+
+  try {
+    const response = await client.query(params).promise();
+    console.log('bftest response', response);
+
+    const moves = response.Items?.map(m => AWS.DynamoDB.Converter.unmarshall(m)); [];
+    console.log('bftest move data', moves);
+    
+    return moves;
+  } catch (error) {
+    console.log(`error getting move for guildId: ${guildId}`, JSON.stringify(error, null, 2));
     return;
   }
 }

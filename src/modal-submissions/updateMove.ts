@@ -1,8 +1,10 @@
 import Discord from 'discord.js';
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
-import { CustomMoveModalInputFields, ModalCustomIdNames } from '../interfaces/enums';
+import { ButtonCustomIdNames, CustomMoveModalInputFields, ModalCustomIdNames } from '../interfaces/enums';
 import { parseCustomIdParams } from '../utils/componentInteractionParams';
 import { update } from '../db/moves';
+import { createActionRow, createButton } from '../utils/components';
+import { hexColors } from '../content/theme';
 const movesHelper = require('../utils/movesHelper');
 
 export default {
@@ -47,8 +49,16 @@ export default {
       return;
     }
 
+    const updateSuccessEmbed = {
+      color: hexColors.green,
+      description: `${updated.name} has been updated.`
+    };
+
     const infoEmbed = movesHelper.createInfoEmbed(updated);
-    messenger.respondWithEmbed(infoEmbed);
+    const editButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${customMoveId}`)
+    const components = [createActionRow([editButton])];
+
+    messenger.respondWithEmbeds([updateSuccessEmbed, infoEmbed], components);
     return;
   }
 }

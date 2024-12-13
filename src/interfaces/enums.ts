@@ -59,3 +59,9 @@ export enum CustomMoveModalInputFields {
 export enum ModalCustomIdNames {
   update_move = 'um',
 }
+
+export enum ButtonCustomIdNames {
+  delete_move = 'dm',
+  edit_move = 'em',
+  mark = 'mark'
+}

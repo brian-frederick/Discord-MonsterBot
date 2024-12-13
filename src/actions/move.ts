@@ -6,6 +6,7 @@ const movesHelper = require('../utils/movesHelper');
 import { getActiveHunter } from '../services/hunterServiceV2';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 import { createActionRow, createButton } from '../utils/components';
+import { ButtonCustomIdNames } from '../interfaces/enums';
 
 export default {
   validate(moveKey: string, moveContext): string | undefined {
@@ -51,7 +52,7 @@ export default {
     const outcome = dice.roll(modifiers);    
     const outcomeEmbed = movesHelper.createOutcomeEmbed(hunter.firstName, outcome.total, outcome.equation, moveContext, isAdvanced);
     const markXpButton = outcome.total <= 6 ?
-      createButton("Mark XP", 1, "mark_experience") : null;
+      createButton("Mark XP", 3,`${ButtonCustomIdNames.mark}_experience`) : null;
 
     const maybeComponents = markXpButton ?
       [createActionRow([markXpButton])] : null;

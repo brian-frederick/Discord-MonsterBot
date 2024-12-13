@@ -1,5 +1,5 @@
 const { hexColors } = require('../content/theme');
-import moves from '../utils/moves';
+import moves from './moves';
 
 function createOutcomeEmbed(name, total, equation, moveContext, advanced) {
 
