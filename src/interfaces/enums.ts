@@ -62,7 +62,9 @@ export enum ModalCustomIdNames {
 }
 
 export enum ButtonCustomIdNames {
+  add_move = 'am',
   delete_move = 'dm',
   edit_move = 'em',
+  view_move = 'vm',
   mark = 'mark'
 }

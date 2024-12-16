@@ -5,10 +5,11 @@ const dice = require('../utils/dice');
 const movesHelper = require('../utils/movesHelper');
 import { getActiveHunter } from '../services/hunterServiceV2';
 import specialMovesService from '../services/specialMovesService';``
-import specialMovesHelper from '../utils/specialMovesHelper';
+import { createInfoResponse, createModificationMessages, createSimpleEmbed } from '../utils/specialMovesHelper';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 import { createActionRow, createButton } from '../utils/components';
 import { ButtonCustomIdNames } from '../interfaces/enums';
+import { ISpecialMove } from '../interfaces/ISpecialMove';
 
 export default {
 
@@ -34,15 +35,13 @@ export default {
 
     const hunter = maybeHunter!;
     if (info) {
-      const infoEmbed = movesHelper.createInfoEmbed(moveContext);
-      const editButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${key}`)
-      const deleteButton = createButton("Delete", 4, `${ButtonCustomIdNames.delete_move}_${key}`);
-      messenger.respondWithEmbed(infoEmbed, [createActionRow([editButton, deleteButton])]);
+      const [embed, components] = createInfoResponse(moveContext as ISpecialMove, userId);
+      messenger.respondWithEmbed(embed, components);
       return;
     }
 
     if (moveContext.type === 'simple') {
-      const simpleEmbed = specialMovesHelper.createSimpleEmbed(hunter.firstName, moveContext);
+      const simpleEmbed = createSimpleEmbed(hunter.firstName, moveContext);
       messenger.respondWithEmbed(simpleEmbed);
       return;
     }
@@ -83,7 +82,7 @@ export default {
 
     if (moveContext.type === 'modification') {
       const secondaryContext = moves[moveContext.moveToModify];
-      outcomeEmbed = specialMovesHelper.createModificationMessages(hunter.firstName, outcome.total, outcome.equation, moveContext, secondaryContext, isAdvanced);
+      outcomeEmbed = createModificationMessages(hunter.firstName, outcome.total, outcome.equation, moveContext, secondaryContext, isAdvanced);
     } else {
       outcomeEmbed = movesHelper.createOutcomeEmbed(hunter.firstName, outcome.total, outcome.equation, moveContext, isAdvanced);
     }

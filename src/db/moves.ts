@@ -46,17 +46,29 @@ export async function deleteAMove(guildId: string, key: string) {
   }
 }
 
-// TODO: delete or use. This may come in handy when we're fuzzy searching the library.
-export async function getAll(guildId: string) {
-  const params: QueryInput = {
+export async function getAll(guildId: string, searchTerm?: string) {
+
+  const params: QueryInput = searchTerm ? {
+    TableName: TABLE,
+    KeyConditionExpression: "#guildId = :guildId",
+    FilterExpression: "contains(#name, :searchTerm)",
+    ExpressionAttributeNames: { 
+      '#guildId': 'guildId',
+      '#name': 'name'
+    },
+    ExpressionAttributeValues: {
+      ':guildId': { S: guildId },
+      ':searchTerm': { S: searchTerm }
+    },
+  } : {
     TableName: TABLE,
     KeyConditionExpression: "#guildId = :guildId",
     ExpressionAttributeNames: { 
-        '#guildId' : 'guildId'
-     },
+      '#guildId' : 'guildId'
+    },
     ExpressionAttributeValues: {
       ':guildId': { S: guildId },
-    }
+    },
   };
 
   try {

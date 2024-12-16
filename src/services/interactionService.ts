@@ -31,9 +31,10 @@ export async function confirmInteractionEmbed(interactionId: string, interaction
   return await postInteraction(interactionId, interactionToken, data);
 }
 
-export async function followupInteractionEmbed(interactionId: string, interactionToken: string, embed: any) {
+export async function followupInteractionEmbed(interactionId: string, interactionToken: string, embed: any, components: any) {
   const data = {
-    embeds: [embed]
+    embeds: [embed],
+    components
   };
 
   return await followup(interactionToken, data);

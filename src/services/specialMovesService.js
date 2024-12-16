@@ -29,8 +29,8 @@ async function getSpecialMoveV2(key, guildId) {
   return await get(guildId, key);
 }
 
-async function getAllSpecialMoves(guildId) {
-  return await getAll(guildId);
+async function getAllSpecialMoves(guildId, searchTerm) {
+  return await getAll(guildId, searchTerm);
 }
 
 async function createSpecialMove(key, guildId, move) {

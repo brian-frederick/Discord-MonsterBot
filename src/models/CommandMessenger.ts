@@ -19,8 +19,8 @@ export class CommandMessenger implements DiscordMessenger {
     return this.respond(msg);
   }
 
-  respondWithEmbed(embed: any) {
-    return this.channel.send({ embeds:embed });
+  respondWithEmbed(embed: any, components?: any) {
+    return this.channel.send({ embeds:embed, components });
   }
 
   async respondWithEmbeds(embeds: any[]) {
@@ -28,7 +28,7 @@ export class CommandMessenger implements DiscordMessenger {
     return;
   }
 
-  followupWithEmbed(embed: any) {
-    return this.respondWithEmbed(embed);
+  followupWithEmbed(embed: any, components?: any) {
+    return this.respondWithEmbed(embed, components);
   }
 }

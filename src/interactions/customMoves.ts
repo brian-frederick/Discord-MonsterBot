@@ -4,24 +4,90 @@ import { Option } from '../interfaces/DiscordInteractions';
 import createMoveModalWithOutcomes from '../actions/customMoves/create-move-modal-with-outcomes';
 import createMoveModal from '../actions/customMoves/create-move-modal';
 import { getParam } from '../utils/interactionParams';
-import { createSpecialMove } from '../services/specialMovesService';
+import { createSpecialMove, getAllSpecialMoves } from '../services/specialMovesService';
+import { createInfoResponse, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
+import { ISpecialMove } from '../interfaces/ISpecialMove';
+import _ from 'lodash';
+
+function movesListEmbed(
+  moves: ISpecialMove[],
+  position: 'only' | 'first' | 'middle' | 'last',
+  maybeSearchKey?: string) {
+  const fields = moves.map((m) => { 
+    return {
+      name: m.name,
+      value: m.description
+    };
+  });
+
+  const firstEmbedTitle = maybeSearchKey ?
+      `Library moves with "${maybeSearchKey}"...` :
+      'Library moves';
+
+  return {
+    title: !['first', 'only'].includes(position) ?
+      undefined :
+      firstEmbedTitle,
+    fields,
+    footer: !['last', 'only'].includes(position) ?
+      undefined : {
+        text: 'To see detailed info about moves, narrow your search.'
+      }
+  };
+}
 
 export default {
   name: 'custommoves',
   async execute(messenger: DiscordMessenger,  user: Discord.User, guildId, options: Option[] = []) {
     const subcommand = options.find(o => o.type === 1);
-    
-    console.log('bftest', subcommand);
-    console.log('bftest options: ', JSON.stringify(options, null, 2));
+    const subcommandOptions = subcommand?.options;
     
     if (!subcommand || subcommand.name === 'view') {
       // TODO: Delete this as an option from here and the slash command.
       return; 
     }
 
-    if (!subcommand || subcommand.name === 'library') {
-      // TODO
-      return;
+    if (subcommand.name === 'library') {
+      const maybeSearchKey = subcommandOptions ? getParam('search', subcommandOptions) : undefined;
+      console.log('maybeSearchKey', maybeSearchKey);
+
+      const moves = await getAllSpecialMoves(PUBLIC_GUILD_ID, maybeSearchKey);
+      console.log('bftest moves in customMoves', moves);
+
+      if (!moves?.length) {
+        messenger.respond('BLORP whimper whimper. Could not find a move by that name.');
+      } else if (moves.length === 1) {
+        const moveContext = moves[0];
+        const [embed, components] = createInfoResponse(moveContext as ISpecialMove, user.id);
+        messenger.respondWithEmbed(embed, components);
+      } 
+      else if (moves.length < 5) {
+        const moveContext = moves[0];
+        const [embed, components] = createInfoResponse(moveContext as ISpecialMove, user.id);
+        messenger.respondWithEmbed(embed, components);
+        const [,...rest] = moves;
+        rest!.forEach(m => {
+          const [embed, components] = createInfoResponse(m as ISpecialMove, user.id);
+          messenger.followupWithEmbed(embed, components)
+        });
+      } else {
+        const chunkedMoves = _.chunk(moves, 25);
+        const embeds = chunkedMoves.map((c,i) => {
+          const position: 'only' | 'first' | 'middle' | 'last' =
+            chunkedMoves.length === 1 ?
+              'only' :
+              i === 0 ? 
+                'first' :
+                  i === chunkedMoves.length - 1 ?
+                    'last' :
+                    'middle';
+
+          return movesListEmbed(c as ISpecialMove[], position, maybeSearchKey)
+        });
+
+        messenger.respondWithEmbeds(embeds);
+        return;
+      }
     }
 
     const moveCreationSubcommands = ['create-roll-outcome-move', 'create-simple-move', 'create-modified-move'];
@@ -31,8 +97,7 @@ export default {
     }
 
     // Handle move creation below
-    const moveOptions = options[0]?.options;
-    if (!moveOptions?.length || moveOptions.length < 1 ) {
+    if (!subcommandOptions?.length || subcommandOptions.length < 1 ) {
       console.error('No move options found even though they are required. Cannot create move.');
       return;
     }
@@ -44,7 +109,7 @@ export default {
     };
 
     const type: 'roll' | 'simple' | 'modification' = typeMap[subcommand.name];
-    const moveName = getParam('name', moveOptions);
+    const moveName = getParam('name', subcommandOptions);
 
     if (!type || !moveName) {
       console.error(`No move type or name found even though they are required. Cannot create move. type: ${type}, moveName: ${moveName}`);
@@ -64,12 +129,14 @@ export default {
       return;
     }
 
-    const commandDescription = getParam('description', moveOptions);
-    const plus = getParam('plus', moveOptions);
+    const commandDescription = getParam('description', subcommandOptions);
+    const plus = getParam('plus', subcommandOptions);
     const moveToModify = type == 'modification' ?
-      getParam('basic-move', moveOptions) :
+      getParam('basic-move', subcommandOptions) :
       undefined;
 
+
+    // TODO: hasCopyInLibrary
     const move = {
       guildId,
       key,
@@ -88,8 +155,6 @@ export default {
       userName: user.username,
       userId: user.id
     }
-
-    console.log('bftest this is where we would save this move', move);
 
     await createSpecialMove(key, guildId, move);
 

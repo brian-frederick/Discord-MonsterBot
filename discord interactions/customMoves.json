@@ -109,14 +109,17 @@
       ]
     },
     {
-      "name": "view",
-      "description": "See and manage the custom moves on your server.",
-      "type": 1
-    },
-        {
       "name": "library",
       "description": "See and manage shared custom moves available to all servers.",
-      "type": 1
+      "type": 1,
+      "options": [
+        {
+          "name": "search",
+          "description": "Search for a move by name.",
+          "type": 3,
+          "max_length": 27
+        }
+      ]
     }
   ]
 }

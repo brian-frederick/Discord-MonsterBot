@@ -39,7 +39,7 @@ export class SlashCommandMessenger extends CommandMessenger {
     return;
   }
 
-  followupWithEmbed(embed: any) {
-    return followupInteractionEmbed(this.#interactionId, this.#interactionToken, embed);
+  followupWithEmbed(embed: any, components: any) {
+    return followupInteractionEmbed(this.#interactionId, this.#interactionToken, embed, components);
   }
 }

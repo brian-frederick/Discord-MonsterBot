@@ -5,7 +5,7 @@ const dice = require('../utils/dice');
 const movesHelper = require('../utils/movesHelper');
 import { getActiveHunter } from '../services/hunterServiceV2';
 import specialMovesService from '../services/specialMovesService';
-import specialMovesHelper from '../utils/specialMovesHelper';
+import { createModificationMessages, createSimpleEmbed } from '../utils/specialMovesHelper';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 
 export default {
@@ -50,7 +50,7 @@ export default {
     }
 
     if (moveContext.type === 'simple') {
-      const simpleEmbed = specialMovesHelper.createSimpleEmbed(hunter.firstName, moveContext);
+      const simpleEmbed = createSimpleEmbed(hunter.firstName, moveContext);
       messenger.respondWithEmbed(simpleEmbed);
       return;
     }
@@ -86,7 +86,7 @@ export default {
 
     if (moveContext.type === 'modification') {
       const secondaryContext = moves[moveContext.moveToModify];
-      outcomeEmbed = specialMovesHelper.createModificationMessages(hunter.firstName, outcome.total, outcome.equation, moveContext, secondaryContext, isAdvanced);
+      outcomeEmbed = createModificationMessages(hunter.firstName, outcome.total, outcome.equation, moveContext, secondaryContext, isAdvanced);
     } else {
       outcomeEmbed = movesHelper.createOutcomeEmbed(hunter.firstName, outcome.total, outcome.equation, moveContext, isAdvanced);
     }

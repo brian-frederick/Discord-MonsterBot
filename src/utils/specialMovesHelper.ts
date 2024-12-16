@@ -1,16 +1,27 @@
+import { ButtonCustomIdNames } from "../interfaces/enums";
+import { ISpecialMove } from "../interfaces/ISpecialMove";
+import { createActionRow, createButton } from "./components";
+const { createInfoEmbed } = require('../utils/movesHelper');
 const { rollOutcomeEmbed } = require('../utils/movesHelper');
 const { hexColors } = require('../content/theme');
 
-const PUBLIC_GUILD_ID = "1";
+/**
+ * Custom moves that are publicly available
+ * to be copied over to a server
+ * are called library moves.
+ * They are stored with GuildId 1.
+ */
+export const PUBLIC_GUILD_ID = "1";
+export const CUSTOM_ID_LIBRARY_IND = "L";
 
-function createSimpleEmbed(name, move) {
+export function createSimpleEmbed(name, move) {
   return {
     title: `${name} just used ${move.name}.`,
     description: move.description
   };
 }
 
-function createModificationMessages(name, total, equation, moveContext, secondaryContext, isAdvanced) {
+export function createModificationMessages(name, total, equation, moveContext, secondaryContext, isAdvanced) {
   
   if (total >= 12 && isAdvanced && secondaryContext.outcome?.advanced?.description) {
       const actionReport = `Wow! ${name} just crushed ${moveContext.name} with a roll of ${total}! ${moveContext.name} modifies ${secondaryContext.name}.`;
@@ -66,7 +77,7 @@ function createModificationMessages(name, total, equation, moveContext, secondar
 }
 
 // A guild specific move takes priority over a public move with the same key.
-function takePriority(moves, guildId) {
+export function takePriority(moves, guildId) {
 
   if (!guildId) {
     return moves[0];
@@ -81,4 +92,29 @@ function takePriority(moves, guildId) {
   return move;
 }
 
-module.exports = { createSimpleEmbed, createModificationMessages, PUBLIC_GUILD_ID, takePriority };
+export function createInfoResponse(moveContext: ISpecialMove, userId: string): [any, any] {
+  const key = moveContext.key;
+  const embed = createInfoEmbed(moveContext);
+  const isOwner = moveContext.userId === userId;
+
+  const libraryAddToServerButton = createButton("Add to Server", 3, `${ButtonCustomIdNames.add_move}_${key}_${CUSTOM_ID_LIBRARY_IND}`);
+  const libraryEditButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${key}_${CUSTOM_ID_LIBRARY_IND}`)
+  const libraryDeleteButton = createButton("Delete from Library", 4, `${ButtonCustomIdNames.delete_move}_${key}_${CUSTOM_ID_LIBRARY_IND}`);
+  const editButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${key}`)
+  const deleteButton = createButton("Delete", 4, `${ButtonCustomIdNames.delete_move}_${key}`);
+
+  const guildSpecificButtons = [editButton, deleteButton];
+  const libraryButtons = isOwner ?
+    [libraryAddToServerButton, libraryEditButton, libraryDeleteButton] :
+    [libraryAddToServerButton];
+ 
+  const components = moveContext.guildId === PUBLIC_GUILD_ID ?
+    [createActionRow(libraryButtons)] :
+    [createActionRow(guildSpecificButtons)];
+  
+  return [embed, components];
+}
+
+export function hasPermissionToEdit(moveContext: ISpecialMove, userId: string) {
+  return moveContext.userId === userId || moveContext.guildId !== PUBLIC_GUILD_ID;
+}

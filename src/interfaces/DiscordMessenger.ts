@@ -29,5 +29,5 @@ export interface DiscordMessenger {
   /**
   * Subsequent messages in the form of an embed after initial ack. Can be invoked multiple times per command.
   */
-  followupWithEmbed: (embed: any) => Promise<Discord.Message>
+  followupWithEmbed: (embed: any, components?: any) => Promise<Discord.Message>
 }

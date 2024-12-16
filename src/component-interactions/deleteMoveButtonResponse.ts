@@ -1,9 +1,11 @@
 import Discord from 'discord.js';
 const _ = require('lodash');
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
-import { parseCustomIdParams } from '../utils/componentInteractionParams';
+import { hasLibraryIndicatorParam, parseCustomIdParams } from '../utils/componentInteractionParams';
 import specialMovesService from '../services/specialMovesService';
 import { ButtonCustomIdNames } from '../interfaces/enums';
+import { hasPermissionToEdit, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
+import { ISpecialMove } from '../interfaces/ISpecialMove';
 
 
 export default {
@@ -17,15 +19,26 @@ export default {
       return;
     }
 
-    const moveContext = await specialMovesService.getSpecialMoveV2(moveKey, messenger.channel.guild?.id);
+    const isLibraryMove = hasLibraryIndicatorParam(customId);
+    const guildId = isLibraryMove ?
+      PUBLIC_GUILD_ID :
+      messenger.channel.guild.id;
+
+    const moveContext = await specialMovesService.getSpecialMoveV2(moveKey, guildId);
     if (!moveContext || _.isEmpty(moveContext)) {
       console.error('The custom id has the wrong key affixed. This is unexpected.');
       messenger.respond('BLORP whimper whimper. Could not find a move by that name.');
       return;
     }
 
-    const deletedMove = await specialMovesService.deleteMove(moveKey, messenger.channel.guild?.id);
+    const hasPermission = hasPermissionToEdit(moveContext as ISpecialMove, user.id);
+    if (!hasPermission) {
+      console.error(`${user.username} attempting to delete move ${moveContext.name} without the proper permissions.`);
+      messenger.respond('BLORP whimper whimper. Could not find a move by that name. Perhaps it has already been deleted.');
+      return;
+    }
 
+    const deletedMove = await specialMovesService.deleteMove(moveKey, guildId);
     if (!deletedMove) {
       console.error('The custom id has the wrong key affixed. This is unexpected.');
       messenger.respond('BLORP whimper whimper. Could not find a move by that name. Perhaps it has already been deleted.');
