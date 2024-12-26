@@ -158,10 +158,13 @@ export default {
 
     await createSpecialMove(key, guildId, move);
 
+    // We don't support this yet and I don't know if we'll need to.
+    const isLibraryMove = false;
+
     if (subcommand?.name === 'create-roll-outcome-move') {
-      await createMoveModalWithOutcomes.execute(messenger, user.id, key);
+      await createMoveModalWithOutcomes.execute(messenger, user.id, key, isLibraryMove);
     } else {
-      await createMoveModal.execute(messenger, user.id, key);
+      await createMoveModal.execute(messenger, user.id, key, isLibraryMove);
     }
     
     return;

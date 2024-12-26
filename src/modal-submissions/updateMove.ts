@@ -1,17 +1,22 @@
 import Discord from 'discord.js';
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
 import { ButtonCustomIdNames, CustomMoveModalInputFields, ModalCustomIdNames } from '../interfaces/enums';
-import { parseCustomIdParams } from '../utils/componentInteractionParams';
+import { hasLibraryIndicatorParam, parseCustomIdParams } from '../utils/componentInteractionParams';
 import { update } from '../db/moves';
 import { createActionRow, createButton } from '../utils/components';
 import { hexColors } from '../content/theme';
+import { CUSTOM_ID_LIBRARY_IND, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
 const movesHelper = require('../utils/movesHelper');
 
 export default {
   name: ModalCustomIdNames.update_move,
   async execute(data, messenger: DiscordMessenger, user: Discord.User) {
     const userId = user.id;
-    const guildId = messenger.channel.guildId;
+
+    const isLibraryMove = hasLibraryIndicatorParam(data.custom_id);
+    const guildId = isLibraryMove ?
+      PUBLIC_GUILD_ID :
+      messenger.channel.guildId;
 
     const customMoveId = parseCustomIdParams(data.custom_id)[0];
 
@@ -55,7 +60,12 @@ export default {
     };
 
     const infoEmbed = movesHelper.createInfoEmbed(updated);
-    const editButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${customMoveId}`)
+
+    const editButtonCustomId = isLibraryMove ?
+      `${ButtonCustomIdNames.edit_move}_${customMoveId}_${CUSTOM_ID_LIBRARY_IND}` :
+      `${ButtonCustomIdNames.edit_move}_${customMoveId}`;
+
+    const editButton = createButton("Edit", 1, editButtonCustomId);
     const components = [createActionRow([editButton])];
 
     messenger.respondWithEmbeds([updateSuccessEmbed, infoEmbed], components);

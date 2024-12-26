@@ -34,7 +34,7 @@ export default {
     const hasPermission = hasPermissionToEdit(moveContext as ISpecialMove, user.id);
     if (!hasPermission) {
       console.error(`${user.username} attempting to delete move ${moveContext.name} without the proper permissions.`);
-      messenger.respond('BLORP whimper whimper. Could not find a move by that name. Perhaps it has already been deleted.');
+      messenger.respond('BLORP whimper whimper. It looks like you do not have permission to delete this move.');
       return;
     }
 

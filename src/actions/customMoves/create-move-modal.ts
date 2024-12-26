@@ -3,12 +3,14 @@ import { createActionRowTextInput, createModal } from '../../utils/components';
 import { textInput } from '../../interfaces/DiscordInteractions';
 import { CustomMoveModalInputFields, ModalCustomIdNames } from '../../interfaces/enums';
 import { undefinedIfEmptyString } from '../../utils/movesHelperV2';
+import { CUSTOM_ID_LIBRARY_IND } from '../../utils/specialMovesHelper';
 
 export default {
   async execute(
     messenger: DiscordMessenger,
     userId: string,
     key: string,
+    isLibraryMove: boolean,
     moveContext?: any
   ): Promise<void> {
 
@@ -33,7 +35,9 @@ export default {
       createActionRowTextInput(descriptionInput),
     ];
 
-    const modalCustomId = `${ModalCustomIdNames.update_move}_${key}`;
+    const modalCustomId = isLibraryMove ?
+      `${ModalCustomIdNames.update_move}_${key}_${CUSTOM_ID_LIBRARY_IND}` :
+      `${ModalCustomIdNames.update_move}_${key}`;
 
     messenger.respondWithModal(createModal(modalCustomId, key, formInputs));
 

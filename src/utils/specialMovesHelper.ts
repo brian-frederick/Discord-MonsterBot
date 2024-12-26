@@ -115,6 +115,12 @@ export function createInfoResponse(moveContext: ISpecialMove, userId: string): [
   return [embed, components];
 }
 
-export function hasPermissionToEdit(moveContext: ISpecialMove, userId: string) {
+/**
+ * Anyone can edit a move on their own server. Only the creator can edit a move in the library.
+ * @param moveContext 
+ * @param userId 
+ * @returns boolean
+ */
+export function hasPermissionToEdit(moveContext: ISpecialMove, userId: string): boolean {
   return moveContext.userId === userId || moveContext.guildId !== PUBLIC_GUILD_ID;
 }

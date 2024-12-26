@@ -1,12 +1,13 @@
 import Discord from 'discord.js';
 const _ = require('lodash');
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
-import { parseCustomIdParams } from '../utils/componentInteractionParams';
+import { hasLibraryIndicatorParam, parseCustomIdParams } from '../utils/componentInteractionParams';
 import specialMovesService from '../services/specialMovesService';
 import createMoveModalWithOutcomes from '../actions/customMoves/create-move-modal-with-outcomes';
 import createMoveModal from '../actions/customMoves/create-move-modal';
 import { ButtonCustomIdNames } from '../interfaces/enums';
-
+import { hasPermissionToEdit, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
+import { ISpecialMove } from '../interfaces/ISpecialMove';
 
 export default {
   name: `${ButtonCustomIdNames.edit_move}`, // this is edit move. saving space since this is fired by an id.
@@ -19,17 +20,29 @@ export default {
       return;
     }
 
-    const moveContext = await specialMovesService.getSpecialMoveV2(moveKey, messenger.channel.guild?.id);
+    const isLibraryMove = hasLibraryIndicatorParam(customId);
+    const guildId = isLibraryMove ?
+      PUBLIC_GUILD_ID :
+      messenger.channel.guild.id;
+      
+    const moveContext = await specialMovesService.getSpecialMoveV2(moveKey, guildId);
     if (!moveContext || _.isEmpty(moveContext)) {
       console.error('The custom id has the wrong key affixed. This is unexpected.');
       messenger.respond('BLORP whimper whimper. Could not find a move by that name.');
       return;
     }
 
+    const hasPermission = hasPermissionToEdit(moveContext as ISpecialMove, user.id);
+    if (!hasPermission) {
+      console.error(`${user.username} attempting to edit move ${moveContext.name} without the proper permissions.`);
+      messenger.respond('BLORP whimper whimper. It looks like you do not have permission to edit this move.');
+      return;
+    }
+
     if (moveContext.type === 'roll') {
-      await createMoveModalWithOutcomes.execute(messenger, user.id, moveKey, moveContext);
+      await createMoveModalWithOutcomes.execute(messenger, user.id, moveKey, isLibraryMove, moveContext);
     } else {
-      await createMoveModal.execute(messenger, user.id, moveKey, moveContext);
+      await createMoveModal.execute(messenger, user.id, moveKey, isLibraryMove, moveContext);
     }
 
     return;
