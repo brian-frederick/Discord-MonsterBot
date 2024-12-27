@@ -102,8 +102,9 @@ export function createInfoResponse(moveContext: ISpecialMove, userId: string): [
   const libraryDeleteButton = createButton("Delete from Library", 4, `${ButtonCustomIdNames.delete_move}_${key}_${CUSTOM_ID_LIBRARY_IND}`);
   const editButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${key}`)
   const deleteButton = createButton("Delete", 4, `${ButtonCustomIdNames.delete_move}_${key}`);
+  const copyToLibraryButton = createButton("Copy to Library", 3, `${ButtonCustomIdNames.add_move}_${key}`);
 
-  const guildSpecificButtons = [editButton, deleteButton];
+  const guildSpecificButtons = [editButton, deleteButton, copyToLibraryButton];
   const libraryButtons = isOwner ?
     [libraryAddToServerButton, libraryEditButton, libraryDeleteButton] :
     [libraryAddToServerButton];
