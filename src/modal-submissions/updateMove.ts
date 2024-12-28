@@ -1,11 +1,11 @@
 import Discord from 'discord.js';
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
-import { ButtonCustomIdNames, CustomMoveModalInputFields, ModalCustomIdNames } from '../interfaces/enums';
+import { CustomMoveModalInputFields, ModalCustomIdNames } from '../interfaces/enums';
 import { hasLibraryIndicatorParam, parseCustomIdParams } from '../utils/componentInteractionParams';
 import { update } from '../db/moves';
-import { createActionRow, createButton } from '../utils/components';
 import { hexColors } from '../content/theme';
-import { CUSTOM_ID_LIBRARY_IND, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
+import { createInfoResponse, CUSTOM_ID_LIBRARY_IND, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
+import { ISpecialMove } from '../interfaces/ISpecialMove';
 const movesHelper = require('../utils/movesHelper');
 
 export default {
@@ -48,10 +48,17 @@ export default {
         }
       };
 
-    const updated = await update(guildId, customMoveId, description, outcome);
+    const updated = await update(guildId, customMoveId, { description, outcome });
     if (!updated) {
       messenger.respond('Blarrr... something went wrong!');
       return;
+    }
+
+    // keep library copy and original move in sync
+    if (!isLibraryMove && updated.hasLibraryCopy) {
+      await update(PUBLIC_GUILD_ID, customMoveId, { description, outcome });
+    } else if (isLibraryMove && updated.guildIdOfOrigin === messenger.channel.guild.id) {
+      await update(messenger.channel.guild.id, customMoveId,{ description, outcome });
     }
 
     const updateSuccessEmbed = {
@@ -59,16 +66,8 @@ export default {
       description: `${updated.name} has been updated.`
     };
 
-    const infoEmbed = movesHelper.createInfoEmbed(updated);
-
-    const editButtonCustomId = isLibraryMove ?
-      `${ButtonCustomIdNames.edit_move}_${customMoveId}_${CUSTOM_ID_LIBRARY_IND}` :
-      `${ButtonCustomIdNames.edit_move}_${customMoveId}`;
-
-    const editButton = createButton("Edit", 1, editButtonCustomId);
-    const components = [createActionRow([editButton])];
-
-    messenger.respondWithEmbeds([updateSuccessEmbed, infoEmbed], components);
+    const [embed, components] = createInfoResponse(updated as ISpecialMove, user.id);
+    messenger.respondWithEmbed(embed, components);
     return;
   }
 }

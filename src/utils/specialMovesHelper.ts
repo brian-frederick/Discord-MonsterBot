@@ -97,14 +97,18 @@ export function createInfoResponse(moveContext: ISpecialMove, userId: string): [
   const embed = createInfoEmbed(moveContext);
   const isOwner = moveContext.userId === userId;
 
-  const libraryAddToServerButton = createButton("Add to Server", 3, `${ButtonCustomIdNames.add_move}_${key}_${CUSTOM_ID_LIBRARY_IND}`);
+  const libraryAddToServerButton = createButton("Add to Server", 3, `${ButtonCustomIdNames.add_move_to_server}_${key}_${CUSTOM_ID_LIBRARY_IND}`);
   const libraryEditButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${key}_${CUSTOM_ID_LIBRARY_IND}`)
   const libraryDeleteButton = createButton("Delete from Library", 4, `${ButtonCustomIdNames.delete_move}_${key}_${CUSTOM_ID_LIBRARY_IND}`);
   const editButton = createButton("Edit", 1, `${ButtonCustomIdNames.edit_move}_${key}`)
   const deleteButton = createButton("Delete", 4, `${ButtonCustomIdNames.delete_move}_${key}`);
-  const copyToLibraryButton = createButton("Copy to Library", 3, `${ButtonCustomIdNames.add_move}_${key}`);
+  const copyToLibraryButton = createButton("Copy to Library", 3, `${ButtonCustomIdNames.copy_move_to_library}_${key}`);
 
-  const guildSpecificButtons = [editButton, deleteButton, copyToLibraryButton];
+  const guildSpecificButtons = [editButton, deleteButton];
+  if (!moveContext.hasLibraryCopy) {
+    guildSpecificButtons.push(copyToLibraryButton);
+  }
+
   const libraryButtons = isOwner ?
     [libraryAddToServerButton, libraryEditButton, libraryDeleteButton] :
     [libraryAddToServerButton];

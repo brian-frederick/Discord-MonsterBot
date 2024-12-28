@@ -2,8 +2,7 @@ import Discord from 'discord.js';
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
 import { Option } from '../interfaces/DiscordInteractions';
 import createMoveModalWithOutcomes from '../actions/customMoves/create-move-modal-with-outcomes';
-import createMoveModal from '../actions/customMoves/create-move-modal';
-import { getParam } from '../utils/interactionParams';
+import { getBooleanParam, getParam, getRequiredParam } from '../utils/interactionParams';
 import { createSpecialMove, getAllSpecialMoves } from '../services/specialMovesService';
 import { createInfoResponse, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
 import { ISpecialMove } from '../interfaces/ISpecialMove';
@@ -129,23 +128,31 @@ export default {
       return;
     }
 
-    const commandDescription = getParam('description', subcommandOptions);
     const plus = getParam('plus', subcommandOptions);
-    const moveToModify = type == 'modification' ?
-      getParam('basic-move', subcommandOptions) :
-      undefined;
+    const maybeMoveToModify = getParam('moveToModify', subcommandOptions);
+    
+    const description = getRequiredParam('description', subcommandOptions);
+    const commandDescription = description.length > 100 ?
+      `${description.substring(0, 97)}...` : 
+      description;
+    
+    const moveToModify =
+      type == 'modification' && maybeMoveToModify ?
+        getParam('basic-move', subcommandOptions) :
+        undefined;
 
+    const saveToLibrary = getBooleanParam('copy-to-library', subcommandOptions);
 
-    // TODO: hasCopyInLibrary
-    const move = {
+    const move: ISpecialMove = {
       guildId,
       key,
       createdOn: new Date().getTime(),
+      description,
       commandDescription,
       guildName: messenger.channel.guild?.name,
       modifiers: type == 'simple' ? undefined : [{
         plus: true,
-        property: plus,
+        property: plus!,
         type: 'property'
       }],
       moveToModify,
@@ -153,18 +160,30 @@ export default {
       type,
       userDiscriminator: user.discriminator,
       userName: user.username,
-      userId: user.id
+      userId: user.id,
+      hasLibraryCopy: saveToLibrary
     }
 
-    await createSpecialMove(key, guildId, move);
+    const createdMove = await createSpecialMove(key, guildId, move);
+
+    if (saveToLibrary) {
+      const libraryMove = {
+        ...move,
+        guildId: PUBLIC_GUILD_ID,
+        guildIdOfOrigin: messenger.channel.guild?.name
+      };
+
+      await createSpecialMove(key, PUBLIC_GUILD_ID, libraryMove);
+    }
 
     // We don't support this yet and I don't know if we'll need to.
     const isLibraryMove = false;
 
     if (subcommand?.name === 'create-roll-outcome-move') {
-      await createMoveModalWithOutcomes.execute(messenger, user.id, key, isLibraryMove);
+      await createMoveModalWithOutcomes.execute(messenger, user.id, key, isLibraryMove, createdMove);
     } else {
-      await createMoveModal.execute(messenger, user.id, key, isLibraryMove);
+      const [embed, components] = createInfoResponse(createdMove as ISpecialMove, user.id);
+      messenger.respondWithEmbed(embed, components);
     }
     
     return;

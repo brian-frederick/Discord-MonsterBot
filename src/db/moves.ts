@@ -1,8 +1,8 @@
 import AWS, { DynamoDB } from 'aws-sdk';
 import { CLIENT as client } from '../utils/dynamoDbClient';
-import { IOutcome } from '../interfaces/iOutcome';
-import { toExpressionAttributeValueOutcome } from '../utils/expressionAttributeValues';
+import { toExpressionAttributeValueBoolean, toExpressionAttributeValueOutcome, toExpressionAttributeValueString } from '../utils/expressionAttributeValues';
 import { AttributeValue, QueryInput } from 'aws-sdk/clients/dynamodb';
+import { ISpecialMove } from '../interfaces/ISpecialMove';
 
 const TABLE = 'moves';
 
@@ -109,16 +109,12 @@ export async function create(key: string, guildId: string, move) {
   }
 }
 
-export async function update(guildId: string, key: string, description: string, outcome?: IOutcome) {
+export async function update(guildId: string, key: string, updateFields: Partial<ISpecialMove>) {
   let params: DynamoDB.Types.UpdateItemInput = {
     TableName: TABLE,
-    UpdateExpression: 'SET #description = :description',
-    ExpressionAttributeNames: {
-      '#description': 'description',
-    },
-    ExpressionAttributeValues: {
-      ':description': { S: description },
-    },
+    UpdateExpression: 'SET',
+    ExpressionAttributeNames: {},
+    ExpressionAttributeValues: {},
     Key: {
       'guildId': { S: guildId },
       'key': {S: key }
@@ -126,11 +122,26 @@ export async function update(guildId: string, key: string, description: string, 
     ReturnValues: 'ALL_NEW'
   };
 
-  if (outcome) {
-    params.UpdateExpression += ', #outcome = :outcome';
-    params.ExpressionAttributeNames!['#outcome'] = 'outcome';
-    const outcomeValue: AttributeValue = toExpressionAttributeValueOutcome(outcome);
-    params.ExpressionAttributeValues![':outcome'] = outcomeValue;
+  const updateableFields: [string, (value: any) => AttributeValue][] = [
+    ['description', toExpressionAttributeValueString],
+    ['outcome', toExpressionAttributeValueOutcome],
+    ['hasLibraryCopy', toExpressionAttributeValueBoolean]
+  ];
+
+  let hasAtLeastOneUpdate = false;
+  updateableFields.forEach(([field, toAttributeValue]) => {
+    if (updateFields[field] !== undefined) {
+      const maybeSeparator = hasAtLeastOneUpdate ? ', ' : '';
+      params.UpdateExpression += `${maybeSeparator} #${field} = :${field}`;
+      params.ExpressionAttributeNames!['#' + field] = field;
+      params.ExpressionAttributeValues![':' + field] = toAttributeValue(updateFields[field]);
+      hasAtLeastOneUpdate = true;
+    }
+  });
+
+  if (!hasAtLeastOneUpdate) {
+    console.error(`No fields to update for guildId: ${guildId} and key: ${key}`);
+    return;
   }
 
   try {

@@ -17,10 +17,9 @@
         },
         {
           "name": "description",
-          "description": "A short description of this slash command.",
+          "description": "A description of this move.",
           "type": 3,
-          "required": true,
-          "max_length": 100
+          "required": true
         },
         {
           "name": "plus",
@@ -34,6 +33,11 @@
             { "name": "tough", "value": "tough" },
             { "name": "weird", "value": "weird" }
           ]
+        },
+        {
+          "name": "copy-to-library",
+          "description": "Moves copied to the library are available to all servers. Mostly for official MOTW moves.",
+          "type": 5
         }
       ]
     },
@@ -51,10 +55,14 @@
         },
         {
           "name": "description",
-          "description": "A short description of this slash command.",
+          "description": "A description of this move.",
           "type": 3,
-          "required": true,
-          "max_length": 100
+          "required": true
+        },
+        {
+          "name": "copy-to-library",
+          "description": "Moves copied to the library are available to all servers. Mostly for official MOTW moves.",
+          "type": 5
         }
       ]
     },
@@ -72,10 +80,9 @@
         },
         {
           "name": "description",
-          "description": "A short description of this slash command.",
+          "description": "A description of this move.",
           "type": 3,
-          "required": true,
-          "max_length": 100
+          "required": true
         },
         {
         "name": "basic-move",
@@ -105,6 +112,11 @@
             { "name": "tough", "value": "tough" },
             { "name": "weird", "value": "weird" }
           ]
+        },
+        {
+          "name": "copy-to-library",
+          "description": "Moves copied to the library are available to all servers. Mostly for official MOTW moves.",
+          "type": 5
         }
       ]
     },

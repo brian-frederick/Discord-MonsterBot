@@ -48,3 +48,13 @@ export function toExpressionAttributeValueOutcome(outcome: IOutcome): AttributeV
     }
   };
 };
+
+export const toExpressionAttributeValueString = (value: string): AttributeValue => {
+  return { S: value };
+}
+
+export const toExpressionAttributeValueBoolean = (value: boolean): AttributeValue => {
+  return { BOOL: value };
+}
+
+
