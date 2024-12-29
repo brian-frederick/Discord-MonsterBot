@@ -1,11 +1,10 @@
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
 import Discord from 'discord.js';
-import { hasLibraryIndicatorParam, parseCustomIdParams } from "../utils/componentInteractionParams";
-import { createInfoResponse, CUSTOM_ID_LIBRARY_IND, PUBLIC_GUILD_ID } from "../utils/specialMovesHelper";
+import { parseCustomIdParams } from "../utils/componentInteractionParams";
+import { createInfoResponse, PUBLIC_GUILD_ID } from "../utils/specialMovesHelper";
 import specialMovesService, { createSpecialMove } from '../services/specialMovesService';
 import { ButtonCustomIdNames } from "../interfaces/enums";
 import { hexColors } from "../content/theme";
-import { createActionRow, createButton } from "../utils/components";
 import { ISpecialMove } from "../interfaces/ISpecialMove";
 import { update } from "../db/moves";
 const _ = require('lodash');
@@ -19,7 +18,7 @@ export default {
     const moveKey = params[0];
     if (!moveKey) {
       console.error('The custom id does not have a key. This is unexpected.');
-      messenger.respond('BLORP whimper whimper. Could not find this move!');
+      messenger.respondV2({content: 'BLORP whimper whimper. Could not find this move!'} , true);
       return;
     }
 
@@ -28,7 +27,7 @@ export default {
     const originalMove = await specialMovesService.getSpecialMoveV2(moveKey, originalMoveGuildId);
     if (!originalMove || _.isEmpty(originalMove)) {
       console.error(`Failed to get move ${moveKey} for guild ${originalMoveGuildId}. This is unexpected.`);
-      messenger.respond('BLORP whimper whimper. Could not find a move by that name.');
+      messenger.respondV2({content: 'BLORP whimper whimper. Could not find a move by that name.' }, true);
       return;
     }
       
@@ -46,7 +45,7 @@ export default {
     const addedMove = await createSpecialMove(moveKey, PUBLIC_GUILD_ID, updatedMove);
     if (!addedMove) {
       console.error('Could not add move to database');
-      messenger.respond('BLORP whimper whimper. Could not add move to database. Possibly because it already exists.');
+      messenger.respondV2({ content:'BLORP whimper whimper. Could not add move to database. Possibly because it already exists.'} , true);
       return;
     }
 
@@ -58,7 +57,7 @@ export default {
     };
     
     const [embed, components] = createInfoResponse(addedMove as ISpecialMove, user.id);
-    messenger.respondWithEmbeds([updateSuccessEmbed, embed], components);
+    messenger.respondV2({ embeds: [updateSuccessEmbed, embed], components }, true);
     return;
   }
 }

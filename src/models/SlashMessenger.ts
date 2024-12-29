@@ -5,7 +5,9 @@ import {
   followupInteraction,
   confirmInteractionEmbed,
   followupInteractionEmbed,
-  confirmInteractionWithModal
+  confirmInteractionWithModal,
+  confirmInteractionV2,
+  followupInteractionV2
 } from '../services/interactionService'; 
 
 export class SlashCommandMessenger extends CommandMessenger {
@@ -42,4 +44,15 @@ export class SlashCommandMessenger extends CommandMessenger {
   followupWithEmbed(embed: any, components: any) {
     return followupInteractionEmbed(this.#interactionId, this.#interactionToken, embed, components);
   }
+
+  respondV2( data: { content?: string; embeds?: any[]; components?: any[] }, ephemeral?: boolean) {
+    const maybeEphemeralData = ephemeral ? { ...data, flags: 1 << 6 } : data;
+    return confirmInteractionV2(this.#interactionId, this.#interactionToken, maybeEphemeralData);
+  }
+
+  followupV2(data: { content?: string; embeds?: any[]; components?: any[] }, ephemeral?: boolean) {
+    const maybeEphemeralData = ephemeral ? { ...data, flags: 1 << 6 } : data;
+    return followupInteractionV2(this.#interactionToken, maybeEphemeralData);
+  }
+
 }

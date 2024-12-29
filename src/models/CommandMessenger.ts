@@ -31,4 +31,14 @@ export class CommandMessenger implements DiscordMessenger {
   followupWithEmbed(embed: any, components?: any) {
     return this.respondWithEmbed(embed, components);
   }
+
+  respondV2(data: { content?: string; embeds?: any[]; components?: any[], ephemeral?: boolean }) {
+    console.error('respondV2 just used for command messenger. Are these even used anymore?');
+    return this.channel.send(data);
+  }
+
+  followupV2(data: { content?: string; embeds?: any[]; components?: any[], ephemeral?: boolean }){
+    console.error('respondV2 just used for command messenger. Are these even used anymore?');
+    return this.channel.send(data);
+  }
 }

@@ -41,8 +41,8 @@ export default {
     const subcommand = options.find(o => o.type === 1);
     const subcommandOptions = subcommand?.options;
     
-    if (!subcommand || subcommand.name === 'view') {
-      // TODO: Delete this as an option from here and the slash command.
+    if (!subcommand) {
+      console.error('no subcommand present. This is unexpected.');
       return; 
     }
 
@@ -51,23 +51,22 @@ export default {
       console.log('maybeSearchKey', maybeSearchKey);
 
       const moves = await getAllSpecialMoves(PUBLIC_GUILD_ID, maybeSearchKey);
-      console.log('bftest moves in customMoves', moves);
 
       if (!moves?.length) {
-        messenger.respond('BLORP whimper whimper. Could not find a move by that name.');
+        messenger.respondV2({content: 'BLORP whimper whimper. Could not find a move by that name.'}, true);
       } else if (moves.length === 1) {
         const moveContext = moves[0];
         const [embed, components] = createInfoResponse(moveContext as ISpecialMove, user.id);
-        messenger.respondWithEmbed(embed, components);
+        messenger.respondV2({ embeds: [embed], components }, true);
       } 
       else if (moves.length < 5) {
         const moveContext = moves[0];
         const [embed, components] = createInfoResponse(moveContext as ISpecialMove, user.id);
-        messenger.respondWithEmbed(embed, components);
+        messenger.respondV2({ embeds: [embed], components }, true);
         const [,...rest] = moves;
         rest!.forEach(m => {
           const [embed, components] = createInfoResponse(m as ISpecialMove, user.id);
-          messenger.followupWithEmbed(embed, components)
+          messenger.followupV2({ embeds: [embed], components }, true);
         });
       } else {
         const chunkedMoves = _.chunk(moves, 25);
@@ -84,7 +83,7 @@ export default {
           return movesListEmbed(c as ISpecialMove[], position, maybeSearchKey)
         });
 
-        messenger.respondWithEmbeds(embeds);
+        messenger.respondV2({ embeds }, true);
         return;
       }
     }
@@ -183,7 +182,7 @@ export default {
       await createMoveModalWithOutcomes.execute(messenger, user.id, key, isLibraryMove, createdMove);
     } else {
       const [embed, components] = createInfoResponse(createdMove as ISpecialMove, user.id);
-      messenger.respondWithEmbed(embed, components);
+      messenger.respondV2({ embeds: [embed], components, }, true);
     }
     
     return;

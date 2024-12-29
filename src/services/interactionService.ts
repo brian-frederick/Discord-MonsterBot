@@ -39,3 +39,11 @@ export async function followupInteractionEmbed(interactionId: string, interactio
 
   return await followup(interactionToken, data);
 }
+
+export async function confirmInteractionV2(interactionId: string, interactionToken: string, data: { content?: string; embeds?: any[]; components?: any[], flags?: number}) {
+  return await postInteraction(interactionId, interactionToken, data);
+}
+
+export async function followupInteractionV2(interactionToken: string, data: { content?: string; embeds?: any[]; components?: any[], flags?: number}) {
+  return await followup(interactionToken, data);
+}

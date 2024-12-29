@@ -45,7 +45,7 @@ export default {
       return;
     }
 
-    messenger.respond(`${deletedMove.name} has been deleted.`);
+    messenger.respondV2({ content: `${deletedMove.name} has been deleted.` }, true);
     return;
   }
 

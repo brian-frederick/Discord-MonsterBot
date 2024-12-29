@@ -6,6 +6,7 @@ import { yesNoFilter, hasYesMsg } from '../utils/messageManager';
 import { DiscordMessenger } from '../interfaces/DiscordMessenger';
 import { getActiveHunter, updateHunterProperty } from '../services/hunterServiceV2';
 
+// TODO: use buttons here instead of awaiting messages
 const confirmPossibleMatch = async (messenger: DiscordMessenger, possibleMatch: string): Promise<boolean> => {
 
   await messenger.followup(`Hrrmmm. Do you want me to remove the ${possibleMatch}? (yes/no)`);
@@ -39,6 +40,7 @@ export default {
     return;
   },
 
+  // TODO: use buttons. use subcommands.
   async execute(
     messenger: DiscordMessenger,
     userId: string, 
@@ -52,7 +54,7 @@ export default {
     
     const errorMessage = this.validate(userId, transaction, item);
     if (errorMessage){
-      messenger.respond(errorMessage);
+      messenger.respondV2({ content: errorMessage }, true);
       return;
     }
 
@@ -68,14 +70,15 @@ export default {
     // if no transaction type, just show existing inventory
     if (!transaction) {
       if (inventory.length < 1) {
-        messenger.respond(`${hunter.firstName}'s inventory is empty`);
+        messenger.respondV2({ content:`${hunter.firstName}'s inventory is empty` }, true);
       } else {
-        messenger.respondWithEmbed(inventoryHelper.printInventory(hunter.firstName, inventory));
+        const inventoryEmbed = inventoryHelper.printInventory(hunter.firstName, inventory)
+        messenger.respondV2({ embeds: [inventoryEmbed] }, true);
       }
       return;
     }
 
-    await messenger.respond(`Blar! Attempting to ${transaction} item: ${item}...`)
+    await messenger.respondV2({ content:`Attempting to ${transaction} item: ${item}...` }, true);
     if (transaction == InventoryTransaction.REMOVE) {
     
       let itemToRemove = inventory.find(inv => inv.toLowerCase() === item.toLowerCase());
@@ -84,13 +87,13 @@ export default {
       // look for a possible match
         const possibleMatch = inventory.find(inv => inv.toLowerCase().startsWith(item));
         if (!possibleMatch) {
-          messenger.followup(`BLAR! Cannot find ${item} to remove!`);
+          messenger.followupV2({ content: `Cannot find ${item} to remove` }, true);
           return;
         }
 
         const confirmed = await confirmPossibleMatch(messenger, possibleMatch);
         if (!confirmed) {
-          messenger.followup(`BLAR! Very well hunter. Nothing to do here.`);
+          messenger.followupV2({ content:`Very well hunter. Nothing to do here.` }, true);
           return;
         }
 
@@ -112,9 +115,10 @@ export default {
     }
     
     if (inventory.length < 1) {
-      messenger.followup(`${hunter.firstName}'s inventory is empty`);
+      messenger.followupV2({ content:`${hunter.firstName}'s inventory is empty` }, true );
     } else {
-      messenger.followupWithEmbed(inventoryHelper.printInventory(hunter.firstName, inventory));
+      const inventoryEmbed = inventoryHelper.printInventory(hunter.firstName, inventory)
+      messenger.followupV2({ embeds: [inventoryEmbed] }, true);
     }
     return;
   }

@@ -11,8 +11,6 @@ const movesHelper = require('../utils/movesHelper');
 export default {
   name: ModalCustomIdNames.update_move,
   async execute(data, messenger: DiscordMessenger, user: Discord.User) {
-    const userId = user.id;
-
     const isLibraryMove = hasLibraryIndicatorParam(data.custom_id);
     const guildId = isLibraryMove ?
       PUBLIC_GUILD_ID :
@@ -67,7 +65,7 @@ export default {
     };
 
     const [embed, components] = createInfoResponse(updated as ISpecialMove, user.id);
-    messenger.respondWithEmbed(embed, components);
+    messenger.respondV2({ embeds: [updateSuccessEmbed, embed], components}, true );
     return;
   }
 }
