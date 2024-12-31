@@ -89,11 +89,11 @@ export default {
         });
 
         const firstEmbed = embeds[0];
-        messenger.respondV2({ embeds: [firstEmbed] }, true);
+        await messenger.respondV2({ embeds: [firstEmbed] }, true);
 
         if (embeds.length > 1) {
           const [,...rest] = embeds;
-          rest!.forEach(e => messenger.followupV2({ embeds: [e] }, true));
+          rest!.forEach(async (e) => await messenger.followupV2({ embeds: [e] }, true));
         }
         return;
       }
