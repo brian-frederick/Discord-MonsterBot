@@ -89,7 +89,7 @@ export default {
         // });
 
 
-        const firstEmbed = embeds[0];
+        const firstEmbed = embeds[1];
         await messenger.respondV2({ embeds: [firstEmbed] }, true);
 
         // if (embeds.length > 1) {
