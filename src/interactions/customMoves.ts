@@ -69,7 +69,7 @@ export default {
           messenger.followupV2({ embeds: [embed], components }, true);
         });
       } else {
-        const chunkedMoves = _.chunk(moves, 25);
+        const chunkedMoves = _.chunk(moves, 15);
         const embeds = chunkedMoves.map((c,i) => {
           const position: 'only' | 'first' | 'middle' | 'last' =
             chunkedMoves.length === 1 ?
