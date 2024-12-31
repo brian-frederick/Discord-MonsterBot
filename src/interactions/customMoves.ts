@@ -83,18 +83,19 @@ export default {
           return movesListEmbed(c as ISpecialMove[], position, maybeSearchKey)
         });
 
-        console.log('bftest here come the embeds');
-        embeds.forEach(e => {
-          console.log('embed', JSON.stringify(e, null, 2));
-        });
+        console.log(`bftest here come the embeds. There's ${embeds.length} of them.`);
+        // embeds.forEach(e => {
+        //   console.log('embed', JSON.stringify(e, null, 2));
+        // });
+
 
         const firstEmbed = embeds[0];
         await messenger.respondV2({ embeds: [firstEmbed] }, true);
 
-        if (embeds.length > 1) {
-          const [,...rest] = embeds;
-          rest!.forEach(async (e) => await messenger.followupV2({ embeds: [e] }, true));
-        }
+        // if (embeds.length > 1) {
+        //   const [,...rest] = embeds;
+        //   rest!.forEach(async (e) => await messenger.followupV2({ embeds: [e] }, true));
+        // }
         return;
       }
     }
