@@ -2,7 +2,7 @@ import Discord from 'discord.js';
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
 import { Option } from '../interfaces/DiscordInteractions';
 import createMoveModalWithOutcomes from '../actions/customMoves/create-move-modal-with-outcomes';
-import { getBooleanParam, getParam, getRequiredParam } from '../utils/interactionParams';
+import { getBooleanParam, getParam, getRequiredStringParam } from '../utils/interactionParams';
 import { createSpecialMove, getAllSpecialMoves } from '../services/specialMovesService';
 import { createInfoResponse, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
 import { ISpecialMove } from '../interfaces/ISpecialMove';
@@ -130,7 +130,7 @@ export default {
     const plus = getParam('plus', subcommandOptions);
     const maybeMoveToModify = getParam('moveToModify', subcommandOptions);
     
-    const description = getRequiredParam('description', subcommandOptions);
+    const description = getRequiredStringParam('description', subcommandOptions);
     const commandDescription = description.length > 100 ?
       `${description.substring(0, 97)}...` : 
       description;

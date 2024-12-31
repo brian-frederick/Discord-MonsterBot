@@ -1,7 +1,7 @@
 import Discord from 'discord.js';
 import { Option } from '../interfaces/DiscordInteractions';
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
-import { getParam } from '../utils/interactionParams';
+import { getParam, getRequiredNumberParam, getRequiredStringParam } from '../utils/interactionParams';
 
 import activate from '../actions/hunters/activate';
 import create from '../actions/hunters/create';
@@ -23,7 +23,28 @@ export default {
     }
 
     if (subcommand.name === 'create') {
-      await create.execute(messenger, user.id);
+      const subcommandOptions = subcommand.options!;
+      const firstName = getRequiredStringParam('first-name', subcommandOptions);
+      const lastName = getParam('last-name', subcommandOptions);
+      const type = getRequiredStringParam('hunter-type', subcommandOptions);
+      const charm = getRequiredNumberParam('charm', subcommandOptions);
+      const cool = getRequiredNumberParam('cool', subcommandOptions);
+      const sharp = getRequiredNumberParam('sharp', subcommandOptions);
+      const tough = getRequiredNumberParam('tough', subcommandOptions);
+      const weird = getRequiredNumberParam('weird', subcommandOptions);
+  
+      const hunterParams = {
+        firstName,
+        lastName,
+        type,
+        charm,
+        cool,
+        sharp,
+        tough,
+        weird
+      };
+
+      await create.execute(messenger, user.id, hunterParams);
       return;
     }
 

@@ -4,7 +4,7 @@
   "options": [
     {
       "name": "activate",
-      "description": "Make one of your hunters active, using their stats, inventory, etc. Only one can be active at a time.",
+      "description": "Make one of your hunters active, using their stats, etc. Only one can be active at a time.",
       "type": 1,
       "options": [
         {
@@ -18,7 +18,56 @@
     {
       "name": "create",
       "description": "Create a new hunter.",
-      "type": 1
+      "type": 1,
+      "options": [
+        {
+          "name": "charm",
+          "required": true,
+          "description": "Your hunter's charm.",
+          "type": 4
+        },
+        {
+          "name": "cool",
+          "required": true,
+          "description": "Your hunter's cool.",
+          "type": 4
+        },
+        {
+          "name": "sharp",
+          "required": true,
+          "description": "Your hunter's sharp.",
+          "type": 4
+        },
+        {
+          "name": "tough",
+          "required": true,
+          "description": "Your hunter's tough.",
+          "type": 4
+        },
+        {
+          "name": "weird",
+          "required": true,
+          "description": "Your hunter's weird.",
+          "type": 4
+        },
+        {
+          "name": "hunter-type",
+          "required": true,
+          "description": "Your hunter's type, ie The Monstrous",
+          "type": 3
+        },
+        {
+          "name": "first-name",
+          "required": true,
+          "description": "Your hunter's first name.",
+          "type": 3
+        },
+        {
+          "name": "last-name",
+          "description": "Your hunter's last name.",
+          "type": 3
+        }
+      ]
     },
     {
       "name": "remove",

@@ -1,11 +1,11 @@
-import { Option, IModalSubmissionData } from '../interfaces/DiscordInteractions';
+import { Option } from '../interfaces/DiscordInteractions';
 
 export const getParam = (name: string, options: Option[]) => 
   options.find(option => 
     option.name === name
   )?.value;
 
-export const getRequiredParam = (name: string, options: Option[]): string => {
+export const getRequiredStringParam = (name: string, options: Option[]): string => {
   const param = options.find(option => option.name === name)?.value;
 
   if (!param) {
@@ -13,6 +13,16 @@ export const getRequiredParam = (name: string, options: Option[]): string => {
   }
 
   return param;
+}
+
+export const getRequiredNumberParam = (name: string, options: Option[]): number => {
+  const param = options.find(option => option.name === name)?.value;
+
+  if (!param) {
+    throw new Error(`Missing required param: ${name}`);
+  }
+
+  return parseInt(param);
 }
 
 /** Parses a param to true or false. Defaults to false. */
