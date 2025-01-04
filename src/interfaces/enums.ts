@@ -66,6 +66,7 @@ export enum ButtonCustomIdNames {
   add_move_to_server = 'am',
   delete_move = 'dm',
   edit_move = 'em',
+  more_moves = 'mm',
   view_move = 'vm',
   mark = 'mark'
 }

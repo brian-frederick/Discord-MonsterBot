@@ -1,6 +1,7 @@
 const { takePriority, PUBLIC_GUILD_ID } = require('../utils/specialMovesHelper');
 const { getSpecialMoves } = require('../utils/dynamodb');
 const { get, create, deleteAMove, getAll } = require('../db/moves');
+const { parseCustomIdParams } = require('../utils/componentInteractionParams');
 
 async function deleteMove(key, guildId) {
   return deleteAMove(guildId, key);
@@ -29,8 +30,18 @@ async function getSpecialMoveV2(key, guildId) {
   return await get(guildId, key);
 }
 
-async function getAllSpecialMoves(guildId, searchTerm) {
-  return await getAll(guildId, searchTerm);
+async function getAllSpecialMoves({
+  guildId,
+  searchTerm,
+  customId
+}) {
+
+  const startKey = customId ? {
+    key: { S: parseCustomIdParams(customId)[0] }, 
+    guildId: { S: guildId }
+  } : undefined;
+
+  return await getAll({ guildId, searchTerm, startKey });
 }
 
 async function createSpecialMove(key, guildId, move) {

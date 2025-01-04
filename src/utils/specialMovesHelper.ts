@@ -129,3 +129,52 @@ export function createInfoResponse(moveContext: ISpecialMove, userId: string): [
 export function hasPermissionToEdit(moveContext: ISpecialMove, userId: string): boolean {
   return moveContext.userId === userId || moveContext.guildId !== PUBLIC_GUILD_ID;
 }
+
+export function createBulkMovesResponse({
+  moves,
+  maybeSearchKey,
+  maybeLastEvaluatedKey
+}:{ 
+  moves: ISpecialMove[],
+  maybeSearchKey?: string,
+  maybeLastEvaluatedKey?: string
+}): [{
+  title: string,
+  description: string,
+  fields: any[]},
+  any[] | undefined
+] {
+  const moreMoves = !!maybeLastEvaluatedKey;
+
+  const title = maybeSearchKey ?
+    `Library moves with "${maybeSearchKey}"...` :
+    'Library moves';
+
+  const description = maybeSearchKey && moreMoves ?
+    'To see more moves, narrow your search.' :
+    'To see move details, use search.'
+  
+  const fields = moves.map((m) => {
+    return {
+      name: m.name,
+      value: m.commandDescription || '--'
+    };
+  });
+
+  const embed = {
+    title,
+    description,
+    fields,
+  };
+
+  const seeMoreButton = maybeLastEvaluatedKey ?
+    createButton('See More', 1, `${ButtonCustomIdNames.more_moves}_${maybeLastEvaluatedKey}`) :
+    undefined;
+
+
+  const components = seeMoreButton ?
+    [createActionRow([seeMoreButton])]: 
+    [];
+
+  return [embed, components];
+}

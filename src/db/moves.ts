@@ -1,8 +1,9 @@
 import AWS, { DynamoDB } from 'aws-sdk';
 import { CLIENT as client } from '../utils/dynamoDbClient';
 import { toExpressionAttributeValueBoolean, toExpressionAttributeValueOutcome, toExpressionAttributeValueString } from '../utils/expressionAttributeValues';
-import { AttributeValue, QueryInput } from 'aws-sdk/clients/dynamodb';
+import { AttributeValue, Key, QueryInput } from 'aws-sdk/clients/dynamodb';
 import { ISpecialMove } from '../interfaces/ISpecialMove';
+import { CUSTOM_ID_LIBRARY_IND, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
 
 const TABLE = 'moves';
 
@@ -46,7 +47,15 @@ export async function deleteAMove(guildId: string, key: string) {
   }
 }
 
-export async function getAll(guildId: string, searchTerm?: string) {
+export async function getAll({
+  guildId,
+  searchTerm,
+  startKey,
+}: {
+  guildId: string,
+  searchTerm?: string,
+  startKey?: Key
+}): Promise<[ISpecialMove[], string | undefined]> {
 
   const params: QueryInput = searchTerm ? {
     TableName: TABLE,
@@ -60,6 +69,8 @@ export async function getAll(guildId: string, searchTerm?: string) {
       ':guildId': { S: guildId },
       ':searchTerm': { S: searchTerm }
     },
+    Limit: 20,
+    ExclusiveStartKey: startKey
   } : {
     TableName: TABLE,
     KeyConditionExpression: "#guildId = :guildId",
@@ -69,19 +80,26 @@ export async function getAll(guildId: string, searchTerm?: string) {
     ExpressionAttributeValues: {
       ':guildId': { S: guildId },
     },
+    Limit: 20,
+    ExclusiveStartKey: startKey
   };
 
   try {
     const response = await client.query(params).promise();
     console.log('bftest response', response);
 
-    const moves = response.Items?.map(m => AWS.DynamoDB.Converter.unmarshall(m)); [];
+    const moves = response.Items?.map(m => AWS.DynamoDB.Converter.unmarshall(m)) as ISpecialMove[] || [];
+    const maybeLibraryIndicator = guildId === PUBLIC_GUILD_ID ? `_${CUSTOM_ID_LIBRARY_IND}` : '';
+    
+    const maybeLastEvaluatedKey = response.LastEvaluatedKey ?
+      AWS.DynamoDB.Converter.unmarshall(response.LastEvaluatedKey)?.['key'] + maybeLibraryIndicator :
+      undefined;
     console.log('bftest move data', moves);
     
-    return moves;
+    return [moves, maybeLastEvaluatedKey];
   } catch (error) {
     console.log(`error getting move for guildId: ${guildId}`, JSON.stringify(error, null, 2));
-    return;
+    return [[], undefined];
   }
 }
 

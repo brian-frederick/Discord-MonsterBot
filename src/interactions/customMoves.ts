@@ -4,36 +4,9 @@ import { Option } from '../interfaces/DiscordInteractions';
 import createMoveModalWithOutcomes from '../actions/customMoves/create-move-modal-with-outcomes';
 import { getBooleanParam, getParam, getRequiredStringParam } from '../utils/interactionParams';
 import { createSpecialMove, getAllSpecialMoves } from '../services/specialMovesService';
-import { createInfoResponse, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
+import { createBulkMovesResponse, createInfoResponse, PUBLIC_GUILD_ID } from '../utils/specialMovesHelper';
 import { ISpecialMove } from '../interfaces/ISpecialMove';
 import _ from 'lodash';
-
-function movesListEmbed(
-  moves: ISpecialMove[],
-  position: 'only' | 'first' | 'middle' | 'last',
-  maybeSearchKey?: string) {
-  const fields = moves.map((m) => { 
-    return {
-      name: m.name,
-      value: m.description
-    };
-  });
-
-  const firstEmbedTitle = maybeSearchKey ?
-      `Library moves with "${maybeSearchKey}"...` :
-      'Library moves';
-
-  return {
-    title: !['first', 'only'].includes(position) ?
-      undefined :
-      firstEmbedTitle,
-    fields,
-    footer: !['last', 'only'].includes(position) ?
-      undefined : {
-        text: 'To see detailed info about moves, narrow your search.'
-      }
-  };
-}
 
 export default {
   name: 'custommoves',
@@ -50,7 +23,11 @@ export default {
       const maybeSearchKey = subcommandOptions ? getParam('search', subcommandOptions) : undefined;
       console.log('maybeSearchKey', maybeSearchKey);
 
-      const moves = await getAllSpecialMoves(PUBLIC_GUILD_ID, maybeSearchKey);
+      const [moves, maybeLastEvaluatedKey] = await getAllSpecialMoves({ 
+        guildId: PUBLIC_GUILD_ID,
+        searchTerm: maybeSearchKey,
+        customId: undefined
+      });
 
       if (!moves?.length) {
         messenger.respondV2({content: 'BLORP whimper whimper. Could not find a move by that name.'}, true);
@@ -59,7 +36,7 @@ export default {
         const [embed, components] = createInfoResponse(moveContext as ISpecialMove, user.id);
         messenger.respondV2({ embeds: [embed], components }, true);
       } 
-      else if (moves.length < 5) {
+      else if (moves.length < 4) {
         const moveContext = moves[0];
         const [embed, components] = createInfoResponse(moveContext as ISpecialMove, user.id);
         messenger.respondV2({ embeds: [embed], components }, true);
@@ -69,33 +46,13 @@ export default {
           messenger.followupV2({ embeds: [embed], components }, true);
         });
       } else {
-        const chunkedMoves = _.chunk(moves, 10);
-        const embeds = chunkedMoves.map((c,i) => {
-          const position: 'only' | 'first' | 'middle' | 'last' =
-            chunkedMoves.length === 1 ?
-              'only' :
-              i === 0 ? 
-                'first' :
-                  i === chunkedMoves.length - 1 ?
-                    'last' :
-                    'middle';
-
-          return movesListEmbed(c as ISpecialMove[], position, maybeSearchKey)
+        const [embed, components] = createBulkMovesResponse({
+          moves: moves as ISpecialMove[],
+          maybeSearchKey,
+          maybeLastEvaluatedKey
         });
 
-        console.log(`bftest here come the embeds. There's ${embeds.length} of them.`);
-        // embeds.forEach(e => {
-        //   console.log('embed', JSON.stringify(e, null, 2));
-        // });
-
-
-        const firstEmbed = embeds[1];
-        await messenger.respondV2({ embeds: [firstEmbed] }, true);
-
-        // if (embeds.length > 1) {
-        //   const [,...rest] = embeds;
-        //   rest!.forEach(async (e) => await messenger.followupV2({ embeds: [e] }, true));
-        // }
+        await messenger.respondV2({ embeds: [embed], components }, true);
         return;
       }
     }
