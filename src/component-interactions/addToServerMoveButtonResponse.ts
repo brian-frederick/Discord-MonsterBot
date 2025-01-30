@@ -35,6 +35,7 @@ export default {
       userId: user.id,
       userName: user.username,
       userDiscriminator: user.discriminator,
+      hasLibraryCopy: true
     }
 
     const addedMove = await createSpecialMove(moveKey, messenger.channel.guild.id, updatedMove);
