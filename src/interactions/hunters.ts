@@ -1,5 +1,5 @@
 import Discord from 'discord.js';
-import { Option } from '../interfaces/DiscordInteractions';
+import { OptionV2 } from '../interfaces/DiscordInteractions';
 import { DiscordMessenger } from "../interfaces/DiscordMessenger";
 import { getParam, getRequiredNumberParam, getRequiredStringParam } from '../utils/interactionParams';
 
@@ -11,7 +11,7 @@ import view from '../actions/hunters/view';
 
 export default {
   name: 'hunters',
-  async execute(messenger: DiscordMessenger, user: Discord.User, guildId: string, options: Option[] = []) {
+  async execute(messenger: DiscordMessenger, user: Discord.User, guildId: string, options: OptionV2[] = []) {
 
     const subcommand = options.find(o => o.type === 1);
     

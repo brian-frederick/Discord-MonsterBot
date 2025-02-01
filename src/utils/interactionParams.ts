@@ -1,4 +1,4 @@
-import { Option } from '../interfaces/DiscordInteractions';
+import { Option, OptionV2 } from '../interfaces/DiscordInteractions';
 
 export const getParam = (name: string, options: Option[]) => 
   options.find(option => 
@@ -15,14 +15,23 @@ export const getRequiredStringParam = (name: string, options: Option[]): string 
   return param;
 }
 
-export const getRequiredNumberParam = (name: string, options: Option[]): number => {
+export const getRequiredNumberParam = (name: string, options: OptionV2[]): number => {
   const param = options.find(option => option.name === name)?.value;
+
+  if (param === 0) {
+    return 0;
+  }
 
   if (!param) {
     throw new Error(`Missing required param: ${name}`);
   }
 
-  return parseInt(param);
+  if (typeof param === 'string') {
+    return parseInt(param);
+  } else {
+    return param;
+  }
+  
 }
 
 /** Parses a param to true or false. Defaults to false. */

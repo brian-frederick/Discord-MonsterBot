@@ -19,6 +19,13 @@ export interface Option {
   options?: Option[]
 }
 
+export interface OptionV2 {
+  name: string,
+  type?: number
+  value?: string | number
+  options?: Option[]
+}
+
 export interface textInput {
   type: number
   custom_id: string
