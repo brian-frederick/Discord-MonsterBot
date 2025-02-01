@@ -69,7 +69,6 @@ export async function getAll({
       ':guildId': { S: guildId },
       ':searchTerm': { S: searchTerm }
     },
-    Limit: 20,
     ExclusiveStartKey: startKey
   } : {
     TableName: TABLE,

@@ -29,10 +29,15 @@ export default {
         customId: undefined
       });
 
+      console.log('bftest library moves search result', moves);
+
       if (!moves?.length) {
         messenger.respondV2({content: 'BLORP whimper whimper. Could not find a move by that name.'}, true);
         return;
-      } else if (moves.length === 1) {
+      } else if (moves.length > 25) {
+        messenger.respondV2({content: "YARRR it's too much! Please narrow your search."}, true);
+      }
+      else if (moves.length === 1) {
         const moveContext = moves[0];
         const [embed, components] = createInfoResponse(moveContext as ISpecialMove, user.id);
         messenger.respondV2({ embeds: [embed], components }, true);
