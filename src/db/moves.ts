@@ -85,6 +85,7 @@ export async function getAll({
   };
 
   try {
+    console.log('bftest getAll params', params);
     const response = await client.query(params).promise();
     console.log('bftest response', response);
 

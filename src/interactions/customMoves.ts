@@ -31,6 +31,7 @@ export default {
 
       if (!moves?.length) {
         messenger.respondV2({content: 'BLORP whimper whimper. Could not find a move by that name.'}, true);
+        return;
       } else if (moves.length === 1) {
         const moveContext = moves[0];
         const [embed, components] = createInfoResponse(moveContext as ISpecialMove, user.id);
