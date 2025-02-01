@@ -117,7 +117,7 @@ client.ws.on('INTERACTION_CREATE', async request => {
   });
 
   console.log('interaction ahoy: ');
-  console.log(request);
+  console.log(JSON.stringify(request, null, 2));
   
   let channel = client.channels?.cache?.get(request.channel_id);
   if (!channel) {
