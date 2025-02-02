@@ -81,6 +81,7 @@ client.on('guildCreate', guild => {
     'event_type': 'guildCreate',
     'server_id': guild.id
   });
+  Sentry.captureMessage(`Guild added to monsterbot! Welcome ${guild.name}`, 'info');
   console.log('guild created.');
   console.log('id: ', guild.id);
   console.log('name: ', guild.name);
@@ -97,6 +98,7 @@ client.on('guildDelete', guild => {
     'event_type': 'guildDelete',
     'server_id': guild.id
   });
+  Sentry.captureMessage(`Guild deleted from monsterbot! So long ${guild.name}`, 'warning');
   console.log('guild deleted.');
   console.log('id: ', guild.id);
   console.log('name: ', guild.name);
