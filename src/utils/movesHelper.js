@@ -76,7 +76,7 @@ const createInfoEmbed = (moveContext) => {
     title: moveContext.name,
     description: '',
     fields: [],
-    url: ''
+    url: '',
   };
 
   const secondaryContext = (moveContext.type === 'modification') ?
@@ -144,7 +144,7 @@ const infoOutcomeFields = (outcome) => {
 }
 
 const infoDescription = (moveContext, secondaryContext) => {
-  let description = '';
+  let description = moveContext.key ? `\`/${moveContext.key}\`\n` : '';
 
   if (secondaryContext) {
     description+= `Modifies ${secondaryContext.name}\n`;
